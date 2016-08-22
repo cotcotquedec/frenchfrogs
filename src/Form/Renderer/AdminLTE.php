@@ -5,7 +5,7 @@ use FrenchFrogs\Form;
 use FrenchFrogs\Renderer\Style\Style;
 
 
-class Conquer extends Inline
+class AdminLTE extends Inline
 {
 
     /**

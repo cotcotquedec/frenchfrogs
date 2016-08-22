@@ -2,7 +2,7 @@
 
 use FrenchFrogs\Table\Column;
 
-class Conquer extends Bootstrap
+class AdminLTE extends Bootstrap
 {
 
     public function table(\FrenchFrogs\Table\Table\Table $table)

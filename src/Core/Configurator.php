@@ -53,7 +53,7 @@ class Configurator
 
 
         'ruler.class' => FrenchFrogs\Ruler\Ruler\Ruler::class,
-        'ruler.renderer.class' => FrenchFrogs\Ruler\Renderer\Conquer::class,
+        'ruler.renderer.class' => FrenchFrogs\Ruler\Renderer\AdminLTE::class,
 
         'toastr.success.default' => 'Action realised with success',
         'toastr.error.default' => 'Oups, something bad happened',

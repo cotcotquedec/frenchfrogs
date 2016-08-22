@@ -5,7 +5,7 @@ use FrenchFrogs\Form;
 use FrenchFrogs\Renderer\Style\Style;
 
 
-class ConquerModal extends Conquer
+class AdminLTEModal extends AdminLTE
 {
 
 
@@ -53,11 +53,4 @@ class ConquerModal extends Conquer
 
         return $html;
     }
-
-
-
-
-
-
-
 }
