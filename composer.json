@@ -30,7 +30,7 @@
     "autoload": {
         "psr-4": {
             "FrenchFrogs\\": "src/",
-            "FrenchFrogs\\Models\\" : "src/Models"
+            "FrenchFrogs\\Models\\" : "src/App/Models"
         },
         "files": ["src/function.php"]
     }
