@@ -92,7 +92,7 @@ class AdminLTE extends Inline
 
             $opt .= html('input', $attr);
             $opt .= $label;
-            $options .= '<label>'.$opt.'</label>';
+            $options .=  html('div', ['class' => 'checkbox'], '<label>'.$opt.'</label>');
         }
 
         // DESCRIPTION
@@ -101,11 +101,10 @@ class AdminLTE extends Inline
         }
 
         // INPUT
-        $element->addClass('checkbox-list');
-        $html =  html('div', $element->getAttributes(), $options);
+        $html =  html('div', [], $options);
 
         // FINAL CONTAINER
-        $html = html('div', ['class' => 'col-md-9'], $html);
+        $html = html('div', ['class' => 'col-md-9 checkbox'], $html);
         return html('div', compact('class'), $elementLabel . $html);
     }
 

@@ -298,6 +298,7 @@ trait AclController
                     transaction(function () use ($user, $data) {
                         $user->setPermissions($data['user_permission_id']);
                     });
+
                     \js()->success()->closeRemoteModal()->reloadDataTable();
                 } catch(\Exception $e) {
                     \js()->error($e->getMessage());

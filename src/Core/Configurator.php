@@ -21,18 +21,18 @@ class Configurator
      */
     protected $config = [
         'panel.class' => FrenchFrogs\Panel\Panel\Panel::class,
-        'panel.renderer.class' =>  FrenchFrogs\Panel\Renderer\Bootstrap::class,
+        'panel.renderer.class' =>  FrenchFrogs\Panel\Renderer\AdminLTE::class,
 
 
         'table.class' => FrenchFrogs\Table\Table\Table::class,
-        'table.renderer.class' => FrenchFrogs\Table\Renderer\Bootstrap::class,
+        'table.renderer.class' => FrenchFrogs\Table\Renderer\AdminLTE::class,
         'table.filterer.class' => FrenchFrogs\Filterer\Filterer::class,
 
         'table.column.date.format' => 'd/m/Y',
         'table.column.datetime.format' => 'd/m/Y h:i',
 
-        'form.renderer.class' => FrenchFrogs\Form\Renderer\Bootstrap::class,
-        'form.renderer.modal.class' => FrenchFrogs\Form\Renderer\Modal::class,
+        'form.renderer.class' => FrenchFrogs\Form\Renderer\AdminLTE::class,
+        'form.renderer.modal.class' => FrenchFrogs\Form\Renderer\AdminLTEModal::class,
         'form.validator.class' => FrenchFrogs\Validator\Validator::class,
         'form.filterer.class' => FrenchFrogs\Filterer\Filterer::class,
 
