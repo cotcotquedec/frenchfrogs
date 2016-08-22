@@ -364,7 +364,7 @@ function fv($value, $filters = null, $validators = null) {
  *
  * @return mixed
  */
-function debug() {
+function is_debug() {
     return config('app.debug');
 }
 
