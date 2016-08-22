@@ -25,7 +25,7 @@
         "oyejorge/less.php": "~1.5",
         "league/csv": "^8.0",
         "almasaeed2010/adminlte": "^2.3",
-        "webpatser/laravel-uuid": "2.*",
+        "webpatser/laravel-uuid": "2.*"
     },
     "autoload": {
         "psr-4": {
