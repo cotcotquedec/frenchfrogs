@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Maker\Console;
+<?php namespace Frenchfrogs\App\Console;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;

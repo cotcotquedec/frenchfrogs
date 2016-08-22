@@ -1,6 +1,6 @@
 <?php
 
-namespace FrenchFrogs\Reference\Console;
+namespace Frenchfrogs\App\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;

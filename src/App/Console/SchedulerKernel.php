@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Scheduler\Console;
+<?php namespace Frenchfrogs\App\Console;
 
 use Illuminate\Console\Scheduling\Schedule as SchedulingSchedule;
 use FrenchFrogs\Models\Db\Schedule\Schedule;

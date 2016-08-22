@@ -1,6 +1,6 @@
 <?php
 
-namespace FrenchFrogs\Reference\Console;
+namespace FrenchfrogsAppConsole;;
 
 use FrenchFrogs\Models\Reference;
 use Illuminate\Console\Command;

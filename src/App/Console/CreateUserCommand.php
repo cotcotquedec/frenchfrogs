@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Acl\Console;
+<?php namespace Frenchfrogs\App\Console;
 
 use FrenchFrogs\Acl\Acl;
 use FrenchFrogs\Models\Business\User;
