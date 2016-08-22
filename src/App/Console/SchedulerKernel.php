@@ -28,7 +28,7 @@ trait SchedulerKernel
      *
      * @var bool
      */
-    protected $has_schedule = false;
+    protected $has_schedule;
 
 
     /**
