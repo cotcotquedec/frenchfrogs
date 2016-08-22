@@ -1,0 +1,36 @@
+{
+    "name": "cotcotquedec/frenchfrogs",
+    "description": "Framework backoffice et autres construit sur laravel",
+    "type": "library",
+    "source": {
+        "url": "https://github.com/cotcotquedec/frenchfrogs.git",
+        "type": "git",
+        "reference": "origin/master"
+    },
+    "keywords": ["laravel", "french", "frogs", "datagrid", "datatable", "framework", "bootstrap", "table", "form", "plugins"],
+    "homepage": "https://github.com/cotcotquedec/frenchfrogs.git",
+    "licence": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Julien Houvion",
+            "email": "cotcotquedec@gmail.com",
+            "homepage": "https://github.com/cotcotquedec",
+            "role": "Project Manager"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0",
+        "laravel/framework": "5.*",
+        "matthiasmullie/minify": "^1.3",
+        "oyejorge/less.php": "~1.5",
+        "league/csv": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "FrenchFrogs\\": "src/",
+            "FrenchFrogs\\Models\\" : "src/Models"
+        },
+        "files": ["src/function.php"]
+    },
+    "minimum-stability": "stable"
+}

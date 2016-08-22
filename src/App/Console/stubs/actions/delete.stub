@@ -1,0 +1,23 @@
+// MODEL
+//$model = __MODEL__::findOrFail($id);
+
+// MODAL
+$modal = \modal(null, 'Etes vous sûr de vouloir supprimer : <b>' . $model->name .'</b>' );
+$button = (new \FrenchFrogs\Form\Element\Button('yes', 'Supprimer !'))
+    ->setOptionAsDanger()
+    ->enableCallback('delete')
+    ->addAttribute('href',  request()->url() . '?delete=1');
+$modal->appendAction($button);
+
+// TRAITEMENT
+if (\request()->has('delete')) {
+    try {
+        $model->delete();
+        \js()->success()->closeRemoteModal()->reloadDataTable();
+    } catch(\Exception $e) {
+        \js()->error($e->getMessage());
+    }
+    return js();
+}
+
+return response()->modal($modal);

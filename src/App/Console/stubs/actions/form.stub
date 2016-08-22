@@ -1,0 +1,31 @@
+// MODEL
+//$model = __MODEL__::findOrNew($id);
+
+// FORM
+$form = \form()->enableRemote();
+$form->setLegend('__LEGEND__');
+
+// ELEMENT
+$form->addText('__INDEX__', '__LABEL__');
+$form->addSubmit('Enregistrer');
+
+// TRAITEMENT
+if (request()->has('Enregistrer')) {
+    $data = request()->all();
+    $form->valid($data);
+    if ($form->isValid()) {
+        $data = $form->getFilteredValues();
+        try {
+            //$model->__INDEX__ = $data['__INDEX__'];
+            $model->save();
+            \js()->success()->closeRemoteModal()->reloadDataTable();
+        } catch (\Exception $e) {
+            \js()->error($e->getMessage());
+        }
+    }
+} else {
+    $data = $model->toArray();
+    $form->populate($data);
+}
+
+return response()->modal($form);
