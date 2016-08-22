@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Core;
+<?php namespace FrenchFrogs\App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Mail;
@@ -20,7 +20,6 @@ class FrenchFrogsServiceProvider  extends ServiceProvider
         $this->bootModal();
         $this->bootMail();
         $this->bootValidator();
-        $this->publish();
     }
 
     /**
@@ -227,18 +226,5 @@ class FrenchFrogsServiceProvider  extends ServiceProvider
                 });
             }
         });
-    }
-
-    /**
-     * Publish asset frenchfrogs
-     *
-     * @deprecated J'aimerai vraiement m'en passer, j'y reflechirais plus tard
-     *
-     */
-    public function publish(){
-        // Asset management
-        $this->publishes([
-            __DIR__.'/../../assets' => base_path('resources/assets'),
-        ], 'frenchfrogs');
     }
 }
