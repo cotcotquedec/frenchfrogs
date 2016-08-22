@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Reference\Http\Controllers;
+<?php namespace FrenchFrogs\App\Http\Controllers;
 
 /**
  * Class AclController

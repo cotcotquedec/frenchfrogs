@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Scheduler\Http\Controllers;
+<?php namespace FrenchFrogs\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use FrenchFrogs\Models\Db;

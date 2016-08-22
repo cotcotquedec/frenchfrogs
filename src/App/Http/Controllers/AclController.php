@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Acl\Http\Controllers;
+<?php namespace FrenchFrogs\App\Http\Controllers;
 use FrenchFrogs\Models\Db\User\Group;
 use FrenchFrogs\Models\Db\User\User;
 use FrenchFrogs\Models\Db\User\UserInterface;

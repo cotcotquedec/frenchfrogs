@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Media\Http\Controllers;
+<?php namespace FrenchFrogs\App\Http\Controllers;
 
 
 use FrenchFrogs\Models\Db;
