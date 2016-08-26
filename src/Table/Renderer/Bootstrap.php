@@ -537,7 +537,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
             $table->addClass('datatable-remote');
             $table->save();
             $options += [
-                'ajax' => ['url' => route('datatable', ['token' => $table->getToken()])],
+                'ajax' => ['url' => route('datatable', ['token' => $table->getToken()],false)],
                 'processing' => true,
                 'serverSide' => true,
                 'pageLength' => $table->getItemsPerPage(),
@@ -564,7 +564,6 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
 
         //footer dom
         if ($table->hasFooter()) {
-
             $dom .= '<"row"<"col-md-5 col-sm-12"i><"col-md-7 col-sm-12"p>>';
         }
         
