@@ -1,5 +1,6 @@
 <?php namespace FrenchFrogs\Ruler\Ruler;
 
+use FrenchFrogs\Container\Container;
 use FrenchFrogs\Core;
 
 class Ruler

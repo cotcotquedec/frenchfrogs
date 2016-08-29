@@ -131,6 +131,14 @@ class Acl extends Ruler
 
             // request validation
             $request = is_null($request) ? request()->all() : $request;
+
+            // check for null value
+            foreach($request as $index => $value) {
+                if (is_null($value)) {
+                    unset($request[$index]);
+                }
+            }
+
             $validation = \Validator::make($request, $laravelValidator);
             if ($validation->fails()) {
                 abort(404, 'Parameters are not valid');
