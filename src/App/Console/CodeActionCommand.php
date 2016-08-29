@@ -1,25 +1,20 @@
 <?php namespace Frenchfrogs\App\Console;
 
-use Carbon\Carbon;
-use gossi\codegen\generator\CodeGenerator;
-use gossi\codegen\model\PhpClass;
-use gossi\codegen\model\PhpMethod;
-use gossi\codegen\model\PhpParameter;
-use gossi\docblock\Docblock;
-use gossi\docblock\tags\TagFactory;
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Composer;
 
-class ControllerActionCreateCommand extends Command
+class CodeActionCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'ffmake:action
-                             {controller : Nom du controller en minuscule}
+    protected $signature = 'code:action
                              {method : Méthode pour l\'action (post, get, etc...)}
                              {name : Nom de l\action}
+                             {controller? : Nom du controller en minuscule}
                              {--acl= : Permission pour l\'accès}
                              {--params= : Paramètre pour l\'action}
                              {--template=default : Template utilisé pour le body de la méthode}';
@@ -255,6 +250,12 @@ class ControllerActionCreateCommand extends Command
      */
     public function handle()
     {
+        $this->info('Nous allons créer ensemble une action pour un controller');
+
+
+        dd('Pas prêt, i ll be back');
+
+
 
         $controller = $this->argument('controller');
 
@@ -300,4 +301,6 @@ class ControllerActionCreateCommand extends Command
 
         $this->info('Action generated dans le fichier : ' . $controller->getFileName());
     }
+
+
 }
