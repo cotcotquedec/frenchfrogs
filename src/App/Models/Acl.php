@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Acl;
+<?php namespace FrenchFrogs\Models;
 
 
 use FrenchFrogs\Ruler\Page\Page;
