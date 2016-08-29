@@ -1,6 +1,6 @@
 <?php namespace FrenchFrogs\Models\Business;
 
-use FrenchFrogs\Acl\Acl;
+use FrenchFrogs\Models\Acl;
 use FrenchFrogs\Models\Db;
 use FrenchFrogs\Business\Business;
 
