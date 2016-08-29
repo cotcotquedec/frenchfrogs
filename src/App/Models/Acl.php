@@ -6,6 +6,7 @@ use FrenchFrogs\Ruler\Ruler\Ruler;
 use FrenchFrogs\Models\Business;
 use FrenchFrogs\Models\Db;
 use Auth;
+use Illuminate\Support\Collection;
 
 /**
  * Class Acl
@@ -48,6 +49,10 @@ class Acl extends Ruler
                 ->where('p.user_interface_id', $interface)
                 ->where('user_id', user('user_id'))
                 ->pluck('user_permission_id');
+
+            if ($permissions instanceof Collection) {
+                $permissions = $permissions->toArray();
+            }
 
             $this->setPermissions($permissions);
         } else {
