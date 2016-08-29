@@ -131,7 +131,7 @@ class Maker
     /**
      * Getter for $methods
      *
-     * @return array
+     * @return Method[]
      */
     public function getMethods()
     {
@@ -445,6 +445,11 @@ class Maker
     static public function load($class)
     {
         $instance = new static();
+
+        if(!class_exists($class, true)){
+            \exc('La classe "' . $class . '" n\'existe pas!');
+        }
+
         $instance->setClass(ReflectionClass::createFromName($class));
         return $instance;
     }
