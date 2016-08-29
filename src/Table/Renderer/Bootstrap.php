@@ -94,6 +94,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
 
         // Data
         $body = '';
+
         foreach($table->getRows() as $row) {
 
             $line = '';

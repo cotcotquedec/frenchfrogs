@@ -24,7 +24,7 @@ trait Columns
     /**
      * Getter for $columns container
      *
-     * @return array
+     * @return Column\Column[]
      */
     public function getColumns()
     {

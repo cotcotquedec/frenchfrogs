@@ -4,6 +4,7 @@
 use FrenchFrogs\Core;
 use FrenchFrogs\Table\Column;
 use FrenchFrogs\Table\Renderer;
+use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
 /**
@@ -63,16 +64,6 @@ class Table
      * @var
      */
     protected $idField;
-    
-    /**
-     * Return TRUE if $is_download is TRUE
-     *
-     * @return bool
-     */
-    public function isDownload()
-    {
-        return (bool) $this->is_download;
-    }
 
     /**
      * Return TRUE if a column has a strainer
@@ -227,6 +218,12 @@ class Table
             $this->itemsTotal = isset($count['_num_rows']) ?  $count['_num_rows'] : null;
 
             $source = $source->skip($this->getItemsOffset())->take($this->getItemsPerPage())->get();
+
+            // Compatibilité avec laravel  5.3
+            if ($source instanceof Collection) {
+                $source = $source->toArray();
+            }
+
             $source = new \ArrayIterator($source);
 
             // Array case
