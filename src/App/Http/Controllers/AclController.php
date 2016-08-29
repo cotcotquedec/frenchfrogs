@@ -262,6 +262,7 @@ trait AclController
 
         $groups = [];
         $permissions = [];
+
         foreach($query->get() as $row) {
 
             // gestion des interfaces

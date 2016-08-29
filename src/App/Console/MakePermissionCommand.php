@@ -107,6 +107,10 @@ class MakePermissionCommand extends Command
         $filepath = storage_path('tmp/') . $filename;
         $filesystem->delete($filepath);
 
+        // FICHIER DE MIGRATION
+        $path = $this->laravel->databasePath().'/migrations';
+        $fullPath = $this->laravel['migration.creator']->create($filename, $path);
+
         // CLASS
         $maker = Maker::init(camel_case($filename), $filepath);
         $maker->addAlias('Acl', $ruler->getClass()->getName());
@@ -118,10 +122,6 @@ class MakePermissionCommand extends Command
         $method = $maker->addMethod('up');
         $body = sprintf('Acl::createDatabasePermission(Acl::%s, Acl::%s, Acl::%s, \'%s\');', $constant, $group, $interface, $label);
         $method->setBody($body);
-
-        // FICHIER DE MIGRATION
-        $path = $this->laravel->databasePath().'/migrations';
-        $fullPath = $this->laravel['migration.creator']->create($filename, $path);
 
         $filesystem->put($fullPath, '<?php ' . $maker->render());
         $filesystem->delete($filepath);

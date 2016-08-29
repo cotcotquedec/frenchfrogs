@@ -127,7 +127,7 @@ class User extends Business
      */
     public function getPermissions()
     {
-        return \query('user_permission_user', ['user_permission_id'])->where('user_id', $this->getId())->pluck('user_permission_id');
+        return \query('user_permission_user', ['user_permission_id'])->where('user_id', $this->getId())->pluck('user_permission_id')->toArray();
     }
 
     /**
