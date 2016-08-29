@@ -228,7 +228,8 @@ function action_url($controller, $action = 'getIndex', $params = [], $query = []
     if ($controller[0] != '\\') {
         $controller = '\\' . $controller;
     }
-    return URL::action($controller . '@' . $action, $params) . (empty($query) ? '' : ('?' . http_build_query($query)));
+
+    return URL::action($controller . '@' . $action, $params, false) . (empty($query) ? '' : ('?' . http_build_query($query)));
 }
 
 
