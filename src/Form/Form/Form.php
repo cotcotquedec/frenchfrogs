@@ -179,7 +179,7 @@ class Form
 
         // default url
         if (empty($this->getUrl())) {
-            $this->setUrl(\Request::fullUrl());
+            $this->setUrl(str_replace(request()->getSchemeAndHttpHost(), '', request()->fullUrl()));
         }
     }
 
