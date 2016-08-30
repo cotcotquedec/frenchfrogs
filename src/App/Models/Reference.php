@@ -1,6 +1,7 @@
 <?php namespace FrenchFrogs\Models;
 
 use Cache;
+use FrenchFrogs\Maker\Maker;
 use gossi\codegen\model\PhpClass;
 use gossi\codegen\generator\CodeFileGenerator;
 
@@ -205,19 +206,12 @@ class Reference
         $file = storage_path('/../bootstrap/') . static::CLASS_NAME . '.php';
 
         // recuperation des données
-        $constant = \query('reference', ['reference_id'])->whereNull('deleted_at')->pluck('reference_id');
-        $constant = array_combine($constant,$constant);
+        $constant = \FrenchFrogs\Models\Db\Reference::pluck('reference_id', 'reference_id')->toArray();
 
         // generate class
-        $class = new PhpClass();
-        $class->setQualifiedName(static::CLASS_NAME);
-        $class->setConstants($constant);
-
-        // generate code
-        $generator = new CodeFileGenerator();
-        $content = $generator->generate($class);
-
-        file_put_contents($file, $content);
+        $maker = Maker::load(static::CLASS_NAME);
+        $maker->setConstants($constant);
+        $maker->write();
     }
 
 }

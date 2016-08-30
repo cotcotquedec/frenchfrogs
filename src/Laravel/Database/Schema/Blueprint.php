@@ -16,7 +16,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
      * @param string $column
      * @return \Illuminate\Support\Fluent
      */
-    public function binaryUuid($column = 'id', $primary = true)
+    public function binaryUuid($column = 'uuid', $primary = true)
     {
         $column = $this->addColumn('binaryuuid', $column, ['length' => 16]);
 
