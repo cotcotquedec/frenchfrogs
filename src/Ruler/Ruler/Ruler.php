@@ -32,6 +32,11 @@ class Ruler
     }
 
 
+    /**
+     *
+     *
+     * @return mixed|string
+     */
     public function renderNavigation()
     {
 

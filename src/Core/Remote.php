@@ -89,7 +89,7 @@ trait Remote
     }
 
     /**
-     * Setter for $is_remoter attribute
+     * Setter for $is_remote attribute
      *
      * @return $this
      */

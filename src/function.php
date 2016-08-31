@@ -236,12 +236,12 @@ function action_url($controller, $action = 'getIndex', $params = [], $query = []
 /**
  * Return ruler polliwog
  *
- * @return \FrenchFrogs\Ruler\Ruler\Ruler
+ * @return \FrenchFrogs\Models\Acl
  */
 function ruler()
 {
     // retrieve the good class
-    $class = configurator()->get('ruler.class', FrenchFrogs\Ruler\Ruler\Ruler::class);
+    $class = configurator()->get('ruler.class', FrenchFrogs\Models\Acl::class);
 
     return $class::getInstance();
 }

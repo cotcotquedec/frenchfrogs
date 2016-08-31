@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static $this findOrFail() findOrFail($id)
  * @method static $this firstOrCreate() firstOrCreate(array $array)
  * @method static $this firstOrNew() firstOrNew(array $array)
+ * @method static Builder orderBy() orderBy(string $column, string $direction = 'asc')
+ * @method static Builder where() where($column, $operator = null, $value = null, $boolean = 'and')
  *
  * @package FrenchFrogs\Laravel\Database\Eloquent
  */

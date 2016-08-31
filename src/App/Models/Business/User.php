@@ -91,7 +91,7 @@ class User extends Business
 	 */
     public function getGroups()
     {
-        return \query('user_group_user', ['user_group_id'])->where('user_id', $this->getId())->pluck('user_group_id');
+        return \query('user_group_user', ['user_group_id'])->where('user_id', $this->getId())->pluck('user_group_id')->toArray();
     }
 
 	/**
