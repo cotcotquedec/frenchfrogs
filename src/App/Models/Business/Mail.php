@@ -41,9 +41,6 @@ class Mail extends Business
         /**@var  \FrenchFrogs\Models\Db\Mail $model */
         $model = $this->getModel();
 
-
-        \Log::debug('BEGIN');
-
         // on met le pail en cours de traietemnt
         $model->mail_status_id = \Ref::MAIL_STATUS_PROCESSING;
         $model->processing_at = Carbon::now();
@@ -57,20 +54,21 @@ class Mail extends Business
 
             $model->mail_status_id = \Ref::MAIL_STATUS_SENT;
             $model->sent_at = Carbon::now();
-            \Log::debug('success');
 
+            ld('Email OK : ' . $model->class . ' ' . $model->params);
         } catch (\Exception $e) {
-
-            \Log::error('Erreur sur l\'envoie du mail ' . $e->getMessage());
             $model->mail_status_id = \Ref::MAIL_STATUS_ERROR;
             $model->error_at = Carbon::now();
             $model->message = $e->getMessage();
+
+            le('Email ERROR : ' . $e->getMessage() .  ' : ' . $model->class . ' ' . $model->params);
         }
 
         $model->save();
 
         return $this;
     }
+
 
     /**
      * Envoie le prochain email

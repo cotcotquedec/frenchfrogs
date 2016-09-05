@@ -32,8 +32,7 @@ class MailSendCommand extends Command
      */
     public function handle()
     {
-        Mail::next();
-//        while(Mail::next() === true) {}
+        while(Mail::next() === true) {}
     }
 
 }

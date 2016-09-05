@@ -588,7 +588,6 @@ if (!function_exists('exc')) {
  */
 function user($info = null) {
 
-
     // if $info is not null we send the wanted info
     if (!is_null($info)) {
         $user = \auth()->user()->$info;
