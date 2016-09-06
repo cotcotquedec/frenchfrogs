@@ -345,7 +345,7 @@ class Javascript extends Container
             $result = '<!--' . PHP_EOL . 'Error on css generation' . PHP_EOL;
 
             // stack trace if in debug mode
-            if (debug()) {
+            if (!is_debug()) {
                 $result .= $e->getMessage() . ' : ' . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
             }
 
