@@ -117,6 +117,11 @@ class Inline extends Renderer\Renderer {
             $label = '<label for="' . $element->getName() . '" class="col-md-3 control-label">' . $element->getLabel() . ($element->hasRule('required') ? ' *' : '') . '</label>';
         }
 
+        // REQUIRED
+        if ($element->hasRule('required')) {
+            $element->addAttribute('required', 'required');
+        }
+
         // INPUT
         $element->addClass(Style::FORM_ELEMENT_CONTROL);
         $element->addAttribute('id', $element->getName());

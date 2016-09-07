@@ -93,8 +93,8 @@ $.fn.extend({
             // FORM REMOTE
             jQuery(this).find('.form-remote').ajaxForm({
 
-                beforeSubmit: function () {
-                    jQuery(this).find("input[type='submit']")
+                beforeSubmit: function (a,f) {
+                    jQuery(f).find("input[type='submit']")
                         .attr("disabled", "disabled")
                         .attr("value", "En cours ...");
                 },
@@ -110,8 +110,8 @@ $.fn.extend({
             // FORM CALLBACK
             jQuery(this).find('.form-callback').ajaxForm({
 
-                beforeSubmit: function () {
-                    jQuery(this).find("input[type='submit']")
+                beforeSubmit: function (a,f) {
+                    jQuery(f).find("input[type='submit']")
                         .attr("disabled", "disabled")
                         .attr("value", "En cours ...");
                 },
