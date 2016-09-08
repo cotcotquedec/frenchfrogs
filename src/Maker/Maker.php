@@ -2,6 +2,7 @@
 
 use BetterReflection\Reflection\ReflectionClass;
 use FrenchFrogs\Core\Renderer;
+use FrenchFrogs\Ruler\Ruler\Ruler;
 
 class Maker
 {
@@ -140,6 +141,17 @@ class Maker
     public function getMethods()
     {
         return $this->methods;
+    }
+
+    /**
+     * Get method from name
+     *
+     * @param $method
+     * @return Method
+     */
+    public function getMethod($method)
+    {
+        return $this->methods[$method];
     }
 
     /**
@@ -528,6 +540,34 @@ class Maker
         return $this;
     }
 
+    /**
+     * Renvcoie le nom de la class depuis un fichier
+     *
+     * @param $file
+     * @return string
+     */
+    static function findClass($file)
+    {
+
+        // recuperation contenu du fichier
+        $content = file_get_contents($file);
+
+        // initialisation
+        $class = '\\';
+
+        // identification du namespace
+        if (preg_match('#namespace\s+(?<namespace>[^\s^;]+)#', $content, $match)) {
+            $class .= trim($match['namespace']) . '\\';
+        }
+
+        // identification de la classe
+        if (preg_match('#class\s+(?<class>[^\s^\{]+)#', $content, $match)) {
+            $class .= $match['class'];
+        }
+
+        return $class;
+    }
+
 
     /**
      * Recuperation des classes dans un repertoire
@@ -560,24 +600,7 @@ class Maker
                     $classes[] = $class;
                 }
             } else {
-
-                // recuperation contenu du fichier
-                $content = file_get_contents($path);
-
-                // initialisation
-                $class = '\\';
-
-                // identification du namespace
-                if (preg_match('#namespace\s+(?<namespace>[^\s^;]+)#', $content, $match)) {
-                    $class .= trim($match['namespace']) . '\\';
-                }
-
-                // identification de la classe
-                if (preg_match('#class\s+(?<class>[^\s^\{]+)#', $content, $match)) {
-                    $class .= $match['class'];
-                }
-
-                $classes[] = $class;
+                $classes[] = static::findClass($path);
             }
         }
 
@@ -612,5 +635,68 @@ class Maker
         }
 
         return $controllers;
+    }
+
+
+    /**
+     * Find permission constant
+     *
+     * @return array
+     */
+    public function getPermissionsConstants()
+    {
+        $permissions = [];
+
+        // ANALYSE DES CONSTANTES
+        foreach ($this->getConstants() as $name => $value) {
+            $match = [];
+            if (preg_match('#^PERMISSION_(?<permission>.+)#', $name, $match)) {
+                if (preg_match('#GROUP_#', $match['permission'])) {
+                    continue;
+                }
+
+                $permissions[] = $name;
+            }
+        }
+
+        return $permissions;
+    }
+
+    /**
+     * Find PErmission groups constant
+     *
+     */
+    public function getPermissionsGroupsConstants()
+    {
+
+        // ANALYSE DES CONSTANTES
+        $groups = [];
+        foreach ($this->getConstants() as $name => $value) {
+            if (preg_match('#^PERMISSION_GROUP_.+#', $name)) {
+                $groups[$name] = $value;
+            }
+        }
+
+        return $groups;
+    }
+
+
+    /**
+     * Get interface constants
+     *
+     * @return array
+     */
+    public function getInterfacesConstants()
+    {
+        $interfaces = [];
+        $rulerClass = $this->getClass()->getName();
+        $interfaces['INTERFACE_DEFAULT'] = $rulerClass::INTERFACE_DEFAULT;
+        foreach ($this->getConstants() as $name => $value) {
+            if (preg_match('#^INTERFACE_.+#', $name) && $name != 'INTERFACE_DEFAULT') {
+                $interfaces[$name] = $value;
+            }
+        }
+
+        return $interfaces;
     }
 }

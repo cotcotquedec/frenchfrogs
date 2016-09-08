@@ -144,16 +144,16 @@ class Method
      * @param $content
      * @return $this
      */
-    public function appendBody($content)
+    public function appendBody($content, $endline = PHP_EOL)
     {
-        $this->body .= $content;
+        $this->body .= $content . PHP_EOL;
         return $this;
     }
 
     /**
      * Getter for $body
      *
-     * @return Body
+     * @return string
      */
     public function getBody()
     {

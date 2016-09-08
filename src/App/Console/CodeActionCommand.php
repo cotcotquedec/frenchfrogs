@@ -6,14 +6,48 @@ use FrenchFrogs\Maker\Parameter;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
+use Models\Acl;
 
 class CodeActionCommand extends Command
 {
 
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'code:action
+                             {method : Méthode pour l\'action (post, get, etc...)}
+                             {name : Nom de l\action}
+                             {controller? : Nom du controller en minuscule}
+                             {--acl= : Permission pour l\'accès}
+                             {--params= : Paramètre pour l\'action}
+                             {--template=default : Template utilisé pour le body de la méthode}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = "Création d'une action pour le controller";
+
+
+    /**
+     *
+     */
     const CHOICE_NEW = ' > Nouveau';
 
+    /**
+     *
+     *
+     */
     const CHOICE_NO_MORE = '> Fini';
 
+    /**
+     *
+     *
+     *
+     */
     const CHOISE_NULL = 'null';
 
 
@@ -154,35 +188,6 @@ class CodeActionCommand extends Command
     }
 
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'code:action
-                             {method : Méthode pour l\'action (post, get, etc...)}
-                             {name : Nom de l\action}
-                             {controller? : Nom du controller en minuscule}
-                             {--acl= : Permission pour l\'accès}
-                             {--params= : Paramètre pour l\'action}
-                             {--template=default : Template utilisé pour le body de la méthode}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = "Création d'une action pour le controller";
-
-
-    /**
-     * Params
-     *
-     * @var
-     */
-    protected $params;
-
-
-    /**
      * Generation du body pour le template "default"
      *
      * @return string
@@ -234,7 +239,7 @@ class CodeActionCommand extends Command
             array_unshift($controllers, static::CHOICE_NEW);
 
             // question
-            $controller = $this->choice('Dans quel controller voulez vous créer cette action?', $controllers);
+            $controller = $this->choice('Dans quel controller voulez vous créer cette action?', $controllers, 0);
 
             // Création d'un nouveau controller
             if ($controller == static::CHOICE_NEW) {
@@ -315,27 +320,26 @@ class CodeActionCommand extends Command
     {
         $body = '';
 
-        $permission = null;
-        if($this->confirm('Faut il une permission pour acceder l\'action?')) {
+        $permission = false;
+        if($this->confirm('Faut il une permission pour acceder l\'action?', true)) {
 
-            // recuperation des ACL
-            $rulerClass = $this->ask('Quelle est la classe de gestion des Acl?', configurator()->get('ruler.class'));
-            $ruler = Maker::load($rulerClass);
+            do {
+                // recuperation des ACL
+                $rulerClass = $this->ask('Quelle est la classe de gestion des Acl?', configurator()->get('ruler.class'));
+                $ruler = Maker::load($rulerClass);
 
-            // ANALYSE DES CONSTANTES
-            $permissions = [];
-            foreach ($ruler->getConstants() as $name => $value) {
-                $match = [];
-                if (preg_match('#^PERMISSION_(?<permission>.+)#', $name, $match)) {
-                    if (preg_match('#GROUP_#', $match['permission'])) {
-                        continue;
-                    }
+                // ANALYSE DES CONSTANTES
+                $permissions = $ruler->getPermissionsConstants();
+                array_unshift($permissions, static::CHOICE_NEW);
+                $permission = $this->choice('Permissions?', $permissions, 0);
 
-                    $permissions[] = $name;
+                // Cas d'une nouvelle persmission
+                if ($permission == static::CHOICE_NEW) {
+                    $this->call('code:permission');
+                    $permission = false;
                 }
-            }
 
-            $permission = $this->choice('Permissions?', $permissions);
+            } while(empty($permission));
         }
 
         // VALIDATOR
@@ -348,6 +352,7 @@ class CodeActionCommand extends Command
 
         // RENDER
         if ($permission || $validator) {
+            $this->getController()->addAlias('Acl', Acl::class);
             $body .= '//RULER' . PHP_EOL;
             $body .= sprintf("\\ruler()->check(Acl::%s %s);", $permission, $validator);
             $body .= str_repeat(PHP_EOL, 2);
@@ -366,7 +371,6 @@ class CodeActionCommand extends Command
      */
     public function handle()
     {
-
         // validation declaration
         $validator = \Validator::make(
             [

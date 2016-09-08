@@ -1,6 +1,7 @@
 <?php namespace Frenchfrogs\App\Console;
 
 use FrenchFrogs\Maker\Maker;
+use FrenchFrogs\Models\Acl;
 use Illuminate\Console\Command;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Filesystem\Filesystem;
@@ -8,12 +9,14 @@ use Illuminate\Support\Composer;
 
 class CodePermissionCommand extends Command
 {
+    const CHOICE_NEW = ' > Nouveau';
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'code:permission {permission : id of the permission}';
+    protected $signature = 'code:permission {permission? : id of the permission}';
 
     /**
      * The console command description.
@@ -28,103 +31,248 @@ class CodePermissionCommand extends Command
      */
     protected $permission;
 
+
     /**
-     * Create a new command instance.
+     * Rulker contenant les permissions
      *
-     * @return void
+     * @var Maker
      */
-    public function __construct()
+    protected $ruler;
+
+
+    /**
+     * @var Maker
+     */
+    protected $migration;
+
+    /**
+     * Setter for $migration
+     *
+     * @param Maker $migration
+     * @return $this
+     */
+    public function setMigration(Maker $migration)
     {
-        parent::__construct();
+        $this->migration = $migration;
+        return $this;
+    }
+
+    /**
+     * Getter for $migration
+     *
+     * @return Maker
+     */
+    public function getMigration()
+    {
+        return $this->migration;
+    }
+
+
+    /**
+     * Getter for $ruler
+     *
+     * @return Maker
+     */
+    public function getRuler()
+    {
+        return $this->ruler;
+    }
+
+    /**
+     * Setter for ruler
+     *
+     * @param Maker $ruler
+     * @return $this
+     */
+    public function setRuler(Maker $ruler)
+    {
+        $this->ruler = $ruler;
+        return $this;
+    }
+
+    /**
+     * Getter for $permission
+     *
+     * @return mixed
+     */
+    public function getPermission()
+    {
+        return $this->permission;
+    }
+
+    /**
+     * Setter for $permission
+     *
+     * @param $permission
+     * @return $this
+     */
+    public function setPermission($permission)
+    {
+        $this->permission = $permission;
+        return $this;
+    }
+
+
+    /**
+     *  CReation de la migration
+     *
+     * @param $filesystem
+     * @param $name
+     * @return Maker
+     */
+    public function migration($filesystem, $name)
+    {
+        // Creation de la migration
+        $this->info('Creation de la migration');
+
+
+        $filename = 'create_permission_' . $name . '_' . \uuid('hex');
+        $path = $this->laravel->databasePath() . '/migrations';
+        $filepath = $this->laravel['migration.creator']->create($filename, $path);
+
+        // CLASS
+        $class = Maker::findClass($filepath);
+
+        // On charge la migration
+        require_once $filepath;
+
+        // Cratiuon de la migration
+        $migration = Maker::load($class);
+        $migration->addAlias('Acl', $this->getRuler()->getClass()->getName());
+        $migration->addAlias('Migration', Migration::class);
+        $migration->setParent(Migration::class);
+        $migration->setSummary('Migration pour l\'ajout de la permission "' . $this->getPermission() . '" en base de donnée');
+
+        // METHOD
+        $migration->addMethod('up');
+
+        $this->setMigration($migration);
+
+        return $migration;
+    }
+
+
+    /**
+     * Choix du group
+     *
+     */
+    public function group()
+    {
+        // RULER
+        $ruler = $this->getRuler();
+
+        // GROUP
+        do {
+            $groups = $ruler->getPermissionsGroupsConstants();
+            $values = array_values($groups);
+            array_unshift($values, static::CHOICE_NEW);
+            $group = $this->choice('A quel groupe voulez vous rattacher cette permission?', $values, 0);
+
+            if ($group == static::CHOICE_NEW) {
+                $name = $this->ask('Comment voulez vous nommer le groupe?', $this->getPermission());
+                $group = 'PERMISSION_GROUP_' . strtoupper(str_replace('.', '_', $name));
+                if ($this->confirm('Créer le groupe ' . $group . '?', true)) {
+
+                    // ajout de la constant
+                    $label = $this->ask('Quel est le libélé du groupe?', ucfirst($name));
+                    $ruler->addConstant($group, $name);
+
+                    // ajout de la création du groupe a la migration
+                    $up = $this->getMigration()->getMethod('up');
+                    $up->appendBody(sprintf('Acl::createDatabasePermissionGroup(Acl::%s, \'%s\');', $group, $label));
+                } else {
+                    $group = false;
+                }
+            }
+        } while (empty($group));
+
+
+        $this->warn('Groupe ok : ' . $group);
+
+        return $group;
     }
 
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @param Filesystem $filesystem
+     * @param Composer $composer
      */
     public function handle(Filesystem $filesystem, Composer $composer)
     {
+        // Recupération du paamètre
+        $permission = $this->argument('permission');
 
-        // validation declaration
-        $validator = \Validator::make(
-            ['permission' => $permission = $this->argument('permission')],
-            ['permission' => 'required|not_exists:user_permission,user_permission_id']
-        );
+        //PERMISSION
+        do {
+            if (empty($permission)) {
+                $permission = $this->ask('Quel est le nom de la permission?');
+            }
 
-        // check if argument are valid
-        if ($validator->fails()) {
-            $this->error($validator->getMessageBag()->toJson());
-            return;
-        }
+            // validation declaration
+            $validator = \Validator::make(
+                ['permission' => $permission],
+                ['permission' => 'required|not_exists:user_permission,user_permission_id']
+            );
 
-        $this->info('Nous allons créer ensemble une migration');
+            // check if argument are valid
+            if ($validator->fails()) {
+                $this->error($validator->getMessageBag()->toJson());
+                $permission = false;
+            }
+        } while (empty($permission));
 
+        $this->setPermission($permission);
+
+        // RULER
         $rulerClass = $this->ask('Quelle est la classe de gestion des Acl?', configurator()->get('ruler.class'));
         $ruler = Maker::load($rulerClass);
+        $this->setRuler($ruler);
 
         // NOM
         $nice_permission = str_replace('.', '_', $permission);
         $constant = $this->ask('Nom de la constante?', 'PERMISSION_' . strtoupper($nice_permission));
         $constant = strtoupper($constant);
 
+        // MIGRATION : INIT
+        $migration = $this->migration($filesystem, $nice_permission);
+
         // ANALYSE DES CONSTANTES
-        $groups = $interfaces = [];
-        $interfaces['INTERFACE_DEFAULT'] = $rulerClass::INTERFACE_DEFAULT;
         foreach ($ruler->getConstants() as $name => $value) {
-            if (preg_match('#^PERMISSION_GROUP_.+#', $name)) {
-                $groups[$name] = $value;
-            } else if (preg_match('#^INTERFACE_.+#', $name) && $name != 'INTERFACE_DEFAULT') {
-                $interfaces[$name] = $value;
-            } elseif ($value == $permission) {
+            if ($value == $permission) {
                 // si on remarque que la permission existe deja
-                exc('La permission "'.$permission.'" existe déjà avec le nom : ' .$name);
-            } elseif($name == $constant) {
+                exc('La permission "' . $permission . '" existe déjà avec le nom : ' . $name);
+            } elseif ($name == $constant) {
                 // si on remarque que la permission existe deja
-                exc('Le nom "'.$permission.'" existe déjà avec la permission : ' . $value);
+                exc('Le nom "' . $permission . '" existe déjà avec la permission : ' . $value);
             }
         }
 
-        $interface = $this->choice('A quelle interface voulez vous rattacher cette permission?', array_values($interfaces), 0);
-        $interface = array_search($interface, $interfaces);
-
-        // GROUP
-        $group = $this->choice('A quel groupe voulez vous rattacher cette permission?', array_values($groups));
-        $group = array_search($group, $groups);
-
-        // création de la constante
-        $ruler->addConstant($constant, $permission);
-        $ruler->write();
-
+        // LABEL
         $label = strrpos($permission, '.');
         $label = $label ? substr($permission, $label + 1) : $permission;
         $label = $this->ask('Quelle est le libellé de cette Permission?', ucfirst($label));
 
-        // Creation de la migration
-        $this->info('Creation de la migration');
-        $filename = 'create_permission_' . $nice_permission . '_' . \uuid('hex') ;
-        $filepath = storage_path('tmp/') . $filename;
-        $filesystem->delete($filepath);
+        // création de la constante
+        $ruler->addConstant($constant, $permission);
 
-        // FICHIER DE MIGRATION
-        $path = $this->laravel->databasePath().'/migrations';
-        $fullPath = $this->laravel['migration.creator']->create($filename, $path);
+        // INTERFACE
+        $interfaces = $ruler->getInterfacesConstants();
+        $interface = $this->choice('A quelle interface voulez vous rattacher cette permission?', array_values($interfaces), 0);
+        $interface = array_search($interface, $interfaces);
 
-        // CLASS
-        $maker = Maker::init(camel_case($filename), $filepath);
-        $maker->addAlias('Acl', $ruler->getClass()->getName());
-        $maker->addAlias('Migration', Migration::class);
-        $maker->setParent(Migration::class);
-        $maker->setSummary('Migration pour l\'ajout de la permission "'.$permission.'" en base de donnée');
+        // GROUPE
+        $group = $this->group();
 
-        // METHOD
-        $method = $maker->addMethod('up');
-        $body = sprintf('Acl::createDatabasePermission(Acl::%s, Acl::%s, Acl::%s, \'%s\');', $constant, $group, $interface, $label);
-        $method->setBody($body);
+        // MAJ RULER
+        $ruler->write();
 
-        $filesystem->put($fullPath, '<?php ' . $maker->render());
-        $filesystem->delete($filepath);
-        $this->info('Migration created successfully!');
+        // Inscirption de la migration
+        $up = $migration->getMethod('up');
+        $up->appendBody(sprintf('Acl::createDatabasePermission(Acl::%s, Acl::%s, Acl::%s, \'%s\');', $constant, $group, $interface, $label));
+        $migration->write();
+
+        // RELOAD COMPOSER
         $composer->dumpAutoloads();
 
         $this->info('Have fun!!');
