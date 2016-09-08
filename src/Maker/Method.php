@@ -139,6 +139,18 @@ class Method
     }
 
     /**
+     * Ajout de contenu au body
+     *
+     * @param $content
+     * @return $this
+     */
+    public function appendBody($content)
+    {
+        $this->body .= $content;
+        return $this;
+    }
+
+    /**
      * Getter for $body
      *
      * @return Body

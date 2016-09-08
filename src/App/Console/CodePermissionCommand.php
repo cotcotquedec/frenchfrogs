@@ -6,14 +6,14 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
 
-class MakePermissionCommand extends Command
+class CodePermissionCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'make:permission {permission : id of the permission}';
+    protected $signature = 'code:permission {permission : id of the permission}';
 
     /**
      * The console command description.
@@ -59,7 +59,6 @@ class MakePermissionCommand extends Command
         }
 
         $this->info('Nous allons créer ensemble une migration');
-
 
         $rulerClass = $this->ask('Quelle est la classe de gestion des Acl?', configurator()->get('ruler.class'));
         $ruler = Maker::load($rulerClass);

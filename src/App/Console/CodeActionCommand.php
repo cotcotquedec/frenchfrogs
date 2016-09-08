@@ -1,11 +1,158 @@
 <?php namespace Frenchfrogs\App\Console;
 
+use FrenchFrogs\Maker\Maker;
+use FrenchFrogs\Maker\Method;
+use FrenchFrogs\Maker\Parameter;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
 
 class CodeActionCommand extends Command
 {
+
+    const CHOICE_NEW = ' > Nouveau';
+
+    const CHOICE_NO_MORE = '> Fini';
+
+    const CHOISE_NULL = 'null';
+
+
+    protected $templates = [
+        '_basic' => 'Basique',
+        '_form' => 'Formulaire',
+        '_delete' => 'Suppression'
+    ];
+
+    /**
+     *
+     * @var Method
+     */
+    protected $method;
+
+
+    /**
+     * Class de gestion du controller
+     *
+     * @var Maker
+     */
+    protected $controller;
+
+    /**
+     *
+     *
+     * @var array
+     */
+    protected $validators = [];
+
+    /**
+     *
+     *
+     * @var array
+     */
+    protected $filters = [];
+
+    /**
+     * Getter for $validators
+     *
+     * @return array
+     */
+    public function getValidators()
+    {
+        return $this->validators;
+    }
+
+    /**
+     * Ajout d'un validateur
+     *
+     * @param $name
+     * @param $validator
+     * @return $this
+     */
+    public function addValidator($name, $validator)
+    {
+        $this->validators[$name] = $validator;
+        return $this;
+    }
+
+    /**
+     * Reurn TRUE si il y a des validateurs
+     *
+     * @return bool
+     */
+    public function hasValidator()
+    {
+        return !empty($this->validators);
+    }
+
+    /**
+     * GEtter for $filters
+     *
+     * @return array
+     */
+    public function getFilters()
+    {
+        return $this->filters;
+    }
+
+
+    /**
+     * Ajout d'un filtre
+     *
+     * @param $name
+     * @param $filter
+     * @return $this
+     */
+    public function addFilter($name, $filter)
+    {
+        $this->filters[$name] = $filter;
+        return $this;
+    }
+
+
+    /**
+     * Getter for $method
+     *
+     * @return Method
+     */
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
+    /**
+     * Setter for $method
+     *
+     * @param Method $method
+     * @return $this
+     */
+    public function setMethod(Method $method)
+    {
+        $this->method = $method;
+        return $this;
+    }
+
+    /**
+     * Getter for $controller
+     *
+     * @return Maker
+     */
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    /**
+     * Setter for $controller
+     *
+     * @param Maker $controller
+     * @return $this
+     */
+    public function setController(Maker $controller)
+    {
+        $this->controller = $controller;
+        return $this;
+    }
+
     /**
      * The name and signature of the console command.
      *
@@ -36,189 +183,18 @@ class CodeActionCommand extends Command
 
 
     /**
-     * Setter for $params
-     *
-     * @param array $params
-     * @return $this
-     */
-    public function setParams(array $params)
-    {
-        $this->params = $params;
-        return $this;
-    }
-
-    /**
-     * Getter for $params
-     *
-     * @return mixed
-     */
-    public function getParams()
-    {
-        if (!isset($this->params)) {
-            $this->extractParams();
-        }
-
-        return $this->params;
-    }
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-
-    /**
-     * Extract params
-     *
-     * @return $this
-     * @throws \Exception
-     */
-    protected function extractParams()
-    {
-        // Recuperation des paramètres de la commande
-        $p = $this->option('params');
-
-        // INITALISATION
-        $params = [];
-
-        if (!empty($p)) {
-
-            // EXPLODE PARAMS
-            foreach (explode('#', $p) as $param) {
-                $parts = explode(';', $param);
-
-                // paramètres
-                $variable = array_shift($parts);
-
-                $match = [];
-                if (!preg_match('#((?<type>\w+)\|)?(?<name>\w+)(=(?<value>.+))?#', $variable, $match)) {
-                    exc('Impossible de determiner les paramètres : ' . $variable);
-                }
-
-                // recuperation du nom du paramètre
-                $name = $match['name'];
-
-                // initialisation du container
-                $params[$name] = [];
-
-                // TYPE - CLASS
-                if (isset($match['type'])) {
-                    $params[$name]['type'] = $match['type'];
-                }
-
-                // DEFAULT VALUE
-                if (isset($match['value'])) {
-                    $params[$name]['value'] = $match['value'];
-                }
-
-                // VALIDATOR
-                if ($validator = array_shift($parts)) {
-                    if (!empty($validator)) {
-                        $params[$name]['validator'] = $validator;
-                    }
-                }
-
-                // FILTER
-                if ($filter = array_shift($parts)) {
-                    if (!empty($filter)) {
-                        $params[$name]['filter'] = $filter;
-                    }
-                }
-            }
-        }
-
-        $this->setParams($params);
-
-        return $this;
-    }
-
-    /**
-     * Génération des paramètres de la méthode
-     *
-     * @param PhpMethod $method
-     * @return $this
-     */
-    protected function generateParams(PhpMethod $method)
-    {
-        // PARAMS
-        foreach ($this->getParams() as $name => $info) {
-            $param = PhpParameter::create($name);
-
-            if (isset($info['type'])) {
-                $param->setType($info['type']);
-            }
-
-            if (isset($info['value'])) {
-                // Cas de la valeur non obligatoire
-                if ($info['value'] == 'null') {
-                    $info['value'] = null;
-                }
-                $param->setValue($info['value']);
-            }
-            $method->addParameter($param);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * Generate ACL block
-     *
-     */
-    protected function generateAcl()
-    {
-        $body = '';
-
-        $ruler = [];
-        $acl = $this->option('acl') ?: 'null';
-        $ruler[] = $acl;
-
-        // RULER
-        $validator = $filter = [];
-        foreach ($this->getParams() as $name => $info) {
-            $validator[] = sprintf("['%s' => '%s']", $name, $info['validator']);
-            if (!empty($info['filter'])) {
-                $filter[] = sprintf("['%s' => f(\$%s, '%s')]", $name, $name, $info['filter']);
-            } else {
-                $filter[]=  sprintf("['%s' => \$%s]", $name, $name);
-            }
-        }
-
-        // VALIDATOR
-        if (!empty($validator)) {
-            $validator = implode(',',$validator);
-            $filter = implode(',',$filter);
-            $ruler[] = $validator;
-            $ruler[] = $filter;
-        }
-
-        $body .= str_repeat(PHP_EOL, 2);
-
-        // RENDER
-        if ($acl || $validator) {
-            $body .= '//RULER' . PHP_EOL;
-            $body .= sprintf("\\ruler()->check(%s);", PHP_EOL . implode(',' . PHP_EOL, $ruler) . PHP_EOL);
-            $body .= str_repeat(PHP_EOL, 2);
-        }
-
-        return $body;
-    }
-
-
-    /**
      * Generation du body pour le template "default"
      *
      * @return string
      */
-    protected function templateDefault()
+    protected function _basic()
     {
-        return "return basic('__TITLE__', '__CONTENT__');";
+        $this->info('Configuration du template basique');
+
+        $title = $this->ask('Titre?');
+        $content = $this->ask('Content?');
+
+        $this->getMethod()->appendBody(sprintf("%sreturn basic('%s', '%s');", str_repeat(PHP_EOL, 2), $title, $content));
     }
 
     /**
@@ -226,7 +202,7 @@ class CodeActionCommand extends Command
      *
      * @return string
      */
-    protected function templateForm()
+    protected function _form()
     {
         $body = file_get_contents(__DIR__ . '/stubs/actions/form.stub');
         return $body;
@@ -237,11 +213,151 @@ class CodeActionCommand extends Command
      *
      * @return string
      */
-    protected function templateDelete()
+    protected function _delete()
     {
         $body = file_get_contents(__DIR__ . '/stubs/actions/delete.stub');
         return $body;
     }
+
+
+    /**
+     *
+     * @return Maker
+     */
+    protected function controller()
+    {
+        do {
+            // recuperation des controllers
+            $controllers = Maker::findControllers();
+
+            // Ajout du choix de création d'un controller
+            array_unshift($controllers, static::CHOICE_NEW);
+
+            // question
+            $controller = $this->choice('Dans quel controller voulez vous créer cette action?', $controllers);
+
+            // Création d'un nouveau controller
+            if ($controller == static::CHOICE_NEW) {
+                unset($controller);
+                $name = $this->ask('Le nom de votre controller');
+                $this->call('code:controller', ['name' => $name]);
+            }
+        } while(empty($controller));
+
+        // Chemin complet du controller
+        $controller = '\\' . Maker::NAMESPACE_CONTROLLER . $controller;
+
+        // INIT MAKER;
+        $this->setController($controller = Maker::load($controller));
+
+        return $controller;
+    }
+
+
+    /**
+     * Génration des paramètres
+     */
+    protected function params()
+    {
+        do {
+            if ($while = $this->confirm('Voulez-vous ajouter un paramètre?', false)){
+
+                // NOM
+                $param = $this->ask('Quel est le nom du paramètre ($___) ?');
+
+                // MAKER PARAM
+                $param = new Parameter($name = camel_case($param));
+
+                // TYPE
+                if ($this->confirm('A-t-il un Type (classe)?')) {
+                    $type = $this->ask('Quel est le type (classe) du parmètre ' . $name);
+                    $param->setType($type);
+                }
+
+                // DEFAULT
+                if ($this->confirm('A-t-il une valeur par défaut?')) {
+                    $value = $this->ask('Quelle est elle?', static::CHOISE_NULL);
+                    $param->setDefault($value == static::CHOISE_NULL ? null : $value);
+                }
+
+                // VALIDATOR
+                if ($this->confirm('Doit il être validé?')) {
+                    $validator = $this->ask('Saisir la chaine laravel de validation?');
+                    $this->addValidator($name, sprintf("'%s' => '%s'", $name, $validator));
+
+
+                    // FILTER
+                    $filter = $this->ask('Saisir la chaine de filtrage si présente?', static::CHOISE_NULL);
+
+                    if ($filter != static::CHOISE_NULL) {
+                        $filter = sprintf("'%s' => f(\$%s, '%s')", $name, $name, $filter);
+                    } else {
+                        $filter =  sprintf("'%s' => \$%s", $name, $name);
+                    }
+
+                    $this->addFilter($name, $filter);
+                }
+
+                // ajout du paramètre a la méthode
+                $this->getMethod()->addParameter($param);
+                $this->warn('Parmètre ' . $name .  ' Ajouté');
+            }
+        } while($while);
+    }
+
+
+    /**
+     * Génération des acl
+     *
+     * @return $this
+     */
+    protected function acl()
+    {
+        $body = '';
+
+        $permission = null;
+        if($this->confirm('Faut il une permission pour acceder l\'action?')) {
+
+            // recuperation des ACL
+            $rulerClass = $this->ask('Quelle est la classe de gestion des Acl?', configurator()->get('ruler.class'));
+            $ruler = Maker::load($rulerClass);
+
+            // ANALYSE DES CONSTANTES
+            $permissions = [];
+            foreach ($ruler->getConstants() as $name => $value) {
+                $match = [];
+                if (preg_match('#^PERMISSION_(?<permission>.+)#', $name, $match)) {
+                    if (preg_match('#GROUP_#', $match['permission'])) {
+                        continue;
+                    }
+
+                    $permissions[] = $name;
+                }
+            }
+
+            $permission = $this->choice('Permissions?', $permissions);
+        }
+
+        // VALIDATOR
+        $validator = '';
+        if ($this->hasValidator()) {
+            $validator = sprintf(', [%s], [%s]', implode(',', $this->getValidators()), implode(',', $this->getFilters()));
+        }
+
+        $body .= str_repeat(PHP_EOL, 2);
+
+        // RENDER
+        if ($permission || $validator) {
+            $body .= '//RULER' . PHP_EOL;
+            $body .= sprintf("\\ruler()->check(Acl::%s %s);", $permission, $validator);
+            $body .= str_repeat(PHP_EOL, 2);
+        }
+
+        $this->getMethod()->appendBody($body);
+
+        return $this;
+    }
+
 
     /**
      * Execute the console command.
@@ -250,57 +366,60 @@ class CodeActionCommand extends Command
      */
     public function handle()
     {
-        $this->info('Nous allons créer ensemble une action pour un controller');
 
+        // validation declaration
+        $validator = \Validator::make(
+            [
+                'method' => $method = $this->argument('method'),
+                'name' => $name = $this->argument('name')
 
-        dd('Pas prêt, i ll be back');
+            ],
+            [
+                'method' => 'required|in:get,post,delete,any',
+                'name' => 'required'
+            ]
+        );
 
-
-
-        $controller = $this->argument('controller');
-
-        // création de la méthode
-        $method = camel_case($this->argument('method') .  '_' . $this->argument('name'));
-        $method = PhpMethod::create($method);
-
-        // PARAMS
-        $this->generateParams($method);
-
-        // BODY
-        $body = '';
-        $body .= $this->generateAcl();
-
-        // TEMPLATE
-        $template = camel_case('template_' . $this->option('template'));
-        if (!method_exists($this, $template)) {
-            exc('Impossible de trouver le template : ' . $template);
+        // check if argument are valid
+        if ($validator->fails()) {
+            $this->error($validator->getMessageBag()->toJson());
+            return 1;
         }
-        $body .= call_user_func([$this, $template]);
-        $method->setBody($body);
 
-        // DOCKBOCK
-        $dockblock = new Docblock();
-        $dockblock->appendTag(TagFactory::create('name', 'Artisan'));
-        $dockblock->appendTag(TagFactory::create('see', 'php artisan ffmake:action'));
-        $dockblock->appendTag(TagFactory::create('generated', Carbon::now()));
-        $method->setDocblock($dockblock);
+        $this->info('Nous allons créer ensemble une action');
 
         // CONTROLLER
-        $controller = ucfirst(camel_case($controller . '_controller'));
-        $controller  = new \ReflectionClass('App\\Http\\Controllers\\'.$controller);
+        $controller = $this->controller();
 
-        $class = PhpClass::fromReflection($controller)->setMethod($method);
-        $class->setParentClassName('Controller');// fix la gestion des namespaec pour la parent class
+        // METHOD
+        $method = camel_case($method .  '_' . $name);
 
-        // GENERATION
-        $generator = new CodeGenerator();
-        $class = '<?php ' . $generator->generate($class);
+        if ($controller->hasMethod($method)) {
+            if (!$this->confirm('La méthode "'.$method.'" existe déjà, voulez vous l\'écraser?')) {
+                $this->info('A plus tard!!');
+                return 1;
+            }
+        }
 
-        // inscription du code dans la classe
-        file_put_contents($controller->getFileName(), $class);
+        // Création de la méthode
+        $method = $controller->addMethod($method);
+        $description = $this->ask('Description de l\'action');
+        $method->setDescription($description);
+        $this->setMethod($method);
 
-        $this->info('Action generated dans le fichier : ' . $controller->getFileName());
+        // PARAMS
+        $this->params();
+        $this->acl();
+
+        // TEMPLATE
+
+        if ($this->confirm('Souhaitez vous charger un template pour cette action?')) {
+            $template = $this->choice('Quel template voulez vous charger ?', array_values($this->templates));
+            $template = array_search($template, $this->templates);
+            $this->$template();
+        }
+
+        // ecriture dans le fichier
+        $controller->write();
     }
-
-
 }

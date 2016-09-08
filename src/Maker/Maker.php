@@ -8,6 +8,8 @@ class Maker
     use Renderer;
     use Docblock;
 
+    const NAMESPACE_CONTROLLER = 'App\\Http\\Controllers\\';
+
     const NO_VALUE = '__null__';
 
     /**
@@ -20,18 +22,20 @@ class Maker
     /**
      * Properties to add or modify
      *
-     * @var array
+     * @var Property[]
      */
     protected $properties = [];
 
     /**
      * Methods to add or modify
      *
-     * @var array
+     * @var Method[]
      */
     protected $methods = [];
 
     /**
+     * Class principale
+     *
      * @var ReflectionClass
      */
     protected $class;
@@ -136,6 +140,17 @@ class Maker
     public function getMethods()
     {
         return $this->methods;
+    }
+
+    /**
+     * Return TRUE si la method exist
+     *
+     * @param $method
+     * @return bool
+     */
+    public function hasMethod($method)
+    {
+        return !empty($this->methods[$method]);
     }
 
     /**
@@ -511,5 +526,91 @@ class Maker
     {
         file_put_contents($this->getFilename(), '<?php ' . $this->render(), LOCK_EX);
         return $this;
+    }
+
+
+    /**
+     * Recuperation des classes dans un repertoire
+     *
+     * @param $root
+     * @return array
+     */
+    static function findClasses($root)
+    {
+        // test si repertoire
+        if (!is_dir($root)) {
+            exc(sprintf('Le repertoire "%s" n\'existe pas', $root));
+        }
+
+        $classes = [];
+
+        foreach (scandir($root) as $name) {
+
+            // cas des repertoires de navigation
+            if (in_array($name, ['.', '..'])) {
+                continue;
+            }
+
+            // construction du chemin complet
+            $path =  $root . DIRECTORY_SEPARATOR . $name;
+
+            // cas des repertoires
+            if (is_dir($path)) {
+                foreach (static::findClasses($path) as $class) {
+                    $classes[] = $class;
+                }
+            } else {
+
+                // recuperation contenu du fichier
+                $content = file_get_contents($path);
+
+                // initialisation
+                $class = '\\';
+
+                // identification du namespace
+                if (preg_match('#namespace\s+(?<namespace>[^\s^;]+)#', $content, $match)) {
+                    $class .= trim($match['namespace']) . '\\';
+                }
+
+                // identification de la classe
+                if (preg_match('#class\s+(?<class>[^\s^\{]+)#', $content, $match)) {
+                    $class .= $match['class'];
+                }
+
+                $classes[] = $class;
+            }
+        }
+
+        return $classes;
+    }
+
+    /**
+     * Recuperation des controllers de l'application
+     *
+     * @return array
+     */
+    static function findControllers()
+    {
+        $controllers = [];
+
+        // recuperation des classes
+        $classes = static::findClasses(app_path('Http/Controllers'));
+
+        foreach ($classes as $class) {
+            $reflection = ReflectionClass::createFromName($class);
+
+            if ($class{0} == '\\') {
+                $class = substr($class, 1);
+            }
+
+            // recuperation des controllers
+            if ($reflection->getParentClass()->getName() != static::NAMESPACE_CONTROLLER . 'Controller') {
+                continue;
+            }
+
+            $controllers[] = str_replace(static::NAMESPACE_CONTROLLER, '', $class);
+        }
+
+        return $controllers;
     }
 }

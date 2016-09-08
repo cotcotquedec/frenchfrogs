@@ -30,6 +30,7 @@ class CodeControllerCommand extends Command
     {
         // nom du controller
         $name = $this->argument('name');
+        $name = str_replace('.', '\\_', $name);
 
         // creation du controller
         $class = ucfirst(camel_case($name . '_controller'));
