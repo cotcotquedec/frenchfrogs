@@ -294,7 +294,7 @@ class Acl extends Ruler
      *
      * @param $index
      */
-    static function removeDatabatasePermissionGroup($index)
+    static function removeDatabasePermissionGroup($index)
     {
         Db\User\PermissionGroup::find($index)->delete();
     }
