@@ -19,6 +19,27 @@ if (!function_exists('html')) {
             'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'
         ];
 
+        // TAG
+        $string = $tag;
+        if (!preg_match('#^(?<tag>[^\.^\#]+)(?<string>.*)#',$string, $match)) {
+            exc('Impossible d\'isoler le tag dans : ' . $string);
+        }
+
+        $tag = $match['tag'];
+        $string = $match['string'];
+
+        // ID
+        if (preg_match('#\#(?<id>[^\.]+)#', $string, $match)) {
+            $attributes['id'] = $match['id'];
+            $string = str_replace($match[0], '', $string);
+        }
+
+        // CLASS
+        if ( preg_match_all('#[\.](?<class>[^\.]+)#', $string, $match)) {
+            empty($attributes['class']) ? $attributes['class'] = '' : $attributes['class'] .= '';
+            $attributes['class'] .= implode(' ', $match['class']);
+        }
+
         // Attributes
         foreach ($attributes as $key => &$value) {
             $value = sprintf('%s="%s"', $key, str_replace('"', '&quot;', $value)) . ' ';
@@ -238,12 +259,10 @@ function action_url($controller, $action = 'getIndex', $params = [], $query = []
  *
  * @return \FrenchFrogs\Models\Acl
  */
-function ruler()
+function ruler($namespace = null)
 {
     // retrieve the good class
-    $class = configurator()->get('ruler.class', FrenchFrogs\Models\Acl::class);
-
-    return $class::getInstance();
+    return configurator($namespace)->build('ruler.class', FrenchFrogs\Models\Acl::class);
 }
 
 /**

@@ -225,7 +225,8 @@ class CodePermissionCommand extends Command
         $this->setPermission($permission);
 
         // RULER
-        $rulerClass = $this->ask('Quelle est la classe de gestion des Acl?', configurator()->get('ruler.class'));
+        $rulers = Maker::findClasses(app_path('Models/Acl'));
+        $rulerClass = $this->choice('Quelle est la classe de gestion des Acl?', $rulers, array_search('\\' . configurator()->get('ruler.class'), $rulers));
         $ruler = Maker::load($rulerClass);
         $this->setRuler($ruler);
 

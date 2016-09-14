@@ -70,6 +70,7 @@ class Acl extends Ruler
      */
     public function getNavigations()
     {
+
         $interface = static::getInterface();
 
         // Navigation
