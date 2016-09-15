@@ -23,7 +23,7 @@ class CodePermissionCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Ajoute une permission';
 
 
     /**
