@@ -16,7 +16,6 @@ class MediaController extends Controller
      */
     public function show($id)
     {
-
         try {
             $media = Business\Media::get($id);
             $attachment = $media->getModel()->attachment()->first();
@@ -27,9 +26,7 @@ class MediaController extends Controller
         return response($attachment->content, 200)
             ->header('Content-Type', $attachment->mime)
             ->header('Content-Length', $attachment->size);
-
     }
-
 
     /**
      * Force download the file

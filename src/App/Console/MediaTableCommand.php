@@ -1,26 +1,24 @@
-<?php
-
-namespace Frenchfrogs\App\Console;
+<?php namespace Frenchfrogs\App\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
 
-class MailTableCommand extends Command
+class MediaTableCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'mail:table';
+    protected $signature = 'media:table';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Création du fichier de migration pour la gestion des emails';
+    protected $description = 'Création du fichier de migration pour la gestion des medias';
 
     /**
      * The filesystem instance.
@@ -53,8 +51,8 @@ class MailTableCommand extends Command
     public function fire()
     {
         $fullPath = $this->createTable();
-        $this->files->put($fullPath, $this->files->get(__DIR__ . '/stubs/mail.stub'));
-        $this->info('Migration created successfully!');
+        $this->files->put($fullPath, $this->files->get(__DIR__.'/stubs/tables/media.stub'));
+        $this->info('Migration created successfully! : ' . $fullPath);
         $this->composer->dumpAutoloads();
     }
 
@@ -65,7 +63,7 @@ class MailTableCommand extends Command
      */
     protected function createTable()
     {
-        $name = 'create_mail_table';
+        $name = 'create_media_table';
         $path = $this->laravel->databasePath().'/migrations';
         return $this->laravel['migration.creator']->create($name, $path);
     }

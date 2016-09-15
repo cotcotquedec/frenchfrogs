@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Mail extends Model
 {
     protected $primaryKey = 'mail_uuid';
-    public $uuid = true;
+    public $primaryUuid = true;
     protected $table = 'mail';
 
     /**

@@ -6,7 +6,7 @@ class GroupUser extends Model
 {
     protected $primaryKey = 'user_group_user_id';
     public $timestamps = false;
-    public $uuid = true;
+    public $primaryUuid = true;
     protected $table = 'user_group_user';
 
 }

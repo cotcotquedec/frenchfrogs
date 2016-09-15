@@ -7,5 +7,5 @@ class PermissionUser extends Model
     protected $primaryKey = 'user_permission_user_id';
     protected $table = 'user_permission_user';
     public $timestamps = false;
-    public $uuid = true;
+    public $primaryUuid = true;
 }

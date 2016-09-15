@@ -125,11 +125,6 @@ abstract class Business
         /** @var \Illuminate\Database\Eloquent\Model $model */
         $model = new $class;
 
-        // set primarye key
-        if(static::isUuid() && empty($data[$model->getKeyName()])) {
-            $data[$model->getKeyName()] = uuid();
-        }
-
         $model = $class::create($data);
 
         return static::get($model->getKey());

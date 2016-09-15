@@ -1,6 +1,7 @@
 <?php namespace FrenchFrogs\Models\Business;
 
 use FrenchFrogs\Models\Db;
+use Illuminate\Http\UploadedFile;
 
 
 class Media extends \FrenchFrogs\Business\Business
@@ -14,11 +15,10 @@ class Media extends \FrenchFrogs\Business\Business
     static public function create(array $data)
     {
         list($name, $type, $mime, $content) = $data;
-        $media = parent::create(['media_type_id' => $type, 'hash_md5' => md5($content)]);
-        $media->getModel()->attachment()->create(['media_id' => $media->getId(), 'name' => $name, 'content' => $content, 'size' => strlen($content), 'mime' => $mime]);
+        $media = parent::create(['media_type_rid' => $type, 'hash_md5' => md5($content)]);
+        $media->getModel()->attachment()->create(['uuid' => $media->getId(), 'name' => $name, 'content' => $content, 'size' => strlen($content), 'mime' => $mime]);
         return $media;
     }
-
 
     /**
      * update file

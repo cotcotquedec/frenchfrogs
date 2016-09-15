@@ -6,12 +6,11 @@ class Media extends Model
 {
 
     protected $table = 'media';
-    protected $primaryKey = 'media_id';
-    public $uuid = true;
-    protected $fillable = ['media_type_id', 'hash_md5'];
+    protected $primaryKey = 'uuid';
+    public $primaryUuid = true;
 
     public function attachment()
     {
-        return $this->hasOne(Attachment::class, 'media_id', 'media_id');
+        return $this->hasOne(Attachment::class, 'uuid', 'uuid');
     }
 }

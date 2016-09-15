@@ -30,7 +30,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
      *
      * @var bool
      */
-    public $uuid = false;
+    public $primaryUuid = false;
 
     /**
      * Insert the given attributes and set the ID on the model.
@@ -44,7 +44,8 @@ class Model extends \Illuminate\Database\Eloquent\Model
         $keyName = $this->getKeyName();
 
         // uuid management
-        if ($this->uuid) {
+        if ($this->primaryUuid) {
+
             $id = uuid();
             $attributes[$keyName] = $id;
             $query->insert($attributes);
@@ -65,7 +66,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
      */
     public function getCasts()
     {
-        if ($this->incrementing && !$this->uuid){
+        if ($this->incrementing && !$this->primaryUuid){
             return array_merge([
                 $this->getKeyName() => 'int',
             ], $this->casts);

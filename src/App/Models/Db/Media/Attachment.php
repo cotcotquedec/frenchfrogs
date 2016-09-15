@@ -5,9 +5,8 @@ use FrenchFrogs\Laravel\Database\Eloquent\Model;
 
 class Attachment extends Model
 {
-
     protected $table = 'media_attachment';
-    protected $primaryKey = 'media_id';
+    protected $primaryKey = 'uuid';
     public $incrementing = false;
-    protected $fillable = ['media_id', 'name', 'content', 'size', 'mime'];
+    public $primaryUuid = true;
 }

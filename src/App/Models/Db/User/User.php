@@ -8,7 +8,7 @@ class User extends Model  implements \Illuminate\Contracts\Auth\Authenticatable 
     use Authenticatable;
     use SoftDeletes;
 
-    public $uuid = true;
+    public $primaryUuid = true;
     protected $primaryKey  = 'user_id';
     protected $table = 'user';
     protected $hidden = ['password', 'remember_token'];

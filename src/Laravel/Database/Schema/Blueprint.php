@@ -36,7 +36,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
      * @param int $size
      * @return mixed
      */
-    public function stringId($column = 'id', $size = 32, $primary = true)
+    public function stringId($column = 'sid', $size = 32, $primary = true)
     {
         $column = $this->string($column, $size);
 

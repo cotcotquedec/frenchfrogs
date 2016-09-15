@@ -7,7 +7,7 @@ class Log extends Model {
 
     protected $primaryKey = 'schedule_log_id';
     protected $table = 'schedule_log';
-    public $uuid = true;
+    public $primaryUuid = true;
 
 
     /**
