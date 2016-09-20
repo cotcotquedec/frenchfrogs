@@ -2,7 +2,6 @@
 
 use BetterReflection\Reflection\ReflectionClass;
 use FrenchFrogs\Core\Renderer;
-use FrenchFrogs\Ruler\Ruler\Ruler;
 use Illuminate\Filesystem\Filesystem;
 
 class Maker
@@ -492,6 +491,17 @@ class Maker
             $class = configurator()->get('maker.renderer.class');
             $this->setRenderer(new $class);
         }
+    }
+
+    /**
+     * CReate a classe from a shortname
+     *
+     * @param $shortname
+     * @return Maker
+     */
+    static public function initFromShortName($shortname)
+    {
+        return static::init(static::formatClassName($shortname));
     }
 
 

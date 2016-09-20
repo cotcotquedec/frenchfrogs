@@ -1,13 +1,17 @@
 <?php namespace FrenchFrogs\App\Console;
 
 use FrenchFrogs\Maker\Maker;
-use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Mail\Mailable;
 use Illuminate\Support\Composer;
 
 
 class CodeMailCommand extends CodeCommand
 {
+
+    protected $classNamespace = 'app.mail.';
+
+    protected $viewPath = 'resources/views/';
 
     /**
      * The name and signature of the console command.
@@ -31,24 +35,74 @@ class CodeMailCommand extends CodeCommand
      */
     public function handle(Filesystem $filesystem, Composer $composer)
     {
-
         // nom du controller
         $name = $this->argument('name');
-
 
         //PERMISSION
         do {
             if (empty($name)) {
-                $name = $this->ask('Quel est le nom de la class?');
+                $name = $this->ask('Quel est le nom de la class? (sans le app.name)');
             }
         } while (empty($name));
 
-        $class = Maker::init(Maker::formatClassName('app.mail.' . $name));
+        // creation de la class
+        $class = Maker::initFromShortName($this->classNamespace . $name);
+        $class->addAlias('Mailable', Mailable::class);
+        $class->setParent(Mailable::class);
+        $class->addMethod('build');
+
+        // PARAMS
+        if ($this->confirm('cette email a t il des paramètres?', true)) {
+
+            // constructeur
+            $method = $class->addMethod('__construct');
+
+            do {
+                $param = $this->ask('Quel est le nom de du paramètre àjouter ?', static::CHOICE_NO_MORE);
+
+                if ($param != static::CHOICE_NO_MORE) {
+                    $method->addParameter($param);
+                    $class->addProperty($param)->enablePublic();
+                    $method->appendBody(sprintf('$this->%1$s = $%1$s;', $param));
+                }
+            } while($param != static::CHOICE_NO_MORE);
+        }
+
+        // TEXT
+        if ($this->confirm('Dois-je créer une version text du mail?', true)) {
+
+            $text = 'emails.' . $name . '_text';
+            $text = $this->ask('Quel est le nom de la vue ?', $text);
+
+            // creation du fichier
+            $textFile = app_path('../' . $this->viewPath) .  str_replace('.', DIRECTORY_SEPARATOR, $text) . '.blade.php';
+            $this->makeDirectory(dirname($textFile));
+            $filesystem->put($textFile, '@todo');
+
+            // ajout de la propriété
+            $class->addProperty('textView', $text)->enableProtected();
+        }
 
 
-            dd($class);
+        // HTML
+        if ($this->confirm('Dois-je créer une version html du mail?', true)) {
 
-        $maker = Maker::init($class, app_path('/Mail'));
+            $text = 'emails.' . $name;
+            $text = $this->ask('Quel est le nom de la vue ?', $text);
+
+            // creation du fichier
+            $textFile = app_path('../' . $this->viewPath) .  str_replace('.', DIRECTORY_SEPARATOR, $text) . '.blade.php';
+            $this->makeDirectory(dirname($textFile));
+            $filesystem->put($textFile, '@todo');
+
+            // ajout de la propriété
+            $class->addProperty('view', $text)->enableProtected();
+        }
+
+        // SUBJECT
+
+
+        $class->write();
 
         dd($class);
 
