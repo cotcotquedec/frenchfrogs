@@ -2,7 +2,7 @@
 
 use FrenchFrogs\Laravel\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use FrenchFrogs\Models\Reference;
+use FrenchFrogs\App\Models\Reference;
 
 class CreateMailTable extends Migration
 {

@@ -1,7 +1,7 @@
-<?php namespace FrenchFrogs\Models\Business;
+<?php namespace FrenchFrogs\App\Models\Business;
 
-use FrenchFrogs\Models\Acl;
-use FrenchFrogs\Models\Db;
+use FrenchFrogs\App\Models\Acl;
+use FrenchFrogs\App\Models\Db;
 use FrenchFrogs\Business\Business;
 
 
@@ -9,7 +9,7 @@ use FrenchFrogs\Business\Business;
  * Class User
  *
  *
- * @package FrenchFrogs\Models\Business
+ * @package FrenchFrogs\App\Models\Business
  */
 class User extends Business
 {

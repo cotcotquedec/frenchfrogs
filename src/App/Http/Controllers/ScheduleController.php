@@ -1,9 +1,9 @@
 <?php namespace FrenchFrogs\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use FrenchFrogs\Models\Db;
+use FrenchFrogs\App\Models\Db;
 use Models\Business\User;
-use FrenchFrogs\Models\Db\Schedule\Schedule;
+use FrenchFrogs\App\Models\Db\Schedule\Schedule;
 
 trait ScheduleController
 {

@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Models\Db\Schedule;
+<?php namespace FrenchFrogs\App\Models\Db\Schedule;
 
 use Carbon\Carbon;
 use FrenchFrogs\Laravel\Database\Eloquent\Model;

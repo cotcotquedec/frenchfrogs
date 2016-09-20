@@ -1,10 +1,10 @@
-<?php namespace FrenchFrogs\Models;
+<?php namespace FrenchFrogs\App\Models;
 
 use BetterReflection\Reflection\ReflectionClass;
 
 /**
  * Class Route
- * @package FrenchFrogs\Models
+ * @package FrenchFrogs\App\Models
  */
 class Route {
 

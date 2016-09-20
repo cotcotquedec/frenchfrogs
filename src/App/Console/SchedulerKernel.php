@@ -1,8 +1,8 @@
 <?php namespace FrenchFrogs\App\Console;
 
 use Illuminate\Console\Scheduling\Schedule as SchedulingSchedule;
-use FrenchFrogs\Models\Db\Schedule\Schedule;
-use FrenchFrogs\Models\Db\Schedule\Log;
+use FrenchFrogs\App\Models\Db\Schedule\Schedule;
+use FrenchFrogs\App\Models\Db\Schedule\Log;
 use Illuminate\Support\Facades\Schema;
 
 /**
@@ -49,7 +49,7 @@ trait SchedulerKernel
     /**
      * Getter for $log
      *
-     * @return \FrenchFrogs\Models\Db\Schedule\Log
+     * @return \FrenchFrogs\App\Models\Db\Schedule\Log
      */
     public function getLog()
     {
@@ -70,7 +70,7 @@ trait SchedulerKernel
     /**
      * Setter for $log
      *
-     * @param \FrenchFrogs\Models\Db\Schedule\Log $log
+     * @param \FrenchFrogs\App\Models\Db\Schedule\Log $log
      * @return $this
      */
     public function setLog(Log $log)

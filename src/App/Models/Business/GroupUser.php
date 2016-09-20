@@ -1,6 +1,6 @@
-<?php namespace FrenchFrogs\Models\Business;
+<?php namespace FrenchFrogs\App\Models\Business;
 
-use FrenchFrogs\Models\Db;
+use FrenchFrogs\App\Models\Db;
 use FrenchFrogs\Business\Business;
 
 /**
@@ -9,7 +9,7 @@ use FrenchFrogs\Business\Business;
  * @deprecated
  *
  * Class GroupUser
- * @package FrenchFrogs\Models\Business
+ * @package FrenchFrogs\App\Models\Business
  */
 class GroupUser extends Business
 {

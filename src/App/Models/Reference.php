@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Models;
+<?php namespace FrenchFrogs\App\Models;
 
 use Cache;
 use FrenchFrogs\Maker\Maker;
@@ -9,7 +9,7 @@ use gossi\codegen\generator\CodeFileGenerator;
  * Classe de gestion des références
  *
  * Class Reference
- * @package FrenchFrogs\Models
+ * @package FrenchFrogs\App\Models
  */
 class Reference
 {
@@ -206,7 +206,7 @@ class Reference
         $file = storage_path('/../bootstrap/') . static::CLASS_NAME . '.php';
 
         // recuperation des données
-        $constant = \FrenchFrogs\Models\Db\Reference::pluck('reference_id', 'reference_id')->toArray();
+        $constant = \FrenchFrogs\App\Models\Db\Reference::pluck('reference_id', 'reference_id')->toArray();
 
         // generate class
         $maker = Maker::load(static::CLASS_NAME);

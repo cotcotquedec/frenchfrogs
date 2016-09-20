@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Models\Business;
+<?php namespace FrenchFrogs\App\Models\Business;
 
 use BetterReflection\Reflection\Adapter\ReflectionClass;
 use Carbon\Carbon;
@@ -9,11 +9,11 @@ use FrenchFrogs\Business\Business;
  *
  * Gestion des email
  *
- * @package FrenchFrogs\Models\Business
+ * @package FrenchFrogs\App\Models\Business
  */
 class Mail extends Business
 {
-    static protected $modelClass = \FrenchFrogs\Models\Db\Mail::class;
+    static protected $modelClass = \FrenchFrogs\App\Models\Db\Mail::class;
 
     /**
      * Création d'un mail dans la base
@@ -38,7 +38,7 @@ class Mail extends Business
      */
     public function send()
     {
-        /**@var  \FrenchFrogs\Models\Db\Mail $model */
+        /**@var  \FrenchFrogs\App\Models\Db\Mail $model */
         $model = $this->getModel();
 
         // on met le pail en cours de traietemnt
@@ -78,7 +78,7 @@ class Mail extends Business
     static public function next()
     {
         // Selection de l'email a envoyer
-        $mail = \FrenchFrogs\Models\Db\Mail::where('mail_status_id', \Ref::MAIL_STATUS_CREATED)
+        $mail = \FrenchFrogs\App\Models\Db\Mail::where('mail_status_id', \Ref::MAIL_STATUS_CREATED)
             ->orderBy('created_at')
             ->first();
 

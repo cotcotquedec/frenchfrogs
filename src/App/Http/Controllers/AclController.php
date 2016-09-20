@@ -1,7 +1,7 @@
 <?php namespace FrenchFrogs\App\Http\Controllers;
-use FrenchFrogs\Models\Db\User\Group;
-use FrenchFrogs\Models\Db\User\User;
-use FrenchFrogs\Models\Db\User\UserInterface;
+use FrenchFrogs\App\Models\Db\User\Group;
+use FrenchFrogs\App\Models\Db\User\User;
+use FrenchFrogs\App\Models\Db\User\UserInterface;
 
 /**
  * Class AclController
@@ -88,7 +88,7 @@ trait AclController
             if ($form->isValid()) {
                 $data = $form->getFilteredAliasValues();
                 try {
-                    \FrenchFrogs\Models\Business\User::get($uuid)->changePassword($data['password']);
+                    \FrenchFrogs\App\Models\Business\User::get($uuid)->changePassword($data['password']);
                     \js()->success()->closeRemoteModal()->reloadDataTable();
                 } catch(\Exception $e) {
                     \js()->error($e->getMessage());
@@ -154,7 +154,7 @@ trait AclController
         } elseif($user->exists) {
             $form->populate($user->toArray());
         } else {
-            $form->populate(['password' => \FrenchFrogs\Models\Business\User::generateRandomPassword()]);
+            $form->populate(['password' => \FrenchFrogs\App\Models\Business\User::generateRandomPassword()]);
         }
 
         return response()->modal($form);
@@ -176,7 +176,7 @@ trait AclController
 		);
 
 		// Recuperation du model
-		$user = \FrenchFrogs\Models\Business\User::get($uuid);
+		$user = \FrenchFrogs\App\Models\Business\User::get($uuid);
 
 		$form = \form()->enableRemote();
 		$form->setLegend('Groupes : ' . $user->getModel()->name);
@@ -245,7 +245,7 @@ trait AclController
 
         // Récuperation du model
         /** @var \Models\Business\User $user */
-        $user = \FrenchFrogs\Models\Business\User::get($id);
+        $user = \FrenchFrogs\App\Models\Business\User::get($id);
 
         $query = \query('user_permission as p', [
             'i.name as interface_name',
@@ -326,7 +326,7 @@ trait AclController
         );
 
         // Recuperation du model
-        $user = \FrenchFrogs\Models\Business\User::get($uuid);
+        $user = \FrenchFrogs\App\Models\Business\User::get($uuid);
 
         $form = \form()->enableRemote();
         $form->setLegend('Paramètres : ' . $user->getModel()->name);

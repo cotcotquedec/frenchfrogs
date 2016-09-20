@@ -1,7 +1,7 @@
 <?php namespace FrenchFrogs\App\Console;
 
 use FrenchFrogs\Maker\Maker;
-use FrenchFrogs\Models\Acl;
+use FrenchFrogs\App\Models\Acl;
 use Illuminate\Console\Command;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Filesystem\Filesystem;

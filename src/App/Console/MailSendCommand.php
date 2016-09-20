@@ -2,7 +2,7 @@
 
 namespace FrenchFrogs\App\Console;
 
-use FrenchFrogs\Models\Business\Mail;
+use FrenchFrogs\App\Models\Business\Mail;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;

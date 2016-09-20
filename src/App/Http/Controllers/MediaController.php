@@ -1,8 +1,8 @@
 <?php namespace FrenchFrogs\App\Http\Controllers;
 
 
-use FrenchFrogs\Models\Db;
-use FrenchFrogs\Models\Business;
+use FrenchFrogs\App\Models\Db;
+use FrenchFrogs\App\Models\Business;
 use Illuminate\Routing\Controller;
 
 class MediaController extends Controller

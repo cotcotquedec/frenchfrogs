@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Models\Db\Schedule;
+<?php namespace FrenchFrogs\App\Models\Db\Schedule;
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 
@@ -8,7 +8,7 @@ use FrenchFrogs\Laravel\Database\Eloquent\Model;
  * Class Schedule
  *
  * @method static \Illuminate\Database\Eloquent\Builder active() active() Scope for active schedule
- * @package FrenchFrogs\Models\Db\Schedule
+ * @package FrenchFrogs\App\Models\Db\Schedule
  */
 class Schedule extends Model {
     protected $primaryKey = 'schedule_id';

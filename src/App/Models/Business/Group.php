@@ -1,13 +1,13 @@
-<?php namespace FrenchFrogs\Models\Business;
+<?php namespace FrenchFrogs\App\Models\Business;
 
-use FrenchFrogs\Models\Db;
+use FrenchFrogs\App\Models\Db;
 use FrenchFrogs\Business\Business;
 
 /**
  * @deprecated
  *
  * Class Group
- * @package FrenchFrogs\Models\Business
+ * @package FrenchFrogs\App\Models\Business
  */
 class Group extends Business
 {

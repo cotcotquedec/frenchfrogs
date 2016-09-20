@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Models\Db\User;
+<?php namespace FrenchFrogs\App\Models\Db\User;
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 

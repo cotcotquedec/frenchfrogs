@@ -1,6 +1,6 @@
 <?php namespace FrenchFrogs\App\Console;
 
-use FrenchFrogs\Models\Acl;
+use FrenchFrogs\App\Models\Acl;
 use Illuminate\Console\Command;
 
 class CreateUserCommand extends Command

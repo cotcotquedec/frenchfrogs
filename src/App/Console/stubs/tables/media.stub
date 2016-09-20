@@ -1,8 +1,8 @@
 <?php
 use FrenchFrogs\Laravel\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use FrenchFrogs\Models\Db;
-use FrenchFrogs\Models\Business\Media;
+use FrenchFrogs\App\Models\Db;
+use FrenchFrogs\App\Models\Business\Media;
 class CreateMediaTable extends Migration
 {
     /**

@@ -1,10 +1,10 @@
-<?php namespace FrenchFrogs\Models;
+<?php namespace FrenchFrogs\App\Models;
 
 
 use FrenchFrogs\Ruler\Page\Page;
 use FrenchFrogs\Ruler\Ruler\Ruler;
-use FrenchFrogs\Models\Business;
-use FrenchFrogs\Models\Db;
+use FrenchFrogs\App\Models\Business;
+use FrenchFrogs\App\Models\Db;
 use Auth;
 use Illuminate\Support\Collection;
 

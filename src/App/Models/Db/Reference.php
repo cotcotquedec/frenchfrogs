@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Models\Db;
+<?php namespace FrenchFrogs\App\Models\Db;
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

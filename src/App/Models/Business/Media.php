@@ -1,6 +1,6 @@
-<?php namespace FrenchFrogs\Models\Business;
+<?php namespace FrenchFrogs\App\Models\Business;
 
-use FrenchFrogs\Models\Db;
+use FrenchFrogs\App\Models\Db;
 use Illuminate\Http\UploadedFile;
 
 

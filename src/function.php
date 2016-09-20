@@ -257,12 +257,12 @@ function action_url($controller, $action = 'getIndex', $params = [], $query = []
 /**
  * Return ruler polliwog
  *
- * @return \FrenchFrogs\Models\Acl
+ * @return \FrenchFrogs\App\Models\Acl
  */
 function ruler($namespace = null)
 {
     // retrieve the good class
-    return configurator($namespace)->build('ruler.class', FrenchFrogs\Models\Acl::class);
+    return configurator($namespace)->build('ruler.class', FrenchFrogs\App\Models\Acl::class);
 }
 
 /**
@@ -611,7 +611,7 @@ function user($info = null) {
     if (!is_null($info)) {
         $user = \auth()->user()->$info;
     } else {
-        $user = \configurator()->build('user.business.class', \FrenchFrogs\Models\Business\User::class, [\auth()->user()->user_id]);
+        $user = \configurator()->build('user.business.class', \FrenchFrogs\App\Models\Business\User::class, [\auth()->user()->user_id]);
     }
 
     return $user;
@@ -623,12 +623,12 @@ function user($info = null) {
  * Return Reference for the collection
  *
  * @package Reference
- * @return \FrenchFrogs\Models\Reference
+ * @return \FrenchFrogs\App\Models\Reference
  */
 function ref($collection, $force_refresh = false) {
 
     // recuperation de la collection
-    $reference = \FrenchFrogs\Models\Reference::getInstance($collection);
+    $reference = \FrenchFrogs\App\Models\Reference::getInstance($collection);
 
     // on rafraichie le cache si demandé
     if ($force_refresh) {
