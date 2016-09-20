@@ -1,4 +1,4 @@
-<?php namespace Frenchfrogs\App\Console;
+<?php namespace FrenchFrogs\App\Console;
 
 use FrenchFrogs\Maker\Maker;
 use FrenchFrogs\Maker\Method;

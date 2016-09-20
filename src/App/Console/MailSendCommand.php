@@ -1,6 +1,6 @@
 <?php
 
-namespace Frenchfrogs\App\Console;
+namespace FrenchFrogs\App\Console;
 
 use FrenchFrogs\Models\Business\Mail;
 use Illuminate\Console\Command;
