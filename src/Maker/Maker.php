@@ -3,6 +3,7 @@
 use BetterReflection\Reflection\ReflectionClass;
 use FrenchFrogs\Core\Renderer;
 use FrenchFrogs\Ruler\Ruler\Ruler;
+use Illuminate\Filesystem\Filesystem;
 
 class Maker
 {
@@ -500,14 +501,48 @@ class Maker
      * @param $class
      * @param $file
      */
-    static public function init($class, $file)
+    static public function init($class, $file = null)
     {
+        // determination du fichier en focntion du nom de la classe
+        if (is_null($file)) {
+            $file = static::findFile($class);
+        }
+
+        // recuperation du realpath du fichier
+        $file = app_path('../' . $file);
 
         if (file_exists($file)) {
             exc('Impossible de créer la classe "'.$class.'", Le fichier existe deja : ' . $file );
         }
 
-        file_put_contents($file, sprintf('<?php class %s {}', $class));
+        // initialisation du gestionnaire de fichier
+        $filesystem = new Filesystem();
+
+        // on regarde sir le fichier exist deja
+        if ($filesystem->exists($file)) {
+            exc('Le fichier exists déjà : ' . $file);
+        }
+
+        // creation du repertoire
+        $dir = dirname($file);
+        if (!is_dir($dir)) {
+            $filesystem->makeDirectory($dir);
+        }
+
+        //gestion du namespace
+        $body = '<?php ';
+        if (preg_match("#\\\\(?<namespace>.+)\\\\(?<class>[^\\\\]+)$#", $class, $match)) {
+            $body .= 'namespace ' . $match['namespace'] . ';' . PHP_EOL;
+            $body .= 'class ' . $match['class'] . '{}';
+        } else {
+            $body .=
+            $body .= 'class ' . $class . '{}';
+        }
+
+        // Création du fichier
+        $filesystem->put($file, $body);
+
+        // Chargement
         require_once $file;
         return static::load($class);
     }
@@ -698,5 +733,39 @@ class Maker
         }
 
         return $interfaces;
+    }
+
+
+    /**
+     * Donne le nom du fichier pour une classe
+     *
+     * @param $class
+     * @return string
+     */
+    static function findFile($class)
+    {
+        // on s'assure que le namespace par bien du debut
+        if ($class{0} != '\\') {
+            $class = '\\' . $class;
+        }
+
+        /// gestion des namespace
+        $class = preg_replace('#^.App(.+)#', 'app$1', $class);
+        $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
+
+        return $class . '.php';
+    }
+
+    /**
+     * Build class name from short naming
+     *
+     * @param $shortname
+     * @return string
+     */
+    static public function formatClassName($shortname)
+    {
+        $shortname = str_replace('.', '\\_', $shortname);
+        $class = ucfirst(camel_case($shortname));
+        return '\\' . $class;
     }
 }

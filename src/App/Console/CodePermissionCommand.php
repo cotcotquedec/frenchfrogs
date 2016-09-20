@@ -7,10 +7,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
 
-class CodePermissionCommand extends Command
+class CodePermissionCommand extends CodeCommand
 {
-    const CHOICE_NEW = ' > Nouveau';
-
     /**
      * The name and signature of the console command.
      *

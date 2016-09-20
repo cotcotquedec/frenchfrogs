@@ -6,10 +6,8 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
 
 
-class CodeMailCommand extends Command
+class CodeMailCommand extends CodeCommand
 {
-
-    const CHOICE_NEW = ' > Nouveau';
 
     /**
      * The name and signature of the console command.
@@ -36,11 +34,19 @@ class CodeMailCommand extends Command
 
         // nom du controller
         $name = $this->argument('name');
-        $name = str_replace('.', '\\_', $name);
 
-        // creation du controller
-        $class = '\\App\\Mail\\'.ucfirst(camel_case($name));
 
+        //PERMISSION
+        do {
+            if (empty($name)) {
+                $name = $this->ask('Quel est le nom de la class?');
+            }
+        } while (empty($name));
+
+        $class = Maker::init(Maker::formatClassName('app.mail.' . $name));
+
+
+            dd($class);
 
         $maker = Maker::init($class, app_path('/Mail'));
 

@@ -8,7 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
 use Models\Acl;
 
-class CodeActionCommand extends Command
+class CodeActionCommand extends CodeCommand
 {
 
     /**

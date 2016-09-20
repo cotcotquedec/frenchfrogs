@@ -4,7 +4,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
 
-class CodeControllerCommand extends Command
+class CodeControllerCommand extends CodeCommand
 {
     /**
      * The name and signature of the console command.
