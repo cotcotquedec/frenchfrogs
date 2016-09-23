@@ -479,6 +479,7 @@ abstract class Column
     public function setDescription($description)
     {
         $this->description = $description;
+        return $this;
     }
 
     /**
