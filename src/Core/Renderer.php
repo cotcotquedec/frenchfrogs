@@ -38,7 +38,6 @@ trait Renderer
      */
     public function setRenderer(\FrenchFrogs\Renderer\Renderer $renderer)
     {
-
         $this->renderer = $renderer;
         return $this;
     }

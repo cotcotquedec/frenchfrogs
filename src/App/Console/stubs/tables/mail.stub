@@ -18,6 +18,7 @@ class CreateMailTable extends Migration
         Reference::createDatabaseReference('MAIL_STATUS_PROCESSING', 'En cours', 'mail_status');
         Reference::createDatabaseReference('MAIL_STATUS_SENT', 'Envoyé', 'mail_status');
         Reference::createDatabaseReference('MAIL_STATUS_ERROR', 'Erreur', 'mail_status');
+        Reference::createDatabaseReference('MAIL_STATUS_OPENED', 'Ouvert', 'mail_status');
 
         Schema::create('mail', function (Blueprint $table) {
             $table->binaryUuid('uuid');
@@ -27,6 +28,7 @@ class CreateMailTable extends Migration
             $table->text('message')->nullable();
             $table->timestamp('processing_at')->nullable();
             $table->timestamp('sent_at')->nullable();
+            $table->timestamp('opened_at')->nullable();
             $table->timestamp('error_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -3,6 +3,7 @@
 use BetterReflection\Reflection\Adapter\ReflectionClass;
 use Carbon\Carbon;
 use FrenchFrogs\Business\Business;
+use FrenchFrogs\Laravel\Mail\Mailable;
 
 /**
  * Class Mail
@@ -91,5 +92,32 @@ class Mail extends Business
 
         // renvoie si le mail a été envoyé
         return $class->getModel()->isSent();
+    }
+
+
+    public function renderTrackingPixel()
+    {
+
+        dd('COUCOU');
+        return html('img', '');
+    }
+
+    /**
+     *
+     * @return Mailable
+     */
+    public function build()
+    {
+        /**@var  \FrenchFrogs\App\Models\Db\Mail $model */
+        $model = $this->getModel();
+        $class = new \ReflectionClass($model->class);
+
+        // CReation de l'instance
+        $mail = $class->newInstanceArgs(\json_decode($model->params));
+
+        // parametreage du mail
+        $mail->build();
+
+        return $mail;
     }
 }

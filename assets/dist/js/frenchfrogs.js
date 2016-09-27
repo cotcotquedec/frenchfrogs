@@ -65,8 +65,9 @@ $.fn.extend({
             jQuery(this).click(function (e) {
                 e.preventDefault();
 
+
                 var target = jQuery(this).data('target');
-                var size  = jQuery(this).data('data-size');
+                var size  = jQuery(this).data('size');
                 $url = jQuery(this).attr('href');
 
                 $data = {};
@@ -240,7 +241,6 @@ $.fn.extend({
             jQuery(this).find('.date-picker').datepicker({
                 autoclose: true
             });
-            jQuery(this).find('.date-picker').each(function() {console.log(this);});
         }
 
         // TIMEPICKER

@@ -15,10 +15,8 @@ class FrenchFrogsServiceProvider  extends ServiceProvider
      */
     public function boot()
     {
-        $this->bootBlade();
         $this->bootDatatable();
         $this->bootModal();
-        $this->bootMail();
         $this->bootValidator();
     }
 
@@ -40,22 +38,11 @@ class FrenchFrogsServiceProvider  extends ServiceProvider
      */
     public function bootValidator()
     {
-
         // notExists (database) renvoie true si l'entrée n'existe pas
         \Validator::extend('not_exists', function($attribute, $value, $parameters)
         {
             $row = \DB::table($parameters[0])->where($parameters[1], '=', $value)->first();
             return empty($row);
-        });
-    }
-
-    /**
-     * Affichage de nombre formaté
-     */
-    public function bootBlade()
-    {
-        Blade::directive('number', function($expression, $decimals = 0) {
-            return "<?php echo number_format({$expression}, {$decimals}) ?>";
         });
     }
 
@@ -161,70 +148,12 @@ class FrenchFrogsServiceProvider  extends ServiceProvider
                 $renderer = configurator()->get('form.renderer.modal.class');
                 $modal = $title->setRenderer(new $renderer());
             } else {
-                $modal = modal($title, $body, $actions)->enableRemote();
+                $modal = \modal($title, $body, $actions)->enableRemote();
             }
 
             $modal .= '<script>jQuery(function() {'.js('onload').'});</script>';
 
             return $modal;
-        });
-    }
-
-    /**
-     * Permet d'utiliser la reponse pour envoyer un mail
-     *
-     * Cela permet de gere un email comme une page web.
-     *
-     */
-    public function bootMail()
-    {
-        /**
-         * Mail manager
-         *
-         * @param string $view
-         * @param array $data
-         * @param array $from
-         * @param array $to
-         * @param string $subject
-         * @param array $attach
-         */
-        Response::macro('mail', function($view, $data = [], $from = [], $to = [], $subject = '', $attach = []) {
-
-            if ($from instanceof Mail\Message) {
-                \Mail::send($view, $data, function (Mail\Message $message) use ($from, $attach) {
-
-                    // Getting the generated message
-                    $swift = $from->getSwiftMessage();
-
-                    // Setting the mandatory arguments
-                    $message->subject($swift->getSubject());
-                    $message->from($swift->getFrom());
-                    $message->to($swift->getTo());
-
-                    // Getting the optional arguments
-                    if (!empty($swift->getSender()))    { $message->sender($swift->getSender()); }
-                    if (!empty($swift->getCc()))        { $message->cc($swift->getCc()); }
-                    if (!empty($swift->getBcc()))       { $message->bcc($swift->getBcc()); }
-                    if (!empty($swift->getReplyTo()))   { $message->replyTo($swift->getReplyTo()); }
-                    if (!empty($swift->getPriority()))  { $message->priority($swift->getPriority()); }
-                    if (!empty($swift->getChildren()))  {
-                        foreach($swift->getChildren() as $child){
-                            $message->attachData($child->getBody(),$child->getHeaders()->get('content-type')->getParameter('name'));
-                        }
-                    }
-                });
-
-            } else {
-                \Mail::send($view, $data, function (Mail\Message $message) use ($from, $to, $subject, $attach) {
-                    // Setting the mandatory arguments
-                    $message->from(...$from)->subject($subject);
-
-                    // Managing multiple to
-                    foreach ($to as $mail)      { $message->to(...$mail); }
-                    // Managing multiple attachment
-                    foreach ($attach as $file)  { $message->attach($file); }
-                });
-            }
         });
     }
 }
