@@ -18,6 +18,7 @@ class FrenchFrogsServiceProvider  extends ServiceProvider
         $this->bootDatatable();
         $this->bootModal();
         $this->bootValidator();
+        $this->bootMail();
     }
 
     /**
@@ -30,6 +31,16 @@ class FrenchFrogsServiceProvider  extends ServiceProvider
         foreach(config('frenchfrogs') as $namespace => $config) {
             configurator($namespace)->merge($config);
         }
+    }
+
+    /**
+     *
+     *
+     *
+     */
+    public function bootMail()
+    {
+        
     }
 
     /**

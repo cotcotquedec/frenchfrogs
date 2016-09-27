@@ -1,6 +1,5 @@
 <?php namespace FrenchFrogs\App\Models\Business;
 
-use BetterReflection\Reflection\Adapter\ReflectionClass;
 use Carbon\Carbon;
 use FrenchFrogs\Business\Business;
 use FrenchFrogs\Laravel\Mail\Mailable;
@@ -33,6 +32,26 @@ class Mail extends Business
     }
 
     /**
+     * Track email
+     *
+     * @param array $query
+     * @return $this
+     */
+    public function track($query = [])
+    {
+        $model = $this->getModel();
+
+        // on met le mail en cours de traitement
+        if ($model->mail_status_id != \Ref::MAIL_STATUS_OPENED) {
+            $model->mail_status_id = \Ref::MAIL_STATUS_OPENED;
+            $model->opened_at = Carbon::now();
+            $model->save();
+        }
+
+        return $this;
+    }
+
+    /**
      * Envoie un email depuis la base
      *
      * @return $this
@@ -48,10 +67,11 @@ class Mail extends Business
         $model->save();
 
         try {
-            $class = new \ReflectionClass($model->class);
-            $class = $class->newInstanceArgs(\json_decode($model->params));
 
-            \Mail::send($class);
+            $mail = $this->build();
+
+            // envoie du mail
+            \Mail::send($mail);
 
             $model->mail_status_id = \Ref::MAIL_STATUS_SENT;
             $model->sent_at = Carbon::now();
@@ -94,14 +114,6 @@ class Mail extends Business
         return $class->getModel()->isSent();
     }
 
-
-    public function renderTrackingPixel()
-    {
-
-        dd('COUCOU');
-        return html('img', '');
-    }
-
     /**
      *
      * @return Mailable
@@ -114,6 +126,7 @@ class Mail extends Business
 
         // CReation de l'instance
         $mail = $class->newInstanceArgs(\json_decode($model->params));
+        $mail->setUuid($model->getKey());
 
         // parametreage du mail
         $mail->build();

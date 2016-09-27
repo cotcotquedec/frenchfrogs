@@ -2,6 +2,86 @@
 
 class Mailable extends \Illuminate\Mail\Mailable implements \FrenchFrogs\Laravel\Contracts\Mail\MailablePreview
 {
+    /**
+     * @var
+     */
+    protected $uuid;
+
+    /**
+     * Pixel
+     *
+     * @var string
+     */
+    public $pixel = '';
+
+    /**
+     * Set UUID
+     *
+     * @return mixed
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * Return uuid
+     *
+     * @param $uuid
+     */
+    public function setUuid($uuid)
+    {
+        $this->uuid = \uuid('hex', $uuid);
+        return $this;
+    }
+
+
+    /**
+     * Nom de la route
+     *
+     * @var string
+     */
+    static protected $pixelRoute = 'mail.pixel';
+
+    /**
+     * Getter for $pixelRoute
+     *
+     * @return string
+     */
+    static public function getPixelRoute()
+    {
+        return static::$pixelRoute;
+    }
+
+    /**
+     * Setter for $pixelRoute
+     *
+     * @param $route
+     */
+    static function setPixelRoute($route)
+    {
+        static::$pixelRoute = $route;
+    }
+
+
+    /**
+     * Render pixel for tracking
+     *
+     * @param array $query
+     * @return string
+     */
+    public function renderPixel($query = [])
+    {
+        // route principale
+        $url = route(static::getPixelRoute(), $this->getUuid());
+
+        // gestion de la query
+        if ($query) {
+            $url .= '?' . http_build_query($query);
+        }
+
+        $this->pixel = html('img', ['src' => $url, 'width' => 1, 'height' => 1]);
+    }
 
     /**
      *
@@ -11,7 +91,8 @@ class Mailable extends \Illuminate\Mail\Mailable implements \FrenchFrogs\Laravel
      */
     public function previewHtml()
     {
-       return \view($this->view, $this->buildViewData());
+        $this->pixel = '';
+        return \view($this->view, $this->buildViewData());
     }
 
     /**
