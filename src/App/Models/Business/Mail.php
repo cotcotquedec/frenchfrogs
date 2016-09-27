@@ -42,7 +42,7 @@ class Mail extends Business
         $model = $this->getModel();
 
         // on met le mail en cours de traitement
-        if ($model->mail_status_id != \Ref::MAIL_STATUS_OPENED) {
+        if ($model->mail_status_id == \Ref::MAIL_STATUS_SENT) {
             $model->mail_status_id = \Ref::MAIL_STATUS_OPENED;
             $model->opened_at = Carbon::now();
             $model->save();
