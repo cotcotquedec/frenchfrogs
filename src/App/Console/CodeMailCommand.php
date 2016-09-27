@@ -2,15 +2,28 @@
 
 use FrenchFrogs\Maker\Maker;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Mail\Mailable;
+use FrenchFrogs\Laravel\Mail\Mailable;
 use Illuminate\Support\Composer;
 
-
+/**
+ * Ajout d'un email
+ *
+ * Class CodeMailCommand
+ * @package FrenchFrogs\App\Console
+ */
 class CodeMailCommand extends CodeCommand
 {
 
+    /**
+     *
+     * @var string
+     */
     protected $classNamespace = 'app.mail.';
 
+    /**
+     *
+     * @var string
+     */
     protected $viewPath = 'resources/views/';
 
     /**
