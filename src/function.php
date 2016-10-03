@@ -261,6 +261,10 @@ function action_url($controller, $action = 'getIndex', $params = [], $query = []
  */
 function ruler($namespace = null)
 {
+    if (is_null($namespace)) {
+        $namespace = \auth()->user()->user_interface_id;
+    }
+
     // retrieve the good class
     return configurator($namespace)->build('ruler.class', FrenchFrogs\App\Models\Acl::class);
 }
