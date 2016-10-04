@@ -32,7 +32,7 @@ class MailSendCommand extends Command
      */
     public function handle()
     {
-        while(Mail::next() === true) {}
+        while(Mail::next() === true) {$this->info('Mail envoyé');}
     }
 
 }
