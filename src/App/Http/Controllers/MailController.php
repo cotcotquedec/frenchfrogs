@@ -45,8 +45,8 @@ class MailController extends Controller
         $table->addText('name', 'Statut')->setStrainerSelect(\ref('mail_status')->pairs());
         $table->addDatetime('created_at', 'Crée le')->setStrainerDateRange('pa.created_at')->setOrder('created_at');
         $table->addDatetime('sent_at', 'Envoyé le')->setStrainerDateRange('sent_at')->setOrder('sent_at');
-        $table->addText('class', 'Mail')->setStrainerText();
-        $table->addText('params', 'Paramètres')->setStrainerText()->setWidth(100);
+        $table->addText('class', 'Mail')->setStrainerText('class');
+        $table->addText('params', 'Paramètres')->setStrainerText('params')->setWidth(100);
         $table->addBoolean('error', 'Erreur');
 
         if (!request()->isXmlHttpRequest()) {
