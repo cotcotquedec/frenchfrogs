@@ -124,7 +124,7 @@ class AuthMiddleware
 
         // si pas authentifié on effectue la redirection
         if ($is_guest) {
-            if ($request->ajax() || $request->wantsJson()) {
+            if ($request->ajax() || $request->wantsJson() || auth()->guard() instanceof TokenGuard) {
                 return response('Unauthorized.', 401);
             } else {
 
@@ -151,14 +151,9 @@ class AuthMiddleware
                 }
 
 
-//                // Cas d'un api
-//        if (auth()->guard() instanceof TokenGuard) {
-//
-//            dd('dslj;hdlkd');
-//        }
-
+                return response('Unauthorized.', 401);
                 // comportement normale
-                return redirect()->guest('login');
+//                return redirect()->guest('login');
             }
         }
 
