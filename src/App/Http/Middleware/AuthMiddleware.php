@@ -3,8 +3,9 @@
 use Carbon\Carbon;
 use Closure;
 use FrenchFrogs\App\Models\Acl;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\SessionGuard;
+use Illuminate\Auth\TokenGuard;
+use Illuminate\Contracts\Auth\Factory as Auth;
 
 class AuthMiddleware
 {
@@ -15,13 +16,12 @@ class AuthMiddleware
     /**
      * Create a new filter instance.
      *
-     * @param  Guard  $auth
+     * @param  Auth $auth
      * @return void
      */
-    public function __construct(Guard $auth)
+    public function __construct(Auth $auth)
     {
-//        $auth = \auth();
-
+        $this->auth = $auth;
     }
 
 
@@ -40,7 +40,7 @@ class AuthMiddleware
 
         if ($auth->check()) {
             return redirect()->route('home');
-        } elseif($request->has('email')) {
+        } elseif ($request->has('email')) {
 
             // recuperationd es information
             $error = true;
@@ -106,8 +106,8 @@ class AuthMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
      * @return mixed
      */
     public function handle($request, Closure $next, $interface = null, $viewLogin = null)
@@ -119,31 +119,46 @@ class AuthMiddleware
             \Auth::shouldUse($interface);
         }
 
-        // set redirection session key
-        $this->redirectionSessionKey = 'login.' . \Auth::getName() . '.redirect';
-
-        // surcharge de l'interface
-        if (!is_null($viewLogin)) {
-            $this->viewLogin = $viewLogin;
-        }
-
+        // determination de l'authentification
         $is_guest = \auth()->guest();
 
         // si pas authentifié on effectue la redirection
         if ($is_guest) {
-            if ($request->ajax()) {
+            if ($request->ajax() || $request->wantsJson()) {
                 return response('Unauthorized.', 401);
             } else {
 
-                // gestion d'une url de redirection
-                $url = $request->getRequestUri();
-                if ($url != '/') {
-                    $this->hasRedirect()?: $this->setRedirect($url);
-                    return \redirect()->to('/');
+                // Cas d'un authentification en sessions (page web)
+                if (auth()->guard() instanceof SessionGuard) {
+
+                    // surcharge de l'interface
+                    if (!is_null($viewLogin)) {
+                        $this->viewLogin = $viewLogin;
+                    }
+
+                    // set redirection session key
+                    $this->redirectionSessionKey = 'login.' . \Auth::getName() . '.redirect';
+
+                    // gestion d'une url de redirection
+                    $url = $request->getRequestUri();
+                    if ($url != '/') {
+                        $this->hasRedirect() ?: $this->setRedirect($url);
+                        return \redirect()->to('/');
+                    }
+
+                    // envoie du login
+                    return $this->login();
                 }
 
-                // envoie du login
-                return $this->login();
+
+//                // Cas d'un api
+//        if (auth()->guard() instanceof TokenGuard) {
+//
+//            dd('dslj;hdlkd');
+//        }
+
+                // comportement normale
+                return redirect()->guest('login');
             }
         }
 

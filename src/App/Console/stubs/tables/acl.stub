@@ -57,6 +57,7 @@ class CreateAclTable extends Migration
             $table->string('email');
             $table->text('parameters')->nullable();
             $table->string('password', 60);
+            $table->string('api_token', 60)->nullable()->unique();
             $table->rememberToken();
             $table->timestamp('loggedin_at')->nullable();
             $table->softDeletes();

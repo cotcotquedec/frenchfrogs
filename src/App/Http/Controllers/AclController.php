@@ -22,16 +22,18 @@ trait AclController
      */
     static public function user()
     {
+
         // QUERY
-        $query = \query('user', [
+        $query = \query('user as u', [
             raw('HEX(user_id) as user_id'),
-            'user.name as name',
+            'u.name as name',
             'email',
             'i.name as interface_name',
-            'loggedin_at'
+            'loggedin_at',
+            raw('api_token IS NOT NULL as api_acess')
         ])
-            ->join('user_interface as i', 'i.user_interface_id', '=', 'user.user_interface_id')
-        ->whereNull('user.deleted_at');
+            ->join('user_interface as i', 'i.user_interface_id', '=', 'u.user_interface_id')
+            ->whereNull('u.deleted_at');
 
         // TABLE
         $table = \table($query);
@@ -42,23 +44,72 @@ trait AclController
             ->enableRemote();
 
         // COLONNES
-        $table->addText('name', 'Nom');
-        $table->addText('interface_name', 'Interface');
+        $table->addText('name', 'Nom')->setStrainerText('u.name');
+        $interfaces = pairs('user_interface', 'user_interface_id', 'name');
+        $table->addText('interface_name', 'Interface')->setStrainerSelect($interfaces, 'u.user_interface_id');
         $table->addText('email', 'Email')->setStrainerText('email');
+        $table->addBoolean('api_acess', 'API?')->setStrainerBoolean(raw('api_token IS NOT NULL'));
         $table->addDate('loggedin_at', 'Dernière connexion');
         $table->setSearch('email');
 
         // ACTION
         $container = $table->addContainer('action', 'Actions')->setWidth('200');
-        $container->addButtonRemote('parameters', 'Paramètre', action_url(static::class, 'postParameter', '%s'), 'user_id')->icon('fa fa-cogs');
+//        $container->addButtonRemote('parameters', 'Paramètre', action_url(static::class, 'postParameter', '%s'), 'user_id')->icon('fa fa-cogs');
         $container->addButtonRemote('permission', 'Permissions', action_url(static::class, 'postPermissions', '%s'), 'user_id')->icon('fa fa-gavel');
-		$container->addButtonRemote('groups', 'Groupes', action_url(static::class, 'postUserGroup', '%s'), 'user_id')->icon('fa fa-users');
+        $container->addButtonRemote('groups', 'Groupes', action_url(static::class, 'postUserGroup', '%s'), 'user_id')->icon('fa fa-users');
         $container->addButtonRemote('password', 'Mot de passe', action_url(static::class, 'postPassword', '%s'), 'user_id')->icon('fa fa-key')->setOptionAsWarning();
+        $container->addButtonRemote('avatar', 'Avatar', action_url(static::class, 'postAvatar', '%s'), 'user_id')->icon('fa fa-image');
+        $container->addButtonRemote('api', 'Api', action_url(static::class, 'postApi', '%s'), 'user_id')->icon('fa fa-cloud');
         $container->addButtonEdit(action_url(static::class, 'postUser', '%s'), 'user_id');
         $container->addButtonDelete(action_url(static::class, 'deleteUser', '%s'), 'user_id');
         return $table;
     }
 
+
+    /**
+     *
+     *
+     * @param $id
+     * @return mixed
+     * @throws \Exception
+     */
+    public function postApi($id)
+    {
+        \ruler()->check(
+            $this->permission,
+            ['id' => 'required:exists:user,user_id'],
+            ['id' => $uuid = f($id, 'uuid')]
+        );
+
+        $user = User::findOrFail($uuid);
+
+        // FORM
+        $form = \form()->enableRemote();
+        $form->setLegend('Utilisateur : ' . $user->name);
+        if ($user->api_token) {
+            $form->addLabel('api_token', 'Token')->setValue($user->api_token);
+            $form->addSubmit('revoke')->setLabel('Supprimer la clé')->setOptionAsDanger();
+        } else {
+            $form->addContent('message', '<p class="well">Cet utilisateur n\'a pas encore accès à l\'api.</p>');
+        }
+        $form->addSubmit('generate')->setLabel('Générer une clé');
+
+        // TRAITEMENT
+        if (\request()->has('generate') || \request()->has('revoke')) {
+            $form->valid(\request()->all());
+            if ($form->isValid()) {
+                try {
+                    $user->api_token = \request()->has('generate') ? str_random(60) : null;
+                    $user->save();
+
+                    \js()->success()->closeRemoteModal()->reloadDataTable();
+                } catch(\Exception $e) {
+                    \js()->error($e->getMessage());
+                }
+            }
+        }
+        return response()->modal($form);
+    }
 
     /**
      *
