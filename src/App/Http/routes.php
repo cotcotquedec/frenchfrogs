@@ -78,6 +78,6 @@ Route::post('/ff/datatable/{token}', function ($token) {
 });
 
 
-Route::get('/ff/media/{id}', 'FrenchFrogs\App\Http\Controllers\MediaController@show')->name('media-show');
-Route::get('/ff/media/dl/{id}', 'FrenchFrogs\App\Http\Controllers\MediaController@download')->name('media-dl');
+Route::get('/ff/media/{id}', '\FrenchFrogs\App\Http\Controllers\MediaController@show')->name('media-show');
+Route::get('/ff/media/dl/{id}', '\FrenchFrogs\App\Http\Controllers\MediaController@download')->name('media-dl');
 
