@@ -143,6 +143,35 @@ trait Docblock
     }
 
     /**
+     * Add a tag type param
+     *
+     * @param $name
+     * @param null $type
+     * @param $description
+     * @return $this
+     */
+    public function addTagProperty($name, $type = null, $description = null)
+    {
+        // construction du tag
+        $tag  = '';
+
+        if (!is_null($type)) {
+            $tag .=  $type . ' ';
+        }
+
+        $tag .= $name;
+
+        if (!is_null($description)) {
+            $tag .= ' ' . $description;
+        }
+
+        $this->addTag('property', $tag);
+
+        return $this;
+    }
+
+
+    /**
      * Getter for tags
      *
      * @return array
