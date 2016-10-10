@@ -408,8 +408,10 @@ trait Datatable
      * Save the Table configuration in Session
      *
      */
-    public function save() {
+    public function save($query = null)
+    {
 
+        // si pas de token
         if(!$this->hasToken()) {
             if (static::hasSingleToken()) {
                 $this->setToken(static::getSingleToken());
@@ -418,11 +420,13 @@ trait Datatable
             }
         }
 
+        // Si le constructeur n'est pas setter
         if (!$this->hasConstructor()) {
             $this->setConstructor(static::class);
         }
 
-        Session::push($this->getToken(), json_encode(['constructor' => $this->getConstructor()]));
+        // on enregistre la session
+        Session::set($this->getToken(), json_encode(['constructor' => $this->getConstructor(), 'query' => $query]));
         return $this;
     }
 
@@ -433,7 +437,7 @@ trait Datatable
      * @param $token
      * @return Table
      */
-    static public function load($token = null)
+    static public function load($token = null, $processQuery = false)
     {
         // if single token is set, we keep it
         if (is_null($token) && static::hasSingleToken()) {
@@ -451,7 +455,7 @@ trait Datatable
 
         // load configuration
         $config = Session::get($token);
-        $config = json_decode($config[0], true);
+        $config = \json_decode($config, true);
         $constructor = $config['constructor'];
 
         // construct Table polliwog
@@ -465,17 +469,68 @@ trait Datatable
                 $params = explode(',', $params['params']);
             }
 
-            $table =  call_user_func_array([$match['class'], $method], $params);
+            $table = call_user_func_array([$match['class'], $method], $params);
         } else {
             $instance = new \ReflectionClass($config->constructor);
             $table = $instance->newInstance();
         }
+
+        // attribution du token
+        $table->setToken($token);
 
         // validate that instance is viable
         if (!($table instanceof static)) {
             throw new \Exception('Loaded instance is not viable');
         }
 
+        // process query
+        if ($processQuery && !empty($config['query'])) {
+            $query = $config['query'];
+
+            $columns = $query['columns'];
+            $search = empty($query['search']) ? null : $query['search'];
+            $order = empty($query['order']) ? null : $query['order'];
+            $table->processQuery($columns, $search, $order);
+        }
+
         return $table;
+    }
+
+    /**
+     * Process a query
+     *
+     * @param $columns
+     * @param null $search
+     * @param null $order
+     * @return $this
+     */
+    public function processQuery($columns, $search = null, $order = null)
+    {
+        // gestion des reccherches
+        foreach ($columns as $c) {
+            if ($c['searchable'] == "true" && $c['search']['value'] != '') {
+                $this->getColumn($c['name'])->getStrainer()->call($this, $c['search']['value']);
+            }
+        }
+
+        // gestion de la recherche globale
+        if (!empty($search['value'])) {
+            $this->search($search['value']);
+        }
+
+        // gestion du tri
+        if (!empty($order)) {
+
+            if ($this->isSourceQueryBuilder()) {
+                $this->getSource()->orders = [];
+            }
+
+            foreach ($order as $o) {
+                extract($o);
+                $this->getColumnByIndex($column)->order($dir);
+            }
+        }
+
+        return $this;
     }
 }

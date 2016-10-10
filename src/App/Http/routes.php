@@ -14,38 +14,19 @@ Route::get('/ff/datatable/{token}', function ($token) {
         $table->setPageFromItemsOffset(Input::get('start'));
         $table->setRenderer(new FrenchFrogs\Table\Renderer\Remote());
 
-        // gestion des reccherches
-        foreach (request()->get('columns') as $c) {
-            if ($c['searchable'] == "true" && $c['search']['value'] != '') {
-                $table->getColumn($c['name'])->getStrainer()->call($table, $c['search']['value']);
-            }
-        }
-
-        // gestion de la recherche globale
+        $columns = $request->get('columns');
         $search = $request->get('search');
-        if (!empty($search['value'])) {
-            $table->search($search['value']);
-        }
-
-        // gestion du tri
         $order = $request->get('order');
-        if (!empty($order)) {
-
-            if ($table->isSourceQueryBuilder()) {
-                $table->getSource()->orders = [];
-            }
-
-            foreach ($order as $o) {
-                extract($o);
-                $table->getColumnByIndex($column)->order($dir);
-            }
-        }
+        $table->processQuery($columns, $search, $order);
 
         // recuperation des données
         $data = [];
         foreach ($table->render() as $row) {
             $data[] = array_values($row);
         }
+
+        // on sauvegarde la recherche
+        $table->save(compact('columns', 'order', 'search'));
 
         return response()->json(['data' => $data, 'draw' => Input::get('draw'), 'recordsFiltered' => $table->getItemsTotal(), 'recordsTotal' => $table->getItemsTotal()]);
 
@@ -61,7 +42,7 @@ Route::get('/ff/datatable/{token}', function ($token) {
  * Gestion de l'export CSV
  */
 Route::get('/ff/datatable/{token}/export', function ($token) {
-    $table = FrenchFrogs\Table\Table\Table::load($token);
+    $table = FrenchFrogs\Table\Table\Table::load($token, true);
     $table->setItemsPerPage(5000);
     $table->toCsv();
 })->name('datatable-export');
