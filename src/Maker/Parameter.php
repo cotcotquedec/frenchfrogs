@@ -175,6 +175,6 @@ class Parameter
      */
     public function hasDefault()
     {
-        return $this->default != Maker::NO_VALUE;
+        return $this->default !== Maker::NO_VALUE;
     }
 }

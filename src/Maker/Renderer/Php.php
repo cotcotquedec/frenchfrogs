@@ -195,6 +195,7 @@ class Php extends Renderer
 
             $p .= '$' . $name;
 
+
             if ($parameter->hasDefault()) {
                 $p .= ' = ' . $this->render('value', $parameter->getDefault());
             }
