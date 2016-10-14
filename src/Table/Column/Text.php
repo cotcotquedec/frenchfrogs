@@ -1,20 +1,20 @@
-<?php namespace FrenchFrogs\Table\Column;
+<?php
 
+namespace FrenchFrogs\Table\Column;
 
 class Text extends Column implements Exportable
 {
-
     protected $tooltip = false;
-    protected $tooltip_position = "bottom";
+    protected $tooltip_position = 'bottom';
 
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $label = '', $attr = [] )
+    public function __construct($name, $label = '', $attr = [])
     {
         $this->setAttributes($attr);
         $this->setName($name);
@@ -22,24 +22,23 @@ class Text extends Column implements Exportable
     }
 
     /**
-     *
-     *
      * @param $row
-     * @return mixed|string
+     *
      * @throws \Exception
+     *
+     * @return mixed|string
      */
-    public function getValue($row) {
-
+    public function getValue($row)
+    {
         $value = isset($row[$this->getName()]) ? $row[$this->getName()] : '';
         if ($this->hasFilterer()) {
             $value = $this->getFilterer()->filter($value);
         }
+
         return $value;
     }
 
     /**
-     *
-     *
      * @return string
      */
     public function render(array $row)
@@ -49,7 +48,7 @@ class Text extends Column implements Exportable
             if ($this->isVisible($row)) {
                 $render = $this->getRenderer()->render('text', $this, $row);
             }
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 
@@ -57,18 +56,18 @@ class Text extends Column implements Exportable
     }
 
     /**
-     * Add tooltip on the column
+     * Add tooltip on the column.
      *
      * @param $position
      */
-    public function tooltip($position = "bottom")
+    public function tooltip($position = 'bottom')
     {
         $this->tooltip = true;
         $this->tooltip_position = $position;
     }
 
     /**
-     * Check if column has tooltip
+     * Check if column has tooltip.
      *
      * @return bool
      */
@@ -78,7 +77,7 @@ class Text extends Column implements Exportable
     }
 
     /**
-     * Get the tooltip position
+     * Get the tooltip position.
      *
      * @return string
      */

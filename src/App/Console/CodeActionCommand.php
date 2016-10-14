@@ -1,16 +1,15 @@
-<?php namespace FrenchFrogs\App\Console;
+<?php
+
+namespace FrenchFrogs\App\Console;
 
 use FrenchFrogs\Maker\Maker;
 use FrenchFrogs\Maker\Method;
 use FrenchFrogs\Maker\Parameter;
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Composer;
 use Models\Acl;
 
 class CodeActionCommand extends CodeCommand
 {
-
     /**
      * The name and signature of the console command.
      *
@@ -32,61 +31,47 @@ class CodeActionCommand extends CodeCommand
     protected $description = "Création d'une action pour le controller";
 
 
-    /**
-     *
-     */
+
     const CHOICE_NEW = ' > Nouveau';
 
-    /**
-     *
-     *
-     */
+
     const CHOICE_NO_MORE = '> Fini';
 
-    /**
-     *
-     *
-     *
-     */
+
     const CHOISE_NULL = 'null';
 
 
     protected $templates = [
-        '_basic' => 'Basique',
-        '_form' => 'Formulaire',
-        '_delete' => 'Suppression'
+        '_basic'  => 'Basique',
+        '_form'   => 'Formulaire',
+        '_delete' => 'Suppression',
     ];
 
     /**
-     *
      * @var Method
      */
     protected $method;
 
 
     /**
-     * Class de gestion du controller
+     * Class de gestion du controller.
      *
      * @var Maker
      */
     protected $controller;
 
     /**
-     *
-     *
      * @var array
      */
     protected $validators = [];
 
     /**
-     *
-     *
      * @var array
      */
     protected $filters = [];
 
     /**
-     * Getter for $validators
+     * Getter for $validators.
      *
      * @return array
      */
@@ -96,20 +81,22 @@ class CodeActionCommand extends CodeCommand
     }
 
     /**
-     * Ajout d'un validateur
+     * Ajout d'un validateur.
      *
      * @param $name
      * @param $validator
+     *
      * @return $this
      */
     public function addValidator($name, $validator)
     {
         $this->validators[$name] = $validator;
+
         return $this;
     }
 
     /**
-     * Reurn TRUE si il y a des validateurs
+     * Reurn TRUE si il y a des validateurs.
      *
      * @return bool
      */
@@ -119,7 +106,7 @@ class CodeActionCommand extends CodeCommand
     }
 
     /**
-     * GEtter for $filters
+     * GEtter for $filters.
      *
      * @return array
      */
@@ -128,23 +115,23 @@ class CodeActionCommand extends CodeCommand
         return $this->filters;
     }
 
-
     /**
-     * Ajout d'un filtre
+     * Ajout d'un filtre.
      *
      * @param $name
      * @param $filter
+     *
      * @return $this
      */
     public function addFilter($name, $filter)
     {
         $this->filters[$name] = $filter;
+
         return $this;
     }
 
-
     /**
-     * Getter for $method
+     * Getter for $method.
      *
      * @return Method
      */
@@ -154,19 +141,21 @@ class CodeActionCommand extends CodeCommand
     }
 
     /**
-     * Setter for $method
+     * Setter for $method.
      *
      * @param Method $method
+     *
      * @return $this
      */
     public function setMethod(Method $method)
     {
         $this->method = $method;
+
         return $this;
     }
 
     /**
-     * Getter for $controller
+     * Getter for $controller.
      *
      * @return Maker
      */
@@ -176,19 +165,21 @@ class CodeActionCommand extends CodeCommand
     }
 
     /**
-     * Setter for $controller
+     * Setter for $controller.
      *
      * @param Maker $controller
+     *
      * @return $this
      */
     public function setController(Maker $controller)
     {
         $this->controller = $controller;
+
         return $this;
     }
 
     /**
-     * Generation du body pour le template "default"
+     * Generation du body pour le template "default".
      *
      * @return string
      */
@@ -203,30 +194,30 @@ class CodeActionCommand extends CodeCommand
     }
 
     /**
-     * Generation du body pour le template "default"
+     * Generation du body pour le template "default".
      *
      * @return string
      */
     protected function _form()
     {
-        $body = file_get_contents(__DIR__ . '/stubs/actions/form.stub');
+        $body = file_get_contents(__DIR__.'/stubs/actions/form.stub');
+
         return $body;
     }
 
     /**
-     * Generation du body pour le template "default"
+     * Generation du body pour le template "default".
      *
      * @return string
      */
     protected function _delete()
     {
-        $body = file_get_contents(__DIR__ . '/stubs/actions/delete.stub');
+        $body = file_get_contents(__DIR__.'/stubs/actions/delete.stub');
+
         return $body;
     }
 
-
     /**
-     *
      * @return Maker
      */
     protected function controller()
@@ -247,10 +238,10 @@ class CodeActionCommand extends CodeCommand
                 $name = $this->ask('Le nom de votre controller');
                 $this->call('code:controller', ['name' => $name]);
             }
-        } while(empty($controller));
+        } while (empty($controller));
 
         // Chemin complet du controller
-        $controller = '\\' . Maker::NAMESPACE_CONTROLLER . $controller;
+        $controller = '\\'.Maker::NAMESPACE_CONTROLLER.$controller;
 
         // INIT MAKER;
         $this->setController($controller = Maker::load($controller));
@@ -258,14 +249,13 @@ class CodeActionCommand extends CodeCommand
         return $controller;
     }
 
-
     /**
-     * Génration des paramètres
+     * Génration des paramètres.
      */
     protected function params()
     {
         do {
-            if ($while = $this->confirm('Voulez-vous ajouter un paramètre?', false)){
+            if ($while = $this->confirm('Voulez-vous ajouter un paramètre?', false)) {
 
                 // NOM
                 $param = $this->ask('Quel est le nom du paramètre ($___) ?');
@@ -275,7 +265,7 @@ class CodeActionCommand extends CodeCommand
 
                 // TYPE
                 if ($this->confirm('A-t-il un Type (classe)?')) {
-                    $type = $this->ask('Quel est le type (classe) du parmètre ' . $name);
+                    $type = $this->ask('Quel est le type (classe) du parmètre '.$name);
                     $param->setType($type);
                 }
 
@@ -297,7 +287,7 @@ class CodeActionCommand extends CodeCommand
                     if ($filter != static::CHOISE_NULL) {
                         $filter = sprintf("'%s' => f(\$%s, '%s')", $name, $name, $filter);
                     } else {
-                        $filter =  sprintf("'%s' => \$%s", $name, $name);
+                        $filter = sprintf("'%s' => \$%s", $name, $name);
                     }
 
                     $this->addFilter($name, $filter);
@@ -305,14 +295,13 @@ class CodeActionCommand extends CodeCommand
 
                 // ajout du paramètre a la méthode
                 $this->getMethod()->addParameter($param);
-                $this->warn('Parmètre ' . $name .  ' Ajouté');
+                $this->warn('Parmètre '.$name.' Ajouté');
             }
-        } while($while);
+        } while ($while);
     }
 
-
     /**
-     * Génération des acl
+     * Génération des acl.
      *
      * @return $this
      */
@@ -321,8 +310,7 @@ class CodeActionCommand extends CodeCommand
         $body = '';
 
         $permission = false;
-        if($this->confirm('Faut il une permission pour acceder l\'action?', true)) {
-
+        if ($this->confirm('Faut il une permission pour acceder l\'action?', true)) {
             do {
                 // recuperation des ACL
                 $rulerClass = $this->ask('Quelle est la classe de gestion des Acl?', configurator()->get('ruler.class'));
@@ -338,8 +326,7 @@ class CodeActionCommand extends CodeCommand
                     $this->call('code:permission');
                     $permission = false;
                 }
-
-            } while(empty($permission));
+            } while (empty($permission));
         }
 
         // VALIDATOR
@@ -353,8 +340,8 @@ class CodeActionCommand extends CodeCommand
         // RENDER
         if ($permission || $validator) {
             $this->getController()->addAlias('Acl', Acl::class);
-            $body .= '//RULER' . PHP_EOL;
-            $body .= sprintf("\\ruler()->check(Acl::%s %s);", $permission, $validator);
+            $body .= '//RULER'.PHP_EOL;
+            $body .= sprintf('\\ruler()->check(Acl::%s %s);', $permission, $validator);
             $body .= str_repeat(PHP_EOL, 2);
         }
 
@@ -362,7 +349,6 @@ class CodeActionCommand extends CodeCommand
 
         return $this;
     }
-
 
     /**
      * Execute the console command.
@@ -375,18 +361,19 @@ class CodeActionCommand extends CodeCommand
         $validator = \Validator::make(
             [
                 'method' => $method = $this->argument('method'),
-                'name' => $name = $this->argument('name')
+                'name'   => $name = $this->argument('name'),
 
             ],
             [
                 'method' => 'required|in:get,post,delete,any',
-                'name' => 'required'
+                'name'   => 'required',
             ]
         );
 
         // check if argument are valid
         if ($validator->fails()) {
             $this->error($validator->getMessageBag()->toJson());
+
             return 1;
         }
 
@@ -396,11 +383,12 @@ class CodeActionCommand extends CodeCommand
         $controller = $this->controller();
 
         // METHOD
-        $method = camel_case($method .  '_' . $name);
+        $method = camel_case($method.'_'.$name);
 
         if ($controller->hasMethod($method)) {
             if (!$this->confirm('La méthode "'.$method.'" existe déjà, voulez vous l\'écraser?')) {
                 $this->info('A plus tard!!');
+
                 return 1;
             }
         }

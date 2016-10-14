@@ -1,13 +1,11 @@
-<?php namespace FrenchFrogs\Renderer\Style;
+<?php
 
+namespace FrenchFrogs\Renderer\Style;
 
 class AdminLTE
 {
-
-
     /**
-     * Classes for table element
-     *
+     * Classes for table element.
      */
     const TABLE_CLASS_STRIPED = 'table-striped';
     const TABLE_CLASS_BORDERED = 'table-bordered';
@@ -18,8 +16,7 @@ class AdminLTE
 
 
     /**
-     * Classes for button element
-     *
+     * Classes for button element.
      */
     const BUTTON_CLASS = 'btn';
     const BUTTON_OPTION_CLASS_DEFAULT = 'btn-default';
@@ -35,8 +32,7 @@ class AdminLTE
 
 
     /**
-     * Class for panel element
-     *
+     * Class for panel element.
      */
     const PANEL_CLASS = 'box';
     const PANEL_CLASS_DEFAULT = '';
@@ -52,8 +48,7 @@ class AdminLTE
 
 
     /**
-     * Class for Modal
-     *
+     * Class for Modal.
      */
     const MODAL_CLASS = 'modal fade';
     const MODAL_DIALOG_CLASS = 'modal-dialog';
@@ -70,5 +65,4 @@ class AdminLTE
     const FORM_GROUP_CHECKBOX = 'checkbox';
     const FORM_ELEMENT_CONTROL = 'form-control';
     const FORM_ELEMENT_CHECKBOX_INLINE = 'checkbox-inline';
-
 }

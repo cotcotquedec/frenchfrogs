@@ -1,33 +1,29 @@
-<?php namespace FrenchFrogs\App\Models;
+<?php
+
+namespace FrenchFrogs\App\Models;
 
 use Cache;
 use FrenchFrogs\Maker\Maker;
-use gossi\codegen\model\PhpClass;
-use gossi\codegen\generator\CodeFileGenerator;
 
 /**
- * Classe de gestion des références
+ * Classe de gestion des références.
  *
  * Class Reference
- * @package FrenchFrogs\App\Models
  */
 class Reference
 {
-
     /**
-     * CPrefix utiliser pour le cache
-     *
+     * CPrefix utiliser pour le cache.
      */
     const CACHE_PREFIX = 'reference_';
 
     /**
-     * Nom de la classe pour l'auto completion
-     *
+     * Nom de la classe pour l'auto completion.
      */
     const CLASS_NAME = 'Ref';
 
     /**
-     * Collection de reference
+     * Collection de reference.
      *
      * @var
      */
@@ -35,7 +31,7 @@ class Reference
 
 
     /**
-     * Full data
+     * Full data.
      *
      * @var
      */
@@ -43,17 +39,17 @@ class Reference
 
 
     /**
-     * Instances
+     * Instances.
      *
      * @var array
      */
-    static protected $instances = [];
-
+    protected static $instances = [];
 
     /**
-     * Constructor
+     * Constructor.
      *
      * Reference constructor.
+     *
      * @param $collection
      */
     protected function __construct($collection)
@@ -64,14 +60,13 @@ class Reference
         $this->getData();
     }
 
-
     /**
-     * constructor du singleton
+     * constructor du singleton.
      *
      * @return static
      */
-    static function getInstance($collection) {
-
+    public static function getInstance($collection)
+    {
         if (!array_key_exists($collection, static::$instances)) {
             self::$instances[$collection] = new static($collection);
         }
@@ -80,24 +75,24 @@ class Reference
     }
 
     /**
-     * Return the cache index
+     * Return the cache index.
      *
      * @return string
      */
     public function getCacheName()
     {
-        return static::CACHE_PREFIX . $this->collection;
+        return static::CACHE_PREFIX.$this->collection;
     }
 
     /**
-     * Clear all cache foir the collection
+     * Clear all cache foir the collection.
      *
      * @return $this
      */
     public function clear()
     {
         // unset data
-        if($this->hasData()){
+        if ($this->hasData()) {
             unset($this->data);
         }
 
@@ -107,9 +102,8 @@ class Reference
         return $this;
     }
 
-
     /**
-     * Return TRUE if $data is set
+     * Return TRUE if $data is set.
      *
      * @return bool
      */
@@ -119,7 +113,7 @@ class Reference
     }
 
     /**
-     * Recuperation des données de la collection
+     * Recuperation des données de la collection.
      *
      * @param bool $force_refresh
      */
@@ -129,7 +123,7 @@ class Reference
         if (!isset($this->data)) {
 
             // adresse du cache
-            $cache = static::CACHE_PREFIX . $this->collection;
+            $cache = static::CACHE_PREFIX.$this->collection;
 
             // si pas les données en cache, on les génère
             if (!Cache::has($cache)) {
@@ -151,7 +145,7 @@ class Reference
     }
 
     /**
-     * Return $data as pair with id => name
+     * Return $data as pair with id => name.
      *
      * @return array
      */
@@ -165,45 +159,44 @@ class Reference
         return $pairs;
     }
 
-
-
     /**
-     * Création d'une référence en base de donnée
+     * Création d'une référence en base de donnée.
      *
      * @param $id
      * @param $name
      * @param $collection
      * @param null $data
+     *
      * @return static
      */
-    static public function createDatabaseReference($id, $name, $collection, $data = null )
+    public static function createDatabaseReference($id, $name, $collection, $data = null)
     {
         return Db\Reference::create([
             'reference_id' => $id,
-            'name' => $name,
-            'collection' => $collection,
-            'data' => json_encode($data)
+            'name'         => $name,
+            'collection'   => $collection,
+            'data'         => json_encode($data),
         ]);
     }
 
     /**
-     * Soft delete a reference
+     * Soft delete a reference.
      *
      * @param $id
+     *
      * @throws \Exception
      */
-    static public function removeDatabaseReference($id)
+    public static function removeDatabaseReference($id)
     {
         Db\Reference::find($id)->delete();
     }
 
     /**
-     * Construction du fichier d'helper pour l'ide afin d'avoir l'autocompletion
-     *
+     * Construction du fichier d'helper pour l'ide afin d'avoir l'autocompletion.
      */
-    static public function build()
+    public static function build()
     {
-        $file = storage_path('/../bootstrap/') . static::CLASS_NAME . '.php';
+        $file = storage_path('/../bootstrap/').static::CLASS_NAME.'.php';
 
         // recuperation des données
         $constant = \FrenchFrogs\App\Models\Db\Reference::pluck('reference_id', 'reference_id')->toArray();
@@ -213,5 +206,4 @@ class Reference
         $maker->setConstants($constant);
         $maker->write();
     }
-
 }

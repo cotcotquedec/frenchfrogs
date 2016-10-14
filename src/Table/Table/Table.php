@@ -1,23 +1,21 @@
-<?php namespace FrenchFrogs\Table\Table;
+<?php
 
+namespace FrenchFrogs\Table\Table;
 
 use FrenchFrogs\Core;
 use FrenchFrogs\Table\Column;
 use FrenchFrogs\Table\Renderer;
 use Illuminate\Support\Collection;
-use InvalidArgumentException;
 
 /**
- * Table polliwog
+ * Table polliwog.
  *
  * Default table is build with a bootstrap support
  *
  * Class Table
- * @package FrenchFrogs\Table
  */
 class Table
 {
-
     use Core\Renderer;
     use Core\Filterer;
     use \FrenchFrogs\Html\Html;
@@ -29,60 +27,59 @@ class Table
     use Export;
 
     /**
+     * Data for the table.
      *
-     * Data for the table
-     *
-     * @var \Iterator $rows
+     * @var \Iterator
      */
     protected $rows;
 
 
     /**
-     * Source data
+     * Source data.
      *
      * @var
      */
     protected $source;
 
     /**
-     * If false, footer will not be render
+     * If false, footer will not be render.
      *
      * @var bool
      */
     protected $has_footer = true;
 
     /**
-     * Enable Json decode on value
+     * Enable Json decode on value.
      *
      * @var array
      */
     protected $jsonField = [];
 
     /**
-     * Contain the name of the id fiels in data
+     * Contain the name of the id fiels in data.
      *
      * @var
      */
     protected $idField;
 
     /**
-     * Return TRUE if a column has a strainer
+     * Return TRUE if a column has a strainer.
      *
      * @return bool
      */
     public function hasStrainer()
     {
-        foreach($this->getColumns() as $column) {
-            if ( $column->hasStrainer()) {
+        foreach ($this->getColumns() as $column) {
+            if ($column->hasStrainer()) {
                 return true;
             }
         }
+
         return false;
     }
 
-
     /**
-     * Return TRUE if $idField is set
+     * Return TRUE if $idField is set.
      *
      * @return bool
      */
@@ -92,7 +89,7 @@ class Table
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $url
      * @param string $method
@@ -104,15 +101,15 @@ class Table
          */
         if (!$this->hasRenderer()) {
             $class = configurator()->get('table.renderer.class');
-            $this->setRenderer(new $class);
+            $this->setRenderer(new $class());
         }
 
         if (!$this->hasFilterer()) {
             $class = configurator()->get('table.filterer.class');
-            $this->setFilterer(new $class);
+            $this->setFilterer(new $class());
         }
 
-        if (!$this->hasUrl()){
+        if (!$this->hasUrl()) {
             $this->setUrl(request()->url());
         }
 
@@ -121,32 +118,32 @@ class Table
         // if method "init" exist, we call it.
         if (method_exists($this, 'init')) {
             call_user_func_array([$this, 'init'], func_get_args());
-        } elseif(func_num_args() == 1) {
+        } elseif (func_num_args() == 1) {
             $this->setSource(func_get_arg(0));
         }
 
         // Force id html attribute
         if (!$this->hasAttribute('id')) {
-            $this->addAttribute('id', 'table-' . rand());
+            $this->addAttribute('id', 'table-'.rand());
         }
     }
 
-
     /**
-     * Set all the rows container
+     * Set all the rows container.
      *
-     * @param \Iterator  $rows
+     * @param \Iterator $rows
+     *
      * @return $this
      */
     public function setRows(\Iterator $rows)
     {
         $this->rows = $rows;
+
         return $this;
     }
 
-
     /**
-     * return all the rows container
+     * return all the rows container.
      *
      * @return \Iterator
      */
@@ -154,7 +151,6 @@ class Table
     {
         return $this->rows;
     }
-
 
     /**l
      * Clear all the rows container
@@ -164,25 +160,24 @@ class Table
     public function clearRows()
     {
         $this->rows = new \ArrayIterator();
+
         return $this;
     }
 
-
     /**
-     *
-     *
      * @param $source
+     *
      * @return $this
      */
     public function setSource($source)
     {
         $this->source = $source;
+
         return $this;
     }
 
-
     /**
-     * Getter for $source attribute
+     * Getter for $source attribute.
      *
      * @return array
      */
@@ -192,7 +187,7 @@ class Table
     }
 
     /**
-     * Return TRUE if $source attribute is set
+     * Return TRUE if $source attribute is set.
      *
      * @return bool
      */
@@ -202,7 +197,7 @@ class Table
     }
 
     /**
-     * Extract rows from $source attribute
+     * Extract rows from $source attribute.
      *
      * @return $this
      */
@@ -211,11 +206,11 @@ class Table
         $source = $this->source;
 
         // Laravel query builder case
-        if(  $this->isSourceQueryBuilder())  {
-            /** @var $source \Illuminate\Database\Query\Builder */
+        if ($this->isSourceQueryBuilder()) {
+            /* @var $source \Illuminate\Database\Query\Builder */
 
             $count = query(raw("({$source->toSql()}) as a"), [raw('COUNT(*) as _num_rows')], $source->getConnection()->getName())->mergeBindings($source)->first();
-            $this->itemsTotal = isset($count['_num_rows']) ?  $count['_num_rows'] : null;
+            $this->itemsTotal = isset($count['_num_rows']) ? $count['_num_rows'] : null;
 
             $source = $source->skip($this->getItemsOffset())->take($this->getItemsPerPage())->get();
 
@@ -227,15 +222,15 @@ class Table
             $source = new \ArrayIterator($source);
 
             // Array case
-        } elseif(is_array($source)) {
+        } elseif (is_array($source)) {
             $this->itemsTotal = count($source);
             $source = array_slice($source, $this->getItemsOffset(), $this->getItemsPerPage());
             $source = new \ArrayIterator($source);
         }
 
-        /**@var $source \Iterator */
+        /** @var $source \Iterator */
         if (!($source instanceof \Iterator)) {
-            throw new \InvalidArgumentException("Source must be an array or an Iterator");
+            throw new \InvalidArgumentException('Source must be an array or an Iterator');
         }
 
 
@@ -251,7 +246,7 @@ class Table
     }
 
     /**
-     * Return true if the source is an instance of \Illuminate\Database\Query\Builder
+     * Return true if the source is an instance of \Illuminate\Database\Query\Builder.
      *
      * @return bool
      */
@@ -260,32 +255,32 @@ class Table
         return is_object($this->getSource()) && get_class($this->getSource()) == \Illuminate\Database\Query\Builder::class;
     }
 
-
     /**
-     * Set $has_footer attribute to TRUE
+     * Set $has_footer attribute to TRUE.
      *
      * @return $this
      */
     public function enableFooter()
     {
         $this->has_footer = true;
+
         return $this;
     }
 
     /**
-     * Set $has_footer attribute to FALSE
+     * Set $has_footer attribute to FALSE.
      *
      * @return $this
      */
     public function disableFooter()
     {
         $this->has_footer = false;
+
         return $this;
     }
 
-
     /**
-     * return TRUE if $has_footer is set tio TRUE
+     * return TRUE if $has_footer is set tio TRUE.
      *
      * @return bool
      */
@@ -294,68 +289,61 @@ class Table
         return $this->has_footer;
     }
 
-
-
     /**
      * *******************
      * RENDERER
-     * *******************
+     * *******************.
      */
 
     /**
-     * Render polliwog
+     * Render polliwog.
      *
      * @return mixed|string
      */
     public function render()
     {
-
         $render = '';
         try {
             $this->extractRows();
             $render = $this->getRenderer()->render('table', $this);
-        } catch(\Exception $e){
-            dd($e->getMessage());//@todo find a good way to warn the developper
+        } catch (\Exception $e) {
+            dd($e->getMessage()); //@todo find a good way to warn the developper
         }
 
         return $render;
     }
 
-
     /**
-     * Overload parent method for form specification
+     * Overload parent method for form specification.
      *
      * @return string
-     *
      */
     public function __toString()
     {
         return $this->render();
     }
 
-
-
-
     /**
-     * Add json field to decode
+     * Add json field to decode.
      *
      * @param $field
      */
     public function addJsonField($field)
     {
         $this->jsonField[] = $field;
+
         return $this;
     }
 
     /**
-     * Remove $field from $jsonField
+     * Remove $field from $jsonField.
      *
      * @param $field
+     *
      * @return $this
      */
-    public  function removeJsonField($field)
+    public function removeJsonField($field)
     {
-
         $i = array_search($field, $this->jsonField);
 
         if ($i !== false) {
@@ -365,21 +353,22 @@ class Table
         return $this;
     }
 
-
     /**
-     * Setter for $jsonField
+     * Setter for $jsonField.
      *
      * @param array $fields
+     *
      * @return $this
      */
     public function setJsonFields(array $fields)
     {
         $this->jsonField = $fields;
+
         return $this;
     }
-    
+
     /**
-     * Getter for jsonField
+     * Getter for jsonField.
      *
      * @return array
      */
@@ -389,7 +378,7 @@ class Table
     }
 
     /**
-     * Return TRUE if a json field is set at least
+     * Return TRUE if a json field is set at least.
      *
      * @return bool
      */
@@ -399,42 +388,43 @@ class Table
     }
 
     /**
-     * Extract json data
+     * Extract json data.
      *
      * @return $this
      */
     public function extractJson()
     {
-        foreach($this->getRows() as &$row) {
-
-            foreach($this->getJsonFields() as $field) {
+        foreach ($this->getRows() as &$row) {
+            foreach ($this->getJsonFields() as $field) {
                 if (isset($row[$field])) {
-
                     $data = json_decode($row[$field], JSON_OBJECT_AS_ARRAY);
 
-                    foreach((array) $data as $k => $v) {
+                    foreach ((array) $data as $k => $v) {
                         $row[sprintf('_%s__%s', $field, $k)] = $v;
                     }
                 }
             }
         }
+
         return $this;
     }
 
     /**
-     * Setter for $idField
+     * Setter for $idField.
      *
      * @param $field
+     *
      * @return $this
      */
     public function setIdField($field)
     {
         $this->idField = $field;
+
         return $this;
     }
 
     /**
-     * Getter for $idField
+     * Getter for $idField.
      *
      * @return mixed
      */
@@ -444,13 +434,14 @@ class Table
     }
 
     /**
-     * Unset $idField
+     * Unset $idField.
      *
      * @return $this
      */
     public function removeIdField()
     {
         unset($this->idField);
+
         return $this;
     }
 }

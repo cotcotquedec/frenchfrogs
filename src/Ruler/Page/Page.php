@@ -1,71 +1,69 @@
-<?php namespace FrenchFrogs\Ruler\Page;
+<?php
 
-use InvalidArgumentException;
+namespace FrenchFrogs\Ruler\Page;
 
 use FrenchFrogs\Core;
 use FrenchFrogs\Html;
+use InvalidArgumentException;
 
 class Page
 {
-
     use Core\Renderer;
     use Html\Html;
 
     /**
-     * Label of the page
+     * Label of the page.
      *
      * @var string
      */
     protected $label;
 
     /**
-     * Link to the page
+     * Link to the page.
      *
      * @var string
      */
     protected $link;
 
     /**
-     * Permission needed to have access to the page
+     * Permission needed to have access to the page.
      *
      * @var string
      */
     protected $permission;
 
     /**
-     * Children page container
+     * Children page container.
      *
      * @var array
      */
     protected $children = [];
 
     /**
-     * Constructeur
+     * Constructeur.
      *
      * @param $link
-     * @param null $label
-     * @param null $permission
+     * @param null  $label
+     * @param null  $permission
      * @param array $children
      */
     public function __construct($link, $label = null, $permission = null, array $children = [])
     {
-
         $this->setLink($link);
 
-        if(!is_null($label)) {
+        if (!is_null($label)) {
             $this->setLabel($label);
         }
 
-        if(!is_null($permission)) {
+        if (!is_null($permission)) {
             $this->setPermission($permission);
         }
 
         $this->setChildren($children);
     }
 
-
     /**
-     * Getter for $label attribute
+     * Getter for $label attribute.
      *
      * @return mixed
      */
@@ -75,30 +73,33 @@ class Page
     }
 
     /**
-     * Setter for $label attribute
+     * Setter for $label attribute.
      *
      * @param $label
+     *
      * @return $this
      */
     public function setLabel($label)
     {
         $this->label = strval($label);
+
         return $this;
     }
 
     /**
-     * Unset $label attribute
+     * Unset $label attribute.
      *
      * @return $this
      */
     public function removeLabel()
     {
         unset($this->label);
+
         return $this;
     }
 
     /**
-     * Return TRUE is $label is set
+     * Return TRUE is $label is set.
      *
      * @return bool
      */
@@ -108,7 +109,7 @@ class Page
     }
 
     /**
-     * Getter for $link attribute
+     * Getter for $link attribute.
      *
      * @return mixed
      */
@@ -118,30 +119,33 @@ class Page
     }
 
     /**
-     * Setter for $link attribute
+     * Setter for $link attribute.
      *
      * @param $link
+     *
      * @return $this
      */
     public function setLink($link)
     {
         $this->link = strval($link);
+
         return $this;
     }
 
     /**
-     * Unset $link attribute
+     * Unset $link attribute.
      *
      * @return $this
      */
     public function removeLink()
     {
         unset($this->link);
+
         return $this;
     }
 
     /**
-     * Return TRUE is $link is set
+     * Return TRUE is $link is set.
      *
      * @return bool
      */
@@ -151,7 +155,7 @@ class Page
     }
 
     /**
-     * Getter for $permission attribute
+     * Getter for $permission attribute.
      *
      * @return mixed
      */
@@ -161,30 +165,33 @@ class Page
     }
 
     /**
-     * Setter for $permission attribute
+     * Setter for $permission attribute.
      *
      * @param $permission
+     *
      * @return $this
      */
     public function setPermission($permission)
     {
         $this->permission = strval($permission);
+
         return $this;
     }
 
     /**
-     * Unset $permission attribute
+     * Unset $permission attribute.
      *
      * @return $this
      */
     public function removePermission()
     {
         unset($this->permission);
+
         return $this;
     }
 
     /**
-     * Return TRUE is $permission is set
+     * Return TRUE is $permission is set.
      *
      * @return bool
      */
@@ -193,22 +200,22 @@ class Page
         return isset($this->permission);
     }
 
-
     /**
-     * Setter for $children container
+     * Setter for $children container.
      *
      * @param $children
+     *
      * @return $this
      */
     public function setChildren($children)
     {
         $this->children = $children;
+
         return $this;
     }
 
-
     /**
-     * Getter for $children attribute
+     * Getter for $children attribute.
      *
      * @return array
      */
@@ -218,18 +225,19 @@ class Page
     }
 
     /**
-     * Clear $children container
+     * Clear $children container.
      *
      * @return $this
      */
     public function clearChildren()
     {
         $this->children = [];
+
         return $this;
     }
 
     /**
-     * Return true if $children container contain a least 1 element
+     * Return true if $children container contain a least 1 element.
      *
      * @return bool
      */
@@ -239,31 +247,33 @@ class Page
     }
 
     /**
-     * Add $pag to $children container
+     * Add $pag to $children container.
      *
      * @param $index
      * @param \FrenchFrogs\Ruler\Page\Page $page
+     *
      * @return $this
      */
     public function addChild($index, Page $page)
     {
         $this->children[$index] = $page;
+
         return $this;
     }
 
     /**
-     * Return TRUE id $index page exist in $children container
+     * Return TRUE id $index page exist in $children container.
      *
      * @param $index
+     *
      * @return bool
      */
     public function hasChild($index, $is_recursive = true)
     {
+        $recursive = function (Page $page) use ($index, &$recursive) {
+            foreach ($page->getChildren() as $k => $p) {
 
-        $recursive = function(Page $page) use ($index, &$recursive) {
-            foreach ($page->getChildren() as $k => $p ) {
-
-                /**@var Page $p*/
+                /** @var Page $p */
                 if ($index == $k) {
                     return true;
                 }
@@ -280,23 +290,22 @@ class Page
     }
 
     /**
-     * Return $index page from $children container
+     * Return $index page from $children container.
      *
      * @param $index
+     *
      * @return mixed
      */
     public function getChild($index, $is_recursive = true)
     {
-
-
         if (!$this->hasChild($index, $is_recursive)) {
-            throw new InvalidArgumentException('Child doesn\'t exist : ' . $index);
+            throw new InvalidArgumentException('Child doesn\'t exist : '.$index);
         }
 
-        $recursive = function(Page $page) use ($index, &$recursive) {
-            foreach ($page->getChildren() as $k => $p ) {
+        $recursive = function (Page $page) use ($index, &$recursive) {
+            foreach ($page->getChildren() as $k => $p) {
 
-                /**@var Page $p*/
+                /** @var Page $p */
                 if ($index == $k) {
                     return $p;
                 }
@@ -312,17 +321,17 @@ class Page
         return $recursive($this);
     }
 
-
     /**
-     * Remove $index child from $children container
+     * Remove $index child from $children container.
      *
      * @param $index
+     *
      * @return $this
      */
     public function removeChild($index)
     {
         if (!$this->hasChild($index)) {
-            throw new InvalidArgumentException('Child doesn\'t exist : ' . $index);
+            throw new InvalidArgumentException('Child doesn\'t exist : '.$index);
         }
 
         unset($this->children[$index]);
@@ -331,14 +340,14 @@ class Page
     }
 
     /**
-     * Return TRUE if the current page is this page
+     * Return TRUE if the current page is this page.
      *
      * @return bool
      */
     public function isCurrent()
     {
         $link = $this->getLink();
-        if ($link{0} == '/') {
+        if ($link[0] == '/') {
             $link = substr($link, 1);
         }
 

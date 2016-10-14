@@ -1,4 +1,6 @@
-<?php namespace FrenchFrogs\Panel\Action;
+<?php
+
+namespace FrenchFrogs\Panel\Action;
 
 use FrenchFrogs\Core;
 use FrenchFrogs\Html\Element;
@@ -9,13 +11,13 @@ class Button extends Action
     use Element\Button;
 
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $label = '', $attr = [] )
+    public function __construct($name, $label = '', $attr = [])
     {
         $this->setRemoteId(configurator()->get('modal.remote.id', $this->remoteId));
         $this->setAttributes($attr);
@@ -25,22 +27,18 @@ class Button extends Action
         $this->disableIconOnly();
     }
 
-
     /**
      * @return string
      */
     public function render()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('button', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 
         return $render;
     }
-
-
 }

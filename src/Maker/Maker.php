@@ -1,4 +1,6 @@
-<?php namespace FrenchFrogs\Maker;
+<?php
+
+namespace FrenchFrogs\Maker;
 
 use BetterReflection\Reflection\ReflectionClass;
 use FrenchFrogs\Core\Renderer;
@@ -14,35 +16,35 @@ class Maker
     const NO_VALUE = '__null__';
 
     /**
-     * Fichier de sortie
+     * Fichier de sortie.
      *
      * @var
      */
     protected $filename;
 
     /**
-     * Properties to add or modify
+     * Properties to add or modify.
      *
      * @var Property[]
      */
     protected $properties = [];
 
     /**
-     * Methods to add or modify
+     * Methods to add or modify.
      *
      * @var Method[]
      */
     protected $methods = [];
 
     /**
-     * Class principale
+     * Class principale.
      *
      * @var ReflectionClass
      */
     protected $class;
 
     /**
-     * Constant de la class
+     * Constant de la class.
      *
      * @var array
      */
@@ -59,15 +61,14 @@ class Maker
     protected $parent;
 
     /**
-     * Alias declaration
+     * Alias declaration.
      *
      * @var array
      */
     protected $aliases = [];
 
-
     /**
-     * Getter for $constants
+     * Getter for $constants.
      *
      * @return array
      */
@@ -77,7 +78,7 @@ class Maker
     }
 
     /**
-     * Setter for $costants
+     * Setter for $costants.
      *
      * @param array $constants
      */
@@ -87,45 +88,51 @@ class Maker
     }
 
     /**
-     * add constant to $constant
+     * add constant to $constant.
      *
      * @param $name
      * @param $value
+     *
      * @return $this
      */
     public function addConstant($name, $value)
     {
         $this->constants[$name] = $value;
+
         return $this;
     }
 
     /**
-     * Clear $constants
+     * Clear $constants.
      *
      * @return $this
      */
     public function clearConstants()
     {
         $this->constants = [];
+
         return $this;
     }
 
     /**
-     * Unset a constant
+     * Unset a constant.
      *
      * @param $name
+     *
      * @return $this
      */
     public function removeConstants($name)
     {
         unset($this->constants[$name]);
+
         return $this;
     }
 
     /**
-     * Return TRUE if $name constant is set
+     * Return TRUE if $name constant is set.
      *
      * @param $name
+     *
      * @return bool
      */
     public function hasConstant($name)
@@ -134,7 +141,7 @@ class Maker
     }
 
     /**
-     * Getter for $methods
+     * Getter for $methods.
      *
      * @return Method[]
      */
@@ -144,9 +151,10 @@ class Maker
     }
 
     /**
-     * Get method from name
+     * Get method from name.
      *
      * @param $method
+     *
      * @return Method
      */
     public function getMethod($method)
@@ -155,9 +163,10 @@ class Maker
     }
 
     /**
-     * Return TRUE si la method exist
+     * Return TRUE si la method exist.
      *
      * @param $method
+     *
      * @return bool
      */
     public function hasMethod($method)
@@ -166,19 +175,21 @@ class Maker
     }
 
     /**
-     * Setter for $aliases
+     * Setter for $aliases.
      *
      * @param $aliases
+     *
      * @return $this
      */
     public function setAliases($aliases)
     {
         $this->aliases = $aliases;
+
         return $this;
     }
 
     /**
-     * Getter for $aliases
+     * Getter for $aliases.
      *
      * @return array
      */
@@ -188,7 +199,7 @@ class Maker
     }
 
     /**
-     * Add alias to $aliases container
+     * Add alias to $aliases container.
      *
      * @param $alias
      */
@@ -198,18 +209,19 @@ class Maker
     }
 
     /**
-     * Clear all aliases
+     * Clear all aliases.
      *
      * @return $this
      */
     public function clearAliases()
     {
         $this->aliases = [];
+
         return $this;
     }
 
     /**
-     * Return TRUE si au moins 1 alias est présent
+     * Return TRUE si au moins 1 alias est présent.
      *
      * @return bool
      */
@@ -219,7 +231,8 @@ class Maker
     }
 
     /**
-     * find the good clas for class name
+     * find the good clas for class name.
+     *
      * @param $class
      */
     public function findAliasName($class)
@@ -228,7 +241,7 @@ class Maker
         $name = $class;
 
         // cas du namespace
-        if($this->hasNamespace()) {
+        if ($this->hasNamespace()) {
             $name = preg_replace('#^'.str_replace('\\', '\\\\', $this->getNamespace()).'\\\\#', '', $name);
         }
 
@@ -238,11 +251,11 @@ class Maker
             $name = strlen($a) < strlen($name) ? $a : $name;
         }
 
-        return $name == $class ?  '\\' . $class : $name;
+        return $name == $class ? '\\'.$class : $name;
     }
 
     /**
-     * Getter for $parent
+     * Getter for $parent.
      *
      * @return string
      */
@@ -252,19 +265,21 @@ class Maker
     }
 
     /**
-     * Setter for $parent
+     * Setter for $parent.
      *
      * @param $parent
+     *
      * @return $this
      */
     public function setParent($parent)
     {
         $this->parent = strval($parent);
+
         return $this;
     }
 
     /**
-     * Return TRUE if a parent is set
+     * Return TRUE if a parent is set.
      *
      * @return bool
      */
@@ -274,7 +289,7 @@ class Maker
     }
 
     /**
-     * Getter for $namespace
+     * Getter for $namespace.
      *
      * @return string
      */
@@ -284,19 +299,21 @@ class Maker
     }
 
     /**
-     * Setter for $namespace
+     * Setter for $namespace.
      *
      * @param $namespace
+     *
      * @return $this
      */
     public function setNamespace($namespace)
     {
         $this->namespace = strval($namespace);
+
         return $this;
     }
 
     /**
-     * Return TRUE if a namespace is present
+     * Return TRUE if a namespace is present.
      *
      * @return bool
      */
@@ -305,35 +322,37 @@ class Maker
         return !empty($this->namespace);
     }
 
-
     /**
-     * Setter pour la class
+     * Setter pour la class.
      *
      * @param $class
+     *
      * @return $this
      */
     public function setClass($class)
     {
         $this->class = $class;
         $this->reflect();
+
         return $this;
     }
 
-
     /**
-     * Setter for $filename
+     * Setter for $filename.
      *
      * @param $filename
+     *
      * @return $this
      */
     public function setFilename($filename)
     {
         $this->filename = strval($filename);
+
         return $this;
     }
 
     /**
-     * Getter for $filename
+     * Getter for $filename.
      *
      * @return mixed
      */
@@ -343,7 +362,7 @@ class Maker
     }
 
     /**
-     * Analyse $class for extract self content
+     * Analyse $class for extract self content.
      *
      * @return $this
      */
@@ -392,7 +411,7 @@ class Maker
         $this->setConstants($reflection->getConstants());
 
         // PROPERTIES
-        foreach($reflection->getProperties() as $property) {
+        foreach ($reflection->getProperties() as $property) {
             $this->addProperty(Property::fromReflection($property));
         }
 
@@ -405,7 +424,7 @@ class Maker
     }
 
     /**
-     * Getter pour la class
+     * Getter pour la class.
      *
      * @return ReflectionClass
      */
@@ -415,35 +434,39 @@ class Maker
     }
 
     /**
-     * Add a property
+     * Add a property.
      *
      * @param $name
      * @param bool $mandatory
      * @param null $default
      * @param null $type
+     *
      * @return Property
      */
-    public function addProperty($name, $default = Maker::NO_VALUE, $type = null)
+    public function addProperty($name, $default = self::NO_VALUE, $type = null)
     {
-        $property = $name instanceof Property ?  $name : new Property($name, $default, $type);
+        $property = $name instanceof Property ? $name : new Property($name, $default, $type);
 
         $this->properties[$property->getName()] = $property;
+
         return $this->properties[$property->getName()];
     }
 
     /**
      * @param $name
      * @param array $params @todo!!!!
+     *
      * @return Method
      */
     public function addMethod($name, $params = [])
     {
-        $method = $name instanceof Method ?  $name : new Method($name, $params);
+        $method = $name instanceof Method ? $name : new Method($name, $params);
+
         return $this->methods[$method->getName()] = $method;
     }
 
     /**
-     * Getter for $properties
+     * Getter for $properties.
      *
      * @return array
      */
@@ -453,31 +476,34 @@ class Maker
     }
 
     /**
-     * Setter for $properties
+     * Setter for $properties.
      *
      * @param array $properties
+     *
      * @return $this
      */
     public function setProperties(array $properties)
     {
         $this->properties = $properties;
+
         return $this;
     }
 
     /**
-     * Factory depuis une class existante
+     * Factory depuis une class existante.
      *
      * @param $class
      */
-    static public function load($class)
+    public static function load($class)
     {
         $instance = new static();
 
-        if(!class_exists($class, true)){
-            \exc('La classe "' . $class . '" n\'existe pas!');
+        if (!class_exists($class, true)) {
+            \exc('La classe "'.$class.'" n\'existe pas!');
         }
 
         $instance->setClass(ReflectionClass::createFromName($class));
+
         return $instance;
     }
 
@@ -489,29 +515,29 @@ class Maker
         // CONFIGURATION
         if (!$this->hasRenderer()) {
             $class = configurator()->get('maker.renderer.class');
-            $this->setRenderer(new $class);
+            $this->setRenderer(new $class());
         }
     }
 
     /**
-     * CReate a classe from a shortname
+     * CReate a classe from a shortname.
      *
      * @param $shortname
+     *
      * @return Maker
      */
-    static public function initFromShortName($shortname)
+    public static function initFromShortName($shortname)
     {
         return static::init(static::formatClassName($shortname));
     }
 
-
     /**
-     * Creation d'un fichier pour inititaliser une class
+     * Creation d'un fichier pour inititaliser une class.
      *
      * @param $class
      * @param $file
      */
-    static public function init($class, $file = null)
+    public static function init($class, $file = null)
     {
         // determination du fichier en focntion du nom de la classe
         if (is_null($file)) {
@@ -519,10 +545,10 @@ class Maker
         }
 
         // recuperation du realpath du fichier
-        $file = app_path('../' . $file);
+        $file = app_path('../'.$file);
 
         if (file_exists($file)) {
-            exc('Impossible de créer la classe "'.$class.'", Le fichier existe deja : ' . $file );
+            exc('Impossible de créer la classe "'.$class.'", Le fichier existe deja : '.$file);
         }
 
         // initialisation du gestionnaire de fichier
@@ -530,7 +556,7 @@ class Maker
 
         // on regarde sir le fichier exist deja
         if ($filesystem->exists($file)) {
-            exc('Le fichier exists déjà : ' . $file);
+            exc('Le fichier exists déjà : '.$file);
         }
 
         // creation du repertoire
@@ -541,12 +567,12 @@ class Maker
 
         //gestion du namespace
         $body = '<?php ';
-        if (preg_match("#\\\\(?<namespace>.+)\\\\(?<class>[^\\\\]+)$#", $class, $match)) {
-            $body .= 'namespace ' . $match['namespace'] . ';' . PHP_EOL;
-            $body .= 'class ' . $match['class'] . '{}';
+        if (preg_match('#\\\\(?<namespace>.+)\\\\(?<class>[^\\\\]+)$#', $class, $match)) {
+            $body .= 'namespace '.$match['namespace'].';'.PHP_EOL;
+            $body .= 'class '.$match['class'].'{}';
         } else {
             $body .=
-            $body .= 'class ' . $class . '{}';
+            $body .= 'class '.$class.'{}';
         }
 
         // Création du fichier
@@ -554,6 +580,7 @@ class Maker
 
         // Chargement
         require_once $file;
+
         return static::load($class);
     }
 
@@ -567,31 +594,33 @@ class Maker
         $render = '';
         try {
             $render = $this->getRenderer()->render('maker', $this);
-        } catch(\Exception $e){
-            dd($e->getMessage());//@todo find a good way to warn the developper
+        } catch (\Exception $e) {
+            dd($e->getMessage()); //@todo find a good way to warn the developper
         }
 
         return $render;
     }
 
     /**
-     * Ecrit dans le fichier le contenu
+     * Ecrit dans le fichier le contenu.
      *
      * @return $this
      */
     public function write()
     {
-        file_put_contents($this->getFilename(), '<?php ' . $this->render(), LOCK_EX);
+        file_put_contents($this->getFilename(), '<?php '.$this->render(), LOCK_EX);
+
         return $this;
     }
 
     /**
-     * Renvcoie le nom de la class depuis un fichier
+     * Renvcoie le nom de la class depuis un fichier.
      *
      * @param $file
+     *
      * @return string
      */
-    static function findClass($file)
+    public static function findClass($file)
     {
 
         // recuperation contenu du fichier
@@ -602,7 +631,7 @@ class Maker
 
         // identification du namespace
         if (preg_match('#namespace\s+(?<namespace>[^\s^;]+)#', $content, $match)) {
-            $class .= trim($match['namespace']) . '\\';
+            $class .= trim($match['namespace']).'\\';
         }
 
         // identification de la classe
@@ -613,14 +642,14 @@ class Maker
         return $class;
     }
 
-
     /**
-     * Recuperation des classes dans un repertoire
+     * Recuperation des classes dans un repertoire.
      *
      * @param $root
+     *
      * @return array
      */
-    static function findClasses($root)
+    public static function findClasses($root)
     {
         // test si repertoire
         if (!is_dir($root)) {
@@ -637,7 +666,7 @@ class Maker
             }
 
             // construction du chemin complet
-            $path =  $root . DIRECTORY_SEPARATOR . $name;
+            $path = $root.DIRECTORY_SEPARATOR.$name;
 
             // cas des repertoires
             if (is_dir($path)) {
@@ -653,11 +682,11 @@ class Maker
     }
 
     /**
-     * Recuperation des controllers de l'application
+     * Recuperation des controllers de l'application.
      *
      * @return array
      */
-    static function findControllers()
+    public static function findControllers()
     {
         $controllers = [];
 
@@ -667,12 +696,12 @@ class Maker
         foreach ($classes as $class) {
             $reflection = ReflectionClass::createFromName($class);
 
-            if ($class{0} == '\\') {
+            if ($class[0] == '\\') {
                 $class = substr($class, 1);
             }
 
             // recuperation des controllers
-            if ($reflection->getParentClass()->getName() != static::NAMESPACE_CONTROLLER . 'Controller') {
+            if ($reflection->getParentClass()->getName() != static::NAMESPACE_CONTROLLER.'Controller') {
                 continue;
             }
 
@@ -682,9 +711,8 @@ class Maker
         return $controllers;
     }
 
-
     /**
-     * Find permission constant
+     * Find permission constant.
      *
      * @return array
      */
@@ -708,8 +736,7 @@ class Maker
     }
 
     /**
-     * Find PErmission groups constant
-     *
+     * Find PErmission groups constant.
      */
     public function getPermissionsGroupsConstants()
     {
@@ -725,9 +752,8 @@ class Maker
         return $groups;
     }
 
-
     /**
-     * Get interface constants
+     * Get interface constants.
      *
      * @return array
      */
@@ -745,37 +771,39 @@ class Maker
         return $interfaces;
     }
 
-
     /**
-     * Donne le nom du fichier pour une classe
+     * Donne le nom du fichier pour une classe.
      *
      * @param $class
+     *
      * @return string
      */
-    static function findFile($class)
+    public static function findFile($class)
     {
         // on s'assure que le namespace par bien du debut
-        if ($class{0} != '\\') {
-            $class = '\\' . $class;
+        if ($class[0] != '\\') {
+            $class = '\\'.$class;
         }
 
         /// gestion des namespace
         $class = preg_replace('#^.App(.+)#', 'app$1', $class);
         $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
 
-        return $class . '.php';
+        return $class.'.php';
     }
 
     /**
-     * Build class name from short naming
+     * Build class name from short naming.
      *
      * @param $shortname
+     *
      * @return string
      */
-    static public function formatClassName($shortname)
+    public static function formatClassName($shortname)
     {
         $shortname = str_replace('.', '\\_', $shortname);
         $class = ucfirst(camel_case($shortname));
-        return '\\' . $class;
+
+        return '\\'.$class;
     }
 }

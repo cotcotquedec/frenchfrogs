@@ -1,38 +1,32 @@
-<?php namespace FrenchFrogs\App\Console;
+<?php
 
-use Illuminate\Console\Scheduling\Schedule as SchedulingSchedule;
-use FrenchFrogs\App\Models\Db\Schedule\Schedule;
+namespace FrenchFrogs\App\Console;
+
 use FrenchFrogs\App\Models\Db\Schedule\Log;
-use Illuminate\Support\Facades\Schema;
+use FrenchFrogs\App\Models\Db\Schedule\Schedule;
+use Illuminate\Console\Scheduling\Schedule as SchedulingSchedule;
 
 /**
- * Class SchedulerKernel
+ * Class SchedulerKernel.
  *
  *
  * @property \Illuminate\Foundation\Application $app
  *
- *
  * @method  \Illuminate\Console\Application getArtisan()
  * @method  void  reportException() reportException(\Exception $e)
  * @method  void  renderException() renderException($output, \Exception $e)
- *
- *
- * @package FrenchFrogs\Scheduler\Console
  */
 trait SchedulerKernel
 {
-
-
     /**
-     * True if schedule is active
+     * True if schedule is active.
      *
      * @var bool
      */
     protected $has_schedule;
 
-
     /**
-     * Return TRU if schedule module is active
+     * Return TRU if schedule module is active.
      *
      * @return bool
      */
@@ -47,7 +41,7 @@ trait SchedulerKernel
     protected $log;
 
     /**
-     * Getter for $log
+     * Getter for $log.
      *
      * @return \FrenchFrogs\App\Models\Db\Schedule\Log
      */
@@ -57,7 +51,7 @@ trait SchedulerKernel
     }
 
     /**
-     * Return TRUE if $log is set
+     * Return TRUE if $log is set.
      *
      * @return bool
      */
@@ -66,16 +60,17 @@ trait SchedulerKernel
         return isset($this->log);
     }
 
-
     /**
-     * Setter for $log
+     * Setter for $log.
      *
      * @param \FrenchFrogs\App\Models\Db\Schedule\Log $log
+     *
      * @return $this
      */
     public function setLog(Log $log)
     {
         $this->log = $log;
+
         return $this;
     }
 
@@ -83,6 +78,7 @@ trait SchedulerKernel
      * Define the application's command schedule.
      *
      * @param SchedulingSchedule $schedule
+     *
      * @return void
      */
     protected function schedule(SchedulingSchedule $schedule)
@@ -91,7 +87,7 @@ trait SchedulerKernel
             // Add command to scheduler
             foreach (Schedule::active()->get() as $model) {
 
-                /**@var Schedule $model */
+                /** @var Schedule $model */
                 $command = $schedule->command($model->command)->cron($model->schedule);
 
                 if (!$model->can_overlapping) {
@@ -104,8 +100,9 @@ trait SchedulerKernel
     /**
      * Run the console application.
      *
-     * @param \Symfony\Component\Console\Input\InputInterface  $input
-     * @param \Symfony\Component\Console\Output\OutputInterface  $output
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
      * @return int
      */
     public function handleSchedule($input, $output = null)
@@ -118,20 +115,20 @@ trait SchedulerKernel
             if (!is_null($command)) {
                 // create log
                 $log = Log::create([
-                    'command' => $input->getFirstArgument(),
-                    'options' => empty($options = $input->getOptions()) ? null : json_encode($options),
-                    'arguments' => empty($arguments = $input->getArguments()) ? null : json_encode($arguments)
+                    'command'   => $input->getFirstArgument(),
+                    'options'   => empty($options = $input->getOptions()) ? null : json_encode($options),
+                    'arguments' => empty($arguments = $input->getArguments()) ? null : json_encode($arguments),
                 ]);
 
                 $this->setLog($log);
             }
 
             return $this->getArtisan()->run($input, $output);
-
         } catch (\Exception $e) {
-           $this->getLog()->message = $e->getMessage();
+            $this->getLog()->message = $e->getMessage();
             $this->reportException($e);
             $this->renderException($output, $e);
+
             return 1;
         }
     }
@@ -139,8 +136,9 @@ trait SchedulerKernel
     /**
      * Terminate the application.
      *
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @param  int  $status
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param int                                             $status
+     *
      * @return void
      */
     public function terminateSchedule($input, $status)

@@ -1,11 +1,12 @@
-<?php namespace FrenchFrogs\App\Console;
+<?php
+
+namespace FrenchFrogs\App\Console;
 
 use FrenchFrogs\App\Models\Acl;
 use Illuminate\Console\Command;
 
 class ChangeUserPasswordCommand extends Command
 {
-
     /**
      * The name and signature of the console command.
      *
@@ -59,6 +60,6 @@ class ChangeUserPasswordCommand extends Command
         $user->save();
 
         // affichage du mot de passe
-        $this->info('Le mot de passe généré est : ' . $password );
+        $this->info('Le mot de passe généré est : '.$password);
     }
 }

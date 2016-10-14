@@ -1,4 +1,6 @@
-<?php namespace FrenchFrogs\App\Models\Db\User;
+<?php
+
+namespace FrenchFrogs\App\Models\Db\User;
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,9 +14,8 @@ class Permission extends Model
     public $timestamps = false;
     public $incrementing = false;
 
-
     /**
-     * Renvoie les utilisateurs ayant accès a cette permission
+     * Renvoie les utilisateurs ayant accès a cette permission.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */

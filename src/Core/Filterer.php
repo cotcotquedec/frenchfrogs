@@ -1,25 +1,23 @@
-<?php namespace FrenchFrogs\Core;
+<?php
+
+namespace FrenchFrogs\Core;
 
 /**
- *
- * Trait for filterer polymorphisme
+ * Trait for filterer polymorphisme.
  *
  * Class Filterer
- * @package FrenchFrogs\Core
  */
 trait Filterer
 {
-
     /**
-     * container
+     * container.
      *
      * @var \FrenchFrogs\Filterer\Filterer
      */
     protected $filterer;
 
-
     /**
-     * Getter
+     * Getter.
      *
      * @return \FrenchFrogs\Filterer\Filterer
      */
@@ -28,22 +26,22 @@ trait Filterer
         return $this->filterer;
     }
 
-
     /**
-     * Setter
+     * Setter.
      *
      * @param \FrenchFrogs\Filterer\Filterer $filterer
+     *
      * @return $this
      */
     public function setFilterer(\FrenchFrogs\Filterer\Filterer $filterer)
     {
-
         $this->filterer = $filterer;
+
         return $this;
     }
 
     /**
-     * Return true if a filtrerer is set
+     * Return true if a filtrerer is set.
      *
      * @return bool
      */
@@ -52,17 +50,19 @@ trait Filterer
         return isset($this->filterer);
     }
 
-
     /**
-     * Shortcut to the main function of the model
+     * Shortcut to the main function of the model.
      *
      * @param $value
-     * @return $this
+     *
      * @throws \Exception
+     *
+     * @return $this
      */
     public function filter($value)
     {
         $this->getFilterer()->filter($value);
+
         return $this;
     }
 }

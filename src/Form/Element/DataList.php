@@ -1,22 +1,22 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
+
+namespace FrenchFrogs\Form\Element;
 
 /**
- * Input list html5
+ * Input list html5.
  *
  * Class AutoComplete
- * @package FrenchFrogs\Form\Element
  */
 class DataList extends Element
 {
-
     /**
-    * Constructror
-    *
-    * @param $name
-    * @param string $label
-    * @param array $attr
-    */
-    public function __construct($name, $label = '', $options = [], $attr = [] )
+     * Constructror.
+     *
+     * @param $name
+     * @param string $label
+     * @param array  $attr
+     */
+    public function __construct($name, $label = '', $options = [], $attr = [])
     {
         $this->setAttributes($attr);
         $this->setName($name);
@@ -26,19 +26,21 @@ class DataList extends Element
     }
 
     /**
-     * Setter pour les options
+     * Setter pour les options.
      *
      * @param $options
+     *
      * @return $this
      */
     public function setOptions($options)
     {
         $this->options = $options;
+
         return $this;
     }
 
     /**
-     * Getter pour les options
+     * Getter pour les options.
      *
      * @return array
      */
@@ -48,17 +50,16 @@ class DataList extends Element
     }
 
     /**
-    * @return mixed
-    */
+     * @return mixed
+     */
     public function getValue()
     {
         return $this->value;
     }
 
     /**
-    *
-    * @param mixed $value
-    */
+     * @param mixed $value
+     */
     public function setValue($value)
     {
         $this->value = $value;
@@ -68,14 +69,14 @@ class DataList extends Element
     }
 
     /**
-    * @return string
-    */
+     * @return string
+     */
     public function __toString()
     {
         $render = '';
         try {
             $render = $this->getRenderer()->render('datalist', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

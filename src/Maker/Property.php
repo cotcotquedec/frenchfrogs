@@ -1,5 +1,6 @@
-<?php namespace FrenchFrogs\Maker;
+<?php
 
+namespace FrenchFrogs\Maker;
 
 use BetterReflection\Reflection\ReflectionProperty;
 
@@ -14,14 +15,13 @@ class Property
     protected $name;
 
     /**
-     * Default value
+     * Default value.
      *
      * @var mixed
      */
     protected $default;
 
     /**
-     *
      * @var string
      */
     protected $type;
@@ -46,12 +46,13 @@ class Property
     }
 
     /**
-     * Factory depuis une reflection
+     * Factory depuis une reflection.
      *
      * @param ReflectionProperty $reflection
+     *
      * @return static
      */
-    static public function fromReflection(ReflectionProperty $reflection)
+    public static function fromReflection(ReflectionProperty $reflection)
     {
         // gestion du type
         $type = implode('|', $reflection->getDocBlockTypeStrings());
@@ -102,19 +103,21 @@ class Property
     }
 
     /**
-     * Setter for $type
+     * Setter for $type.
      *
      * @param $type
+     *
      * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
     /**
-     * Getter for $type
+     * Getter for $type.
      *
      * @return string
      */
@@ -124,7 +127,7 @@ class Property
     }
 
     /**
-     * Return TRUE is ype is set
+     * Return TRUE is ype is set.
      *
      * @return bool
      */
@@ -134,30 +137,33 @@ class Property
     }
 
     /**
-     * Unset $type
+     * Unset $type.
      *
      * @return $this
      */
     public function removeType()
     {
         unset($this->type);
+
         return $this;
     }
 
     /**
-     * Setter for default
+     * Setter for default.
      *
      * @param $default
+     *
      * @return $this
      */
     public function setDefault($default)
     {
         $this->default = $default;
+
         return $this;
     }
 
     /**
-     * Getter for default
+     * Getter for default.
      *
      * @return mixed
      */
@@ -167,7 +173,7 @@ class Property
     }
 
     /**
-     * Return TRUE if default valus is set
+     * Return TRUE if default valus is set.
      *
      * @return bool
      */
@@ -177,7 +183,7 @@ class Property
     }
 
     /**
-     * Getter for $name
+     * Getter for $name.
      *
      * @return string
      */
@@ -187,15 +193,16 @@ class Property
     }
 
     /**
-     *
-     * Setter for $name
+     * Setter for $name.
      *
      * @param $name
+     *
      * @return $this
      */
     public function setName($name)
     {
         $this->name = strval($name);
+
         return $this;
     }
 }

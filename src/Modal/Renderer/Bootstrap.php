@@ -1,38 +1,34 @@
-<?php namespace FrenchFrogs\Modal\Renderer;
+<?php
 
+namespace FrenchFrogs\Modal\Renderer;
 
-use FrenchFrogs\Core\FrenchFrogsServiceProvider;
-use FrenchFrogs\Renderer\Renderer;
-use FrenchFrogs\Modal\Modal;
 use FrenchFrogs\Form\Element;
+use FrenchFrogs\Modal\Modal;
+use FrenchFrogs\Renderer\Renderer;
 use FrenchFrogs\Renderer\Style\Style;
-
 
 class Bootstrap extends Renderer
 {
-
     /**
-     *
-     * Available renderer
+     * Available renderer.
      *
      * @var array
      */
     protected $renderers = [
         'modal',
         'action',
-        'modal_remote'
+        'modal_remote',
     ];
 
-
     /**
-     * Render a modal
+     * Render a modal.
      *
      * @param \FrenchFrogs\Modal\Modal\Modal $modal
+     *
      * @return string
      */
     public function modal(Modal\Modal $modal)
     {
-
         $html = '';
 
         // header
@@ -50,7 +46,6 @@ class Bootstrap extends Renderer
 
         // footer
         if ($modal->hasActions()) {
-
             $actions = '';
 
             if ($modal->hasCloseButton()) {
@@ -58,7 +53,7 @@ class Bootstrap extends Renderer
             }
 
             foreach ($modal->getActions() as $action) {
-                /** @var Element\Button $action */
+                /* @var Element\Button $action */
                 $actions .= $this->render('action', $action);
             }
 
@@ -67,26 +62,24 @@ class Bootstrap extends Renderer
 
         // container
         if (!$modal->isRemote()) {
-            $html = html('div', ['class' => Style::MODAL_CONTENT_CLASS, ], $html);
+            $html = html('div', ['class' => Style::MODAL_CONTENT_CLASS], $html);
             $html = html('div', ['class' => Style::MODAL_DIALOG_CLASS, 'role' => 'document'], $html);
-            $html = html('div', ['class' => Style::MODAL_CLASS,'role' => 'dialog'], $html);
+            $html = html('div', ['class' => Style::MODAL_CLASS, 'role' => 'dialog'], $html);
         }
 
-        $html .= html('script', ['type' => 'text/javascript'],js('onload'));
+        $html .= html('script', ['type' => 'text/javascript'], js('onload'));
 
         return $html;
     }
 
-
     public function action(Element\Button $action)
     {
-
         if ($action->hasOption()) {
-            $action->addClass(constant(  Style::class . '::' . $action->getOption()));
+            $action->addClass(constant(Style::class.'::'.$action->getOption()));
         }
 
         if ($action->hasSize()) {
-            $action->addClass(constant(  Style::class . '::' . $action->getSize()));
+            $action->addClass(constant(Style::class.'::'.$action->getSize()));
         }
 
         $action->addClass(Style::BUTTON_CLASS);
@@ -104,27 +97,24 @@ class Bootstrap extends Renderer
         }
 
         if ($action->isRemote()) {
-            $action->addAttribute('data-target', '#' . $action->getRemoteId())
+            $action->addAttribute('data-target', '#'.$action->getRemoteId())
                 ->addClass('modal-remote');
-        } elseif($action->isCallback()) {
+        } elseif ($action->isCallback()) {
             $action->addClass('callback-remote');
         }
 
         $action->addAttribute('title', $name);
 
-        $html = html('a',$action->getAttributes(), $label );
+        $html = html('a', $action->getAttributes(), $label);
 
         return $html;
-
     }
-
 
     public function modal_remote(Modal\Modal $modal)
     {
-
-        $html = html('div', ['class' => Style::MODAL_CONTENT_CLASS, ], '');
+        $html = html('div', ['class' => Style::MODAL_CONTENT_CLASS], '');
         $html = html('div', ['class' => Style::MODAL_DIALOG_CLASS, 'role' => 'document'], $html);
-        $html = html('div', ['class' => Style::MODAL_CLASS,'role' => 'dialog', 'id' => $modal->getRemoteId()], $html);
+        $html = html('div', ['class' => Style::MODAL_CLASS, 'role' => 'dialog', 'id' => $modal->getRemoteId()], $html);
 
         return $html;
     }

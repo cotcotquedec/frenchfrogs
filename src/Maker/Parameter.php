@@ -1,5 +1,6 @@
-<?php namespace FrenchFrogs\Maker;
+<?php
 
+namespace FrenchFrogs\Maker;
 
 use BetterReflection\Reflection\ReflectionParameter;
 use phpDocumentor\Reflection\Types\Array_;
@@ -7,25 +8,22 @@ use phpDocumentor\Reflection\Types\Object_;
 
 class Parameter
 {
-
     /**
      * @var string
      */
     protected $name;
 
     /**
-     * Default value
+     * Default value.
      *
      * @var mixed
      */
     protected $default = null;
 
     /**
-     *
      * @var string
      */
     protected $type;
-
 
     /**
      * Parameter constructor.
@@ -47,12 +45,13 @@ class Parameter
     }
 
     /**
-     * Factory depuis une reflection
+     * Factory depuis une reflection.
      *
      * @param ReflectionParameter $reflection
+     *
      * @return static
      */
-    static public function fromReflection(ReflectionParameter $reflection)
+    public static function fromReflection(ReflectionParameter $reflection)
     {
 
         // VALUE
@@ -65,10 +64,10 @@ class Parameter
         if (!is_null($type)) {
             if ($type instanceof Object_) {
                 $type = strval($type->getFqsen());
-            } elseif($type instanceof Array_) {
+            } elseif ($type instanceof Array_) {
                 $type = 'array';
             } else {
-                exc('Impossible de determiner le type du paramètre : ' . $reflection->getName());
+                exc('Impossible de determiner le type du paramètre : '.$reflection->getName());
             }
         }
 
@@ -79,19 +78,21 @@ class Parameter
     }
 
     /**
-     * Setter for $type
+     * Setter for $type.
      *
      * @param $type
+     *
      * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
     /**
-     * Getter for $type
+     * Getter for $type.
      *
      * @return string
      */
@@ -101,7 +102,7 @@ class Parameter
     }
 
     /**
-     * Return TRUE is ype is set
+     * Return TRUE is ype is set.
      *
      * @return bool
      */
@@ -111,32 +112,33 @@ class Parameter
     }
 
     /**
-     * Unset $type
+     * Unset $type.
      *
      * @return $this
      */
     public function removeType()
     {
         unset($this->type);
+
         return $this;
     }
 
-
-
     /**
-     * Setter for default
+     * Setter for default.
      *
      * @param $default
+     *
      * @return $this
      */
     public function setDefault($default)
     {
         $this->default = $default;
+
         return $this;
     }
 
     /**
-     * Getter for default
+     * Getter for default.
      *
      * @return mixed
      */
@@ -146,7 +148,7 @@ class Parameter
     }
 
     /**
-     * Getter for $name
+     * Getter for $name.
      *
      * @return string
      */
@@ -156,20 +158,21 @@ class Parameter
     }
 
     /**
-     *
-     * Setter for $name
+     * Setter for $name.
      *
      * @param $name
+     *
      * @return $this
      */
     public function setName($name)
     {
         $this->name = strval($name);
+
         return $this;
     }
 
     /**
-     * Return TRUE if default valus is set
+     * Return TRUE if default valus is set.
      *
      * @return bool
      */

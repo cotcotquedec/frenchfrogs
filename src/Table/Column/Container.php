@@ -1,4 +1,6 @@
-<?php namespace FrenchFrogs\Table\Column;
+<?php
+
+namespace FrenchFrogs\Table\Column;
 
 use FrenchFrogs\Table\Table;
 
@@ -6,15 +8,14 @@ class Container extends Column
 {
     use Table\Columns;
 
-
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $label = '', $attr = [] )
+    public function __construct($name, $label = '', $attr = [])
     {
         $this->setAttributes($attr);
         $this->setName($name);
@@ -24,11 +25,11 @@ class Container extends Column
         $this->center();
     }
 
-
     /**
-     * Add a single column to the column container
+     * Add a single column to the column container.
      *
      * @param Column $column
+     *
      * @return $this
      */
     public function addColumn(Column $column)
@@ -46,11 +47,7 @@ class Container extends Column
         return $this;
     }
 
-
-
-     /**
-     *
-     *
+    /**
      * @return string
      */
     public function render(array $row)
@@ -58,7 +55,7 @@ class Container extends Column
         $render = '';
         try {
             $render = $this->getRenderer()->render('container', $this, $row);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

@@ -1,38 +1,38 @@
-<?php namespace FrenchFrogs\Container;
+<?php
 
+namespace FrenchFrogs\Container;
 
 trait Minify
 {
-
     /**
-     *
-     *
      * @var bool
      */
     protected $is_minify = false;
 
 
     /**
-     * Target directory for css file
+     * Target directory for css file.
      *
      * @var
      */
     protected $targetPath;
 
     /**
-     * Setter for argetPath
+     * Setter for argetPath.
      *
      * @param $path
+     *
      * @return $this
      */
     public function setTargetPath($path)
     {
         $this->targetPath = $path;
+
         return $this;
     }
 
     /**
-     * getter for $targetPath
+     * getter for $targetPath.
      *
      * @return mixed
      */
@@ -42,29 +42,31 @@ trait Minify
     }
 
     /**
-     * Set $is_minity to TRUE
+     * Set $is_minity to TRUE.
      *
      * @return $this
      */
     public function enableMinify()
     {
         $this->is_minify = true;
+
         return $this;
     }
 
     /**
-     * Set $is_minity to FALSE
+     * Set $is_minity to FALSE.
      *
      * @return $this
      */
     public function disableMinify()
     {
         $this->is_minify = false;
+
         return $this;
     }
 
     /**
-     * Return $is_minify
+     * Return $is_minify.
      *
      * @return bool
      */
@@ -73,13 +75,13 @@ trait Minify
         return $this->is_minify;
     }
 
-
     /**
-     * Force minify
+     * Force minify.
      *
      * @return string
      */
-    public function minify() {
+    public function minify()
+    {
         return strval($this);
     }
 }

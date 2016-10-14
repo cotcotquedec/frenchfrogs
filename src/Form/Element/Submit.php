@@ -1,18 +1,17 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
-use FrenchFrogs\Core;
+namespace FrenchFrogs\Form\Element;
 
 class Submit extends Button
 {
-
     /**
-     * Constructor
+     * Constructor.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $attr = [] )
+    public function __construct($name, $attr = [])
     {
         parent::__construct($name, $name, $attr);
         $this->addAttribute('type', 'submit');
@@ -23,15 +22,13 @@ class Submit extends Button
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('submit', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 
         return $render;
-
     }
 }

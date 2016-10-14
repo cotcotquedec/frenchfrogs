@@ -1,59 +1,59 @@
-<?php namespace FrenchFrogs\Modal\Modal;
+<?php
 
-use FrenchFrogs\Core;
+namespace FrenchFrogs\Modal\Modal;
+
 use FrenchFrogs;
-
+use FrenchFrogs\Core;
 
 class Modal
 {
-
     use Core\Renderer;
 
     /**
-     * Configuration for the overlay
+     * Configuration for the overlay.
      *
      * @var string | boolean
      */
     protected $backdrop = true;
 
     /**
-     * Configuration for close modal on escape button press
+     * Configuration for close modal on escape button press.
      *
-     * @var boolean
+     * @var bool
      */
     protected $is_escToClose = true;
 
     /**
-     * Titleof the modal
+     * Titleof the modal.
      *
      * @var string
      */
     protected $title;
 
     /**
-     * Body of the modal
+     * Body of the modal.
      *
      * @var string
      */
     protected $body;
 
     /**
-     * Actions of the modal
+     * Actions of the modal.
      *
      * @var array
      */
     protected $actions = [];
 
     /**
-     * true if render the header close button
+     * true if render the header close button.
      *
-     * @var Boolean
+     * @var bool
      */
     protected $has_closeButton = true;
 
 
     /**
-     * Label for the close button
+     * Label for the close button.
      *
      * @var string
      */
@@ -61,7 +61,7 @@ class Modal
 
 
     /**
-     * id html attribute for remote modal
+     * id html attribute for remote modal.
      *
      * @var
      */
@@ -69,27 +69,28 @@ class Modal
 
 
     /**
-     * TRUE if render only the main content container
+     * TRUE if render only the main content container.
      *
      * @var bool
      */
     protected $is_remote = false;
 
-
     /**
-     * Setter for $id attribute
+     * Setter for $id attribute.
      *
      * @param $id
+     *
      * @return $this
      */
     public function setRemoteId($id)
     {
         $this->remoteId = $id;
+
         return $this;
     }
 
     /**
-     * Getter for $remoteId Attribute
+     * Getter for $remoteId Attribute.
      *
      * @return mixed
      */
@@ -99,19 +100,21 @@ class Modal
     }
 
     /**
-     * Setter for $closeButtonLabel Attribute
+     * Setter for $closeButtonLabel Attribute.
      *
      * @param $label
+     *
      * @return $this
      */
     public function setCloseButtonLabel($label)
     {
         $this->closeButtonLabel = $label;
+
         return $this;
     }
 
     /**
-     * Getter for $closeButtonLabel attribute
+     * Getter for $closeButtonLabel attribute.
      *
      * @return string
      */
@@ -121,29 +124,31 @@ class Modal
     }
 
     /**
-     * Enabler for $is_closeButton attribute
+     * Enabler for $is_closeButton attribute.
      *
      * @return $this
      */
     public function enableCloseButton()
     {
         $this->has_closeButton = true;
+
         return $this;
     }
 
     /**
-     * Disabler for $is_closeButton attribute
+     * Disabler for $is_closeButton attribute.
      *
      * @return $this
      */
     public function disableCloseButton()
     {
         $this->has_closeButton = false;
+
         return $this;
     }
 
     /**
-     * Return TRUE if the close button will be render
+     * Return TRUE if the close button will be render.
      *
      * @return bool
      */
@@ -153,29 +158,31 @@ class Modal
     }
 
     /**
-     * Enabler for $is_onlyContent attribute
+     * Enabler for $is_onlyContent attribute.
      *
      * @return $this
      */
     public function enableRemote()
     {
         $this->is_remote = true;
+
         return $this;
     }
 
     /**
-     * Disabler for $is_onlyContent attribute
+     * Disabler for $is_onlyContent attribute.
      *
      * @return $this
      */
     public function disableRemote()
     {
         $this->is_remote = false;
+
         return $this;
     }
 
     /**
-     * Return TRUE if $is_onlyContent attribute is TRUE
+     * Return TRUE if $is_onlyContent attribute is TRUE.
      *
      * @return bool
      */
@@ -185,7 +192,7 @@ class Modal
     }
 
     /**
-     * Constructeur
+     * Constructeur.
      *
      * @param null $title
      * @param null $body
@@ -193,18 +200,18 @@ class Modal
      */
     public function __construct($title = null, $body = null, $actions = null)
     {
-        (configurator()->get('modal.backdrop')) ? $this->enableBackdrop()   : $this->disableBackdrop();
+        (configurator()->get('modal.backdrop')) ? $this->enableBackdrop() : $this->disableBackdrop();
         (configurator()->get('modal.backdrop')) ? $this->enableEscToClose() : $this->disableEscToClose();
         $this->setCloseButtonLabel(configurator()->get('modal.closeButtonLabel', $this->closeButtonLabel));
 
-        (configurator()->get('modal.is_remote')) ? $this->enableRemote()    : $this->disableRemote();
+        (configurator()->get('modal.is_remote')) ? $this->enableRemote() : $this->disableRemote();
         $this->setRemoteId(configurator()->get('modal.remote.id', $this->remoteId));
 
         if (!is_null($title)) {
             $this->setTitle($title);
         }
 
-        if (!is_null($body)){
+        if (!is_null($body)) {
             $this->setBody($body);
         }
 
@@ -215,49 +222,49 @@ class Modal
 
         // Renderer
         $renderer = configurator()->get('modal.renderer.class');
-        $this->setRenderer(new $renderer);
+        $this->setRenderer(new $renderer());
     }
 
     /**
-     * Enabler for $backdrop attribute
+     * Enabler for $backdrop attribute.
      *
      * @return $this
-     *
      */
     public function enableBackdrop()
     {
         $this->backdrop = true;
+
         return $this;
     }
 
     /**
-     * Disabler for $backdrop attribute
+     * Disabler for $backdrop attribute.
      *
      * @return $this
-     *
      */
     public function disableBackdrop()
     {
         $this->backdrop = false;
+
         return $this;
     }
 
     /**
-     * Set $backdrop attribute as static
+     * Set $backdrop attribute as static.
      *
      * @return $this
      */
     public function setBackdropAsStatic()
     {
         $this->backdrop = 'static';
+
         return $this;
     }
 
     /**
-     * Return TRUE if $backdrop attribute is set
+     * Return TRUE if $backdrop attribute is set.
      *
      * @return bool
-     *
      */
     public function hasBackdrop()
     {
@@ -265,7 +272,7 @@ class Modal
     }
 
     /**
-     * Getter for $backdrop attribute
+     * Getter for $backdrop attribute.
      *
      * @return mixed
      */
@@ -275,29 +282,31 @@ class Modal
     }
 
     /**
-     * Enabler for $is_escToClose attribute
+     * Enabler for $is_escToClose attribute.
      *
      * @return $this
      */
     public function enableEscToClose()
     {
         $this->is_escToClose = true;
+
         return $this;
     }
 
     /**
-     * Disabler for $is_escToClose attribute
+     * Disabler for $is_escToClose attribute.
      *
      * @return $this
      */
     public function disableEscToClose()
     {
         $this->is_escToClose = false;
+
         return $this;
     }
 
     /**
-     * return TRUE if $is_escToClose is TRUE
+     * return TRUE if $is_escToClose is TRUE.
      *
      * @return mixed
      */
@@ -306,22 +315,22 @@ class Modal
         return (bool) $this->is_escToClose;
     }
 
-
     /**
-     * Setter for $title attribute
+     * Setter for $title attribute.
      *
      * @param $title
+     *
      * @return $this
      */
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
-
     /**
-     * Getter for $title attribute
+     * Getter for $title attribute.
      *
      * @return mixed
      */
@@ -331,18 +340,19 @@ class Modal
     }
 
     /**
-     * Unset $title attribute
+     * Unset $title attribute.
      *
      * @return $this
      */
     public function clearTitle()
     {
         unset($this->title);
+
         return $this;
     }
 
     /**
-     * Return TRUE if $title attribute is set
+     * Return TRUE if $title attribute is set.
      *
      * @return bool
      */
@@ -352,20 +362,21 @@ class Modal
     }
 
     /**
-     * Setter for $body attribute
+     * Setter for $body attribute.
      *
      * @param $body
+     *
      * @return $this
      */
     public function setBody($body)
     {
         $this->body = $body;
+
         return $this;
     }
 
-
     /**
-     * Getter for $body attribute
+     * Getter for $body attribute.
      *
      * @return mixed
      */
@@ -375,56 +386,61 @@ class Modal
     }
 
     /**
-     * Unset $body attribute
+     * Unset $body attribute.
      *
      * @return $this
      */
     public function clearBody()
     {
         unset($this->body);
+
         return $this;
     }
 
     /**
-     * Append $body to ody attribute
+     * Append $body to ody attribute.
      *
      * @param $body
+     *
      * @return $this
      */
     public function appendBody($body)
     {
         $this->body .= strval($body);
+
         return $this;
     }
 
-
     /**
-     * Prepend $body to $body attribute
+     * Prepend $body to $body attribute.
      *
      * @param $body
+     *
      * @return $this
      */
     public function prependBody($body)
     {
-        $this->body  = strval($body) . $this->body;
+        $this->body = strval($body).$this->body;
+
         return $this;
     }
 
     /**
-     * Setter for $actions container
+     * Setter for $actions container.
      *
      * @param array $actions
+     *
      * @return $this
      */
     public function setActions(array $actions)
     {
         $this->actions = $actions;
+
         return $this;
     }
 
-
     /**
-     * Getter for $actions container
+     * Getter for $actions container.
      *
      * @return array
      */
@@ -433,20 +449,20 @@ class Modal
         return $this->actions;
     }
 
-
     /**
-     * Set $action container as an empty array
+     * Set $action container as an empty array.
      *
      * @return $this
      */
     public function clearActions()
     {
         $this->actions = [];
+
         return $this;
     }
 
     /**
-     * Return TRUE if $action container have at least 1 element
+     * Return TRUE if $action container have at least 1 element.
      *
      * @return bool
      */
@@ -456,7 +472,7 @@ class Modal
     }
 
     /**
-     * Shift an element off the beginning of the $actions container
+     * Shift an element off the beginning of the $actions container.
      *
      * @return mixed
      */
@@ -466,7 +482,7 @@ class Modal
     }
 
     /**
-     * Pop an element off the end of the container
+     * Pop an element off the end of the container.
      *
      * @return mixed
      */
@@ -475,33 +491,36 @@ class Modal
         return array_pop($this->actions);
     }
 
-
     /**
-     * Push one element to the end of the $actions container
+     * Push one element to the end of the $actions container.
      *
      * @param \FrenchFrogs\Form\Element\Button $action
+     *
      * @return $this
      */
     public function appendAction(FrenchFrogs\Form\Element\Button $action)
     {
         $this->actions[] = $action;
+
         return $this;
     }
 
     /**
-     * Prepend one elements to the beginning of the $actions container
+     * Prepend one elements to the beginning of the $actions container.
      *
      * @param \FrenchFrogs\Form\Element\Button $action
+     *
      * @return $this
      */
     public function prependAction(FrenchFrogs\Form\Element\Button $action)
     {
         array_unshift($this->actions, $action);
+
         return $this;
     }
 
     /**
-     * Render the polliwog
+     * Render the polliwog.
      *
      * @return mixed|string
      */
@@ -510,40 +529,40 @@ class Modal
         $render = '';
         try {
             $render = $this->getRenderer()->render('modal', $this);
-        } catch(\Exception $e){
-            dd($e->getMessage());//@todo find a good way to warn the developper
+        } catch (\Exception $e) {
+            dd($e->getMessage()); //@todo find a good way to warn the developper
         }
 
         return $render;
     }
 
-
     /**
-     * Overload parent method for form specification
+     * Overload parent method for form specification.
      *
      * @return string
-     *
      */
     public function __toString()
     {
         return $this->render();
     }
 
-
     /**
-     * Render an emptyl
+     * Render an emptyl.
      *
      * @param null $remoteId
-     * @return mixed
+     *
      * @throws \Exception
+     *
+     * @return mixed
      */
-    static function renderRemoteEmptyModal($remoteId = null)
+    public static function renderRemoteEmptyModal($remoteId = null)
     {
         $modal = modal();
 
         if (!is_null($remoteId)) {
             $modal->setRemoteId($remoteId);
         }
+
         return $modal->getRenderer()->render('modal_remote', $modal);
     }
 }

@@ -1,42 +1,36 @@
-<?php namespace FrenchFrogs\App\Models;
+<?php
 
+namespace FrenchFrogs\App\Models;
 
+use Auth;
 use FrenchFrogs\Ruler\Page\Page;
 use FrenchFrogs\Ruler\Ruler\Ruler;
-use FrenchFrogs\App\Models\Business;
-use FrenchFrogs\App\Models\Db;
-use Auth;
 use Illuminate\Support\Collection;
 
 /**
- * Class Acl
- *
- *
- * @package FrenchFrogs\Acl
+ * Class Acl.
  */
 class Acl extends Ruler
 {
-
     /**
-     * Current used interface
+     * Current used interface.
      *
      * @var
      */
-    static protected $interface;
+    protected static $interface;
 
 
     /**
-     * Name of the default interface
-     *
+     * Name of the default interface.
      */
     const INTERFACE_DEFAULT = 'default';
 
-
     /**
-     * Charge les permissions
+     * Charge les permissions.
+     *
+     * @throws \Exception
      *
      * @return $this
-     * @throws \Exception
      */
     public function loadPermissions()
     {
@@ -63,18 +57,18 @@ class Acl extends Ruler
     }
 
     /**
-     * Recupère les information de navigations pour l'utilisateur
+     * Recupère les information de navigations pour l'utilisateur.
+     *
+     * @throws \Exception
      *
      * @return \Illuminate\Database\Eloquent\Collection
-     * @throws \Exception
      */
     public function getNavigations()
     {
-
         $interface = static::getInterface();
 
         // Navigation
-        /**@var \Illuminate\Database\Eloquent\Collection $navigation */
+        /** @var \Illuminate\Database\Eloquent\Collection $navigation */
         $navigation = Db\User\Navigation::where('user_interface_id', $interface)
             ->whereIn('user_permission_id', $this->getPermissions())
             ->orderBy('parent_id')
@@ -85,7 +79,7 @@ class Acl extends Ruler
     }
 
     /**
-     * Overload constructor
+     * Overload constructor.
      *
      *
      * @throws \Exception
@@ -96,7 +90,7 @@ class Acl extends Ruler
         // ojn charge les permissions
         $this->loadPermissions();
 
-		$navigation = $this->getNavigations();
+        $navigation = $this->getNavigations();
 
         // COnstruction de la navigation
         while ($page = $navigation->shift()) {
@@ -106,30 +100,30 @@ class Acl extends Ruler
                 $this->addPage($page->user_navigation_id, new Page($page->link, $page->name, $page->user_permission_id));
 
                 // page de niveau inferieur
-            } elseif($this->hasPage($page->parent_id)) {
+            } elseif ($this->hasPage($page->parent_id)) {
                 $this->getPage($page->parent_id)->addChild($page->user_navigation_id, new Page($page->link, $page->name, $page->user_permission_id));
             } else {
-//                throw new \Exception('We don\'t find parent "' . $page->parent_id . '" for the page "' . $page->user_navigation_id . '"');
+                //                throw new \Exception('We don\'t find parent "' . $page->parent_id . '" for the page "' . $page->user_navigation_id . '"');
             }
         }
     }
 
-
     /**
-     * Easy validation
+     * Easy validation.
      *
-     * @param array $permissions
-     * @param array $laravelValidator
+     * @param array      $permissions
+     * @param array      $laravelValidator
      * @param bool|false $throwException
-     * @return bool
+     *
      * @throws \Exception
+     *
+     * @return bool
      */
     public function check($permissions = [], $laravelValidator = [], $request = null, $throwException = true)
     {
-
         try {
             // permission
-            foreach ((array)$permissions as $permission) {
+            foreach ((array) $permissions as $permission) {
                 if (!$this->hasPermission($permission)) {
                     abort(401, 'You don\'t have the right permissions');
                 }
@@ -139,7 +133,7 @@ class Acl extends Ruler
             $request = is_null($request) ? request()->all() : $request;
 
             // check for null value
-            foreach($request as $index => $value) {
+            foreach ($request as $index => $value) {
                 if (is_null($value)) {
                     unset($request[$index]);
                 }
@@ -149,8 +143,10 @@ class Acl extends Ruler
             if ($validation->fails()) {
                 abort(404, 'Parameters are not valid');
             }
-        }catch (\Exception $e) {
-            if ($throwException) {throw $e;}
+        } catch (\Exception $e) {
+            if ($throwException) {
+                throw $e;
+            }
 
             return false;
         }
@@ -158,25 +154,23 @@ class Acl extends Ruler
         return true;
     }
 
-
     /**
      * Detect current interface
-     * => overload this method with your own rules if you need it
+     * => overload this method with your own rules if you need it.
      *
      * @return string
      */
-    static public function detectInterface()
+    public static function detectInterface()
     {
         return static::INTERFACE_DEFAULT;
     }
 
-
     /**
-     * Return current interface
+     * Return current interface.
      *
      * @return string
      */
-    static public function getInterface()
+    public static function getInterface()
     {
 
         // if no interface was detected before we try to detect
@@ -192,7 +186,7 @@ class Acl extends Ruler
     }
 
     /**
-     * Create a new Navigation
+     * Create a new Navigation.
      *
      * @param $index
      * @param $interface
@@ -201,103 +195,100 @@ class Acl extends Ruler
      * @param $permission
      * @param $parent
      */
-    static function createDatatabaseNavigation($index, $interface, $name, $link, $permission, $parent = null)
+    public static function createDatatabaseNavigation($index, $interface, $name, $link, $permission, $parent = null)
     {
         Db\User\Navigation::create([
             'user_navigation_id' => $index,
-            'user_interface_id' => $interface,
-            'name' => $name,
-            'link' => $link,
+            'user_interface_id'  => $interface,
+            'name'               => $name,
+            'link'               => $link,
             'user_permission_id' => $permission,
-            'parent_id' => $parent,
+            'parent_id'          => $parent,
         ]);
     }
 
-
     /**
-     * Remove navigation from database
+     * Remove navigation from database.
      *
      * @param $index
      */
-    static function removeDatatabaseNavigation($index)
+    public static function removeDatatabaseNavigation($index)
     {
         Db\User\Navigation::find($index)->delete();
     }
 
     /**
-     * Insert a new permission in database
+     * Insert a new permission in database.
      *
      * @param $index
      * @param $interface
      * @param $name
      */
-    static function createDatabasePermission($index, $group, $interface, $name)
+    public static function createDatabasePermission($index, $group, $interface, $name)
     {
         Db\User\Permission::create([
-            'user_permission_id' => $index,
+            'user_permission_id'       => $index,
             'user_permission_group_id' => $group,
-            'user_interface_id' => $interface,
-            'name' => $name,
+            'user_interface_id'        => $interface,
+            'name'                     => $name,
         ]);
     }
 
     /**
-     * Remove a permission from the database
+     * Remove a permission from the database.
      *
      * @param $index
      */
-    static function removeDatabasePermission($index)
+    public static function removeDatabasePermission($index)
     {
         Db\User\Permission::find($index)->delete();
     }
 
     /**
-     * Insert a interface into the database
+     * Insert a interface into the database.
      *
      * @param $index
      * @param $name
      */
-    static function createDatabaseInterface($index, $name)
+    public static function createDatabaseInterface($index, $name)
     {
         Db\User\UserInterface::create([
             'user_interface_id' => $index,
-            'name' => $name,
+            'name'              => $name,
         ]);
     }
 
     /**
-     * Remove interface from database
+     * Remove interface from database.
      *
      * @param $index
      */
-    static function removeDatabaseInterface($index)
+    public static function removeDatabaseInterface($index)
     {
         Db\User\UserInterface::find($index)->delete();
     }
 
     /**
-     * Insert a new permissiongroup into datatabse
+     * Insert a new permissiongroup into datatabse.
      *
      * @param $index
      * @param $name
      */
-    static function createDatabasePermissionGroup($index, $name)
+    public static function createDatabasePermissionGroup($index, $name)
     {
-
         Db\User\PermissionGroup::create([
             'user_permission_group_id' => $index,
-            'name' => $name,
+            'name'                     => $name,
         ]);
     }
 
     /**
-     *Remove a permission group from the database
+     *Remove a permission group from the database.
      *
      * @param $index
      */
-    static function removeDatabasePermissionGroup($index)
+    public static function removeDatabasePermissionGroup($index)
     {
         Db\User\PermissionGroup::find($index)->delete();
     }
-
 }

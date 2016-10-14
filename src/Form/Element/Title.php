@@ -1,34 +1,32 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class Title extends Element
 {
-
     protected $is_discreet = true;
 
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $label
      * @param array $attr
      */
-    public function __construct($label, $attr = [] )
+    public function __construct($label, $attr = [])
     {
         $this->setAttributes($attr);
         $this->setName($label);
     }
-
 
     /**
      * @return string
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('title', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

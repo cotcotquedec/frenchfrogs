@@ -1,11 +1,11 @@
-<?php namespace FrenchFrogs\Renderer\Style;
+<?php
+
+namespace FrenchFrogs\Renderer\Style;
 
 class Style
 {
-
     /**
-     * Classes for table element
-     *
+     * Classes for table element.
      */
     const TABLE_CLASS_STRIPED = 'table-striped';
     const TABLE_CLASS_BORDERED = 'table-bordered';
@@ -16,8 +16,7 @@ class Style
 
 
     /**
-     * Classes for button element
-     *
+     * Classes for button element.
      */
     const BUTTON_CLASS = 'btn';
     const BUTTON_OPTION_CLASS_DEFAULT = 'btn-default';
@@ -33,8 +32,7 @@ class Style
 
 
     /**
-     * Class for panel element
-     *
+     * Class for panel element.
      */
     const PANEL_CLASS = 'panel';
     const PANEL_CLASS_DEFAULT = 'panel-default';
@@ -50,8 +48,7 @@ class Style
 
 
     /**
-     * Class for Modal
-     *
+     * Class for Modal.
      */
     const MODAL_CLASS = 'modal fade';
     const MODAL_DIALOG_CLASS = 'modal-dialog';

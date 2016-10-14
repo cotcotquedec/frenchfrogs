@@ -1,4 +1,6 @@
-<?php namespace FrenchFrogs\App\Models\Db\User;
+<?php
+
+namespace FrenchFrogs\App\Models\Db\User;
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +12,6 @@ class UserInterface extends Model
     public $timestamps = false;
     public $incrementing = false;
     protected $table = 'user_interface';
-
 
     public function navigations()
     {

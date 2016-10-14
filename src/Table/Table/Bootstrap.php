@@ -1,12 +1,11 @@
-<?php namespace FrenchFrogs\Table\Table;
+<?php
 
+namespace FrenchFrogs\Table\Table;
 
 trait Bootstrap
 {
-
     /**
-     *
-     * Add zebra-striping to any table row within the <tbody>
+     * Add zebra-striping to any table row within the <tbody>.
      *
      * @link http://getbootstrap.com/css/#tables-striped
      *
@@ -15,7 +14,7 @@ trait Bootstrap
     protected $is_striped = true;
 
     /**
-     * Borders on all sides of the table and cells
+     * Borders on all sides of the table and cells.
      *
      * @link http://getbootstrap.com/css/#tables-bordered
      *
@@ -25,7 +24,7 @@ trait Bootstrap
 
 
     /**
-     * Enable a hover state on table rows within a <tbody>
+     * Enable a hover state on table rows within a <tbody>.
      *
      * @link http://getbootstrap.com/css/#tables-hover-rows
      *
@@ -43,7 +42,7 @@ trait Bootstrap
     protected $is_condensed = true;
 
     /**
-     * Create responsive tables by making them scroll horizontally on small devices
+     * Create responsive tables by making them scroll horizontally on small devices.
      *
      * @link http://getbootstrap.com/css/#tables-responsive
      *
@@ -51,33 +50,32 @@ trait Bootstrap
      */
     protected $is_responsive = true;
 
-
-
-
     /**
-     * Setter for $is_stripped attribute
+     * Setter for $is_stripped attribute.
      *
      * @return $this
      */
     public function enableStriped()
     {
         $this->is_striped = true;
+
         return $this;
     }
 
     /**
-     * Setter for $is_stripped attribute
+     * Setter for $is_stripped attribute.
      *
      * @return $this
      */
     public function disableStriped()
     {
         $this->is_striped = false;
+
         return $this;
     }
 
     /**
-     * Return TRUE if $is_stripped attribute is TRUE
+     * Return TRUE if $is_stripped attribute is TRUE.
      *
      * @return bool
      */
@@ -87,29 +85,31 @@ trait Bootstrap
     }
 
     /**
-     * Setter for $is_bordered attribute
+     * Setter for $is_bordered attribute.
      *
      * @return $this
      */
     public function enableBordered()
     {
         $this->is_bordered = true;
+
         return $this;
     }
 
     /**
-     * Setter for $is_bordered attribute
+     * Setter for $is_bordered attribute.
      *
      * @return $this
      */
     public function disableBordered()
     {
         $this->is_bordered = false;
+
         return $this;
     }
 
     /**
-     * Return TRUE if $is_bordered attribute is TRUE
+     * Return TRUE if $is_bordered attribute is TRUE.
      *
      * @return bool
      */
@@ -118,31 +118,32 @@ trait Bootstrap
         return (bool) $this->is_bordered;
     }
 
-
     /**
-     * Setter for $is_condensed attribute
+     * Setter for $is_condensed attribute.
      *
      * @return $this
      */
     public function enableCondensed()
     {
         $this->is_condensed = true;
+
         return $this;
     }
 
     /**
-     * Setter for $is_condensed attribute
+     * Setter for $is_condensed attribute.
      *
      * @return $this
      */
     public function disableCondensed()
     {
         $this->is_condensed = false;
+
         return $this;
     }
 
     /**
-     * Return TRUE if $is_condensed attribute is TRUE
+     * Return TRUE if $is_condensed attribute is TRUE.
      *
      * @return bool
      */
@@ -152,29 +153,31 @@ trait Bootstrap
     }
 
     /**
-     * Setter for $is_responsive attribute
+     * Setter for $is_responsive attribute.
      *
      * @return $this
      */
     public function enableResponsive()
     {
         $this->is_responsive = true;
+
         return $this;
     }
 
     /**
-     * Setter for $is_responsive attribute
+     * Setter for $is_responsive attribute.
      *
      * @return $this
      */
     public function disableResponsive()
     {
         $this->is_responsive = false;
+
         return $this;
     }
 
     /**
-     * Return TRUE if $is_responsive attribute is TRUE
+     * Return TRUE if $is_responsive attribute is TRUE.
      *
      * @return bool
      */
@@ -184,29 +187,31 @@ trait Bootstrap
     }
 
     /**
-     * Setter for $has_hover attribute
+     * Setter for $has_hover attribute.
      *
      * @return $this
      */
     public function enableHover()
     {
         $this->has_hover = true;
+
         return $this;
     }
 
     /**
-     * Setter for $has_hover attribute
+     * Setter for $has_hover attribute.
      *
      * @return $this
      */
     public function disableHover()
     {
         $this->has_hover = false;
+
         return $this;
     }
 
     /**
-     * Return TRUE if $has_hover attribute is TRUE
+     * Return TRUE if $has_hover attribute is TRUE.
      *
      * @return bool
      */
@@ -214,5 +219,4 @@ trait Bootstrap
     {
         return (bool) $this->has_hover;
     }
-
 }

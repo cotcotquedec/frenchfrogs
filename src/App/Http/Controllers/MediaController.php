@@ -1,17 +1,18 @@
-<?php namespace FrenchFrogs\App\Http\Controllers;
+<?php
 
+namespace FrenchFrogs\App\Http\Controllers;
 
-use FrenchFrogs\App\Models\Db;
 use FrenchFrogs\App\Models\Business;
+use FrenchFrogs\App\Models\Db;
 use Illuminate\Routing\Controller;
 
 class MediaController extends Controller
 {
-
     /**
-     * Try to sho a file in browser
+     * Try to sho a file in browser.
      *
      * @param $id
+     *
      * @return mixed
      */
     public function show($id)
@@ -19,8 +20,8 @@ class MediaController extends Controller
         try {
             $media = Business\Media::get($id);
             $attachment = $media->getModel()->attachment()->first();
-        } catch(\Exception $e) {
-            abort(404, 'Media doesn\'t exist : ' . $e->getMessage());
+        } catch (\Exception $e) {
+            abort(404, 'Media doesn\'t exist : '.$e->getMessage());
         }
 
         return response($attachment->content, 200)
@@ -29,9 +30,10 @@ class MediaController extends Controller
     }
 
     /**
-     * Force download the file
+     * Force download the file.
      *
      * @param $id
+     *
      * @return mixed
      */
     public function download($id)
@@ -39,8 +41,8 @@ class MediaController extends Controller
         try {
             /** @var Db\Media\Media $media */
             $media = Db\Media\Media::findOrFail($id);
-        } catch(\Exception $e) {
-            abort(404, 'Media doesn\'t exist : ' . $e->getMessage());
+        } catch (\Exception $e) {
+            abort(404, 'Media doesn\'t exist : '.$e->getMessage());
         }
 
         $attachment = $media->attachment()->first();

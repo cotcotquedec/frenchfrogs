@@ -1,8 +1,8 @@
-<?php namespace FrenchFrogs\App\Console;
+<?php
+
+namespace FrenchFrogs\App\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Composer;
 
 class CodeControllerCommand extends CodeCommand
 {
@@ -33,7 +33,7 @@ class CodeControllerCommand extends CodeCommand
         $name = str_replace('.', '\\_', $name);
 
         // creation du controller
-        $class = ucfirst(camel_case($name . '_controller'));
+        $class = ucfirst(camel_case($name.'_controller'));
         $this->call('make:controller', ['name' => $class]);
     }
 }

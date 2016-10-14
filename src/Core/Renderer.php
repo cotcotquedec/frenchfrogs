@@ -1,26 +1,23 @@
-<?php namespace FrenchFrogs\Core;
+<?php
 
+namespace FrenchFrogs\Core;
 
 /**
- * Trait for render polymorphisme
+ * Trait for render polymorphisme.
  *
  * Class Renderer
- * @package FrenchFrogs\Core
  */
 trait Renderer
 {
-
     /**
-     * Renderer container
+     * Renderer container.
      *
      * @var \FrenchFrogs\Renderer\Renderer
      */
     protected $renderer;
 
-
-
     /**
-     * Getter
+     * Getter.
      *
      * @return \FrenchFrogs\Renderer\Renderer
      */
@@ -29,24 +26,24 @@ trait Renderer
         return $this->renderer;
     }
 
-
     /**
-     * Setter
+     * Setter.
      *
      * @param \FrenchFrogs\Renderer\Renderer $renderer
+     *
      * @return $this
      */
     public function setRenderer(\FrenchFrogs\Renderer\Renderer $renderer)
     {
         $this->renderer = $renderer;
+
         return $this;
     }
 
     /**
-     * Return TRUE if a renderer is set
+     * Return TRUE if a renderer is set.
      *
      * @return bool
-     *
      */
     public function hasRenderer()
     {
@@ -54,8 +51,7 @@ trait Renderer
     }
 
     /**
-     *
-     * Shortcut to the main function of the model
+     * Shortcut to the main function of the model.
      *
      * @return string
      */

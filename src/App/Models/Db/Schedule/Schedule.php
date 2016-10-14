@@ -1,20 +1,19 @@
-<?php namespace FrenchFrogs\App\Models\Db\Schedule;
+<?php
+
+namespace FrenchFrogs\App\Models\Db\Schedule;
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 
-
 /**
- *
- * Class Schedule
+ * Class Schedule.
  *
  * @method static \Illuminate\Database\Eloquent\Builder active() active() Scope for active schedule
- * @package FrenchFrogs\App\Models\Db\Schedule
  */
-class Schedule extends Model {
+class Schedule extends Model
+{
     protected $primaryKey = 'schedule_id';
     protected $table = 'schedule';
     public $incrementing = false;
-
 
     /**
      * Scope a query to only include active users.
@@ -25,5 +24,4 @@ class Schedule extends Model {
     {
         return $query->where('is_active', 1);
     }
-
 }

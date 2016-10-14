@@ -1,22 +1,21 @@
-<?php namespace FrenchFrogs\App\Http\Controllers;
+<?php
 
-use App\Http\Controllers\Controller;
+namespace FrenchFrogs\App\Http\Controllers;
+
 use FrenchFrogs\App\Models\Db;
-use Models\Business\User;
 use FrenchFrogs\App\Models\Db\Schedule\Schedule;
 
 trait ScheduleController
 {
-
     /**
-     * Permission necessaire pour l'accès a ces methode
+     * Permission necessaire pour l'accès a ces methode.
      *
      * @var
      */
     protected $permission;
 
     /**
-     * Create table for scheduler list
+     * Create table for scheduler list.
      *
      * @return \FrenchFrogs\Table\Table\Table
      */
@@ -40,28 +39,29 @@ trait ScheduleController
         $container->addButtonCallback('execute', 'Executer', action_url(static::class, 'postExecute', '%s'), 'schedule_id')
             ->setOptionAsWarning()
             ->icon('fa fa-rocket');
-        $container->addButtonEdit(action_url(static::class,'postSchedule', '%s'), 'schedule_id');
-        $container->addButtonDelete(action_url(static::class,'deleteSchedule', '%s'), 'schedule_id');
+        $container->addButtonEdit(action_url(static::class, 'postSchedule', '%s'), 'schedule_id');
+        $container->addButtonDelete(action_url(static::class, 'deleteSchedule', '%s'), 'schedule_id');
 
         return $table;
     }
 
     /**
-     * List all commands
+     * List all commands.
      *
      * @return \Illuminate\View\View
      */
     public function getIndex()
     {
         \ruler()->check($this->permission);
+
         return view('basic', ['title' => 'Programmateur', 'content' => static::schedule()]);
     }
 
-
     /**
-     * Edit a command
+     * Edit a command.
      *
      * @param $id
+     *
      * @return mixed
      */
     public function postSchedule($id = null)
@@ -85,7 +85,7 @@ trait ScheduleController
         $form->addSubmit('Enregistrer');
 
         // Legende
-        $form->setLegend($schedule->exists ? 'Commande : ' . $schedule->command : 'Ajouter une commande : ');
+        $form->setLegend($schedule->exists ? 'Commande : '.$schedule->command : 'Ajouter une commande : ');
 
         // Traitement
         if (\request()->has('Enregistrer')) {
@@ -93,28 +93,28 @@ trait ScheduleController
             if ($form->isValid()) {
                 $data = $form->getFilteredValues();
                 try {
-                    if($schedule->exists) {
+                    if ($schedule->exists) {
                         $schedule->update($data);
                     } else {
                         $schedule::create($data);
                     }
                     \js()->success()->reloadDataTable()->closeRemoteModal();
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     \js()->error($e->getMessage());
                 }
             }
-        } elseif($schedule->exists) {
+        } elseif ($schedule->exists) {
             $form->populate($schedule->toArray());
         }
 
         return response()->modal($form);
     }
 
-
     /**
-     * delete a command
+     * delete a command.
      *
      * @param $id
+     *
      * @return mixed
      */
     public function deleteSchedule($id)
@@ -128,11 +128,11 @@ trait ScheduleController
         // Récuperation du model
         $schedule = Schedule::find($id);
 
-        $modal = \modal(null, 'Etes vous sûr de vouloir supprimer : <b>' . $schedule->schedule_id .'</b>' );
+        $modal = \modal(null, 'Etes vous sûr de vouloir supprimer : <b>'.$schedule->schedule_id.'</b>');
         $button = (new \FrenchFrogs\Form\Element\Button('yes', 'Supprimer !'))
             ->setOptionAsDanger()
             ->enableCallback('delete')
-            ->addAttribute('href',  action_url(static::class, __FUNCTION__, $id, ['delete' => true]));
+            ->addAttribute('href', action_url(static::class, __FUNCTION__, $id, ['delete' => true]));
         $modal->appendAction($button);
 
         // enregistrement
@@ -140,22 +140,24 @@ trait ScheduleController
             try {
                 $schedule->delete();
                 \js()->success()->closeRemoteModal()->reloadDataTable();
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 \js()->error($e->getMessage());
             }
+
             return \js();
         }
 
         return response()->modal($modal);
     }
 
-
     /**
-     * Execute a command
+     * Execute a command.
      *
      * @param $id
-     * @return mixed
+     *
      * @throws \Exception
+     *
+     * @return mixed
      */
     public function postExecute($id)
     {
@@ -170,9 +172,10 @@ trait ScheduleController
             $schedule = Db\Schedule\Schedule::findOrFail($id);
             \Artisan::call($schedule->command);
             \js()->success()->reloadDataTable();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             \js()->error($e->getMessage());
         }
+
         return \js();
     }
 }

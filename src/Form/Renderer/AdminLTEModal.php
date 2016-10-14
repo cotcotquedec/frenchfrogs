@@ -1,17 +1,14 @@
-<?php namespace FrenchFrogs\Form\Renderer;
+<?php
 
-use FrenchFrogs\Renderer;
+namespace FrenchFrogs\Form\Renderer;
+
 use FrenchFrogs\Form;
 use FrenchFrogs\Renderer\Style\Style;
 
-
 class AdminLTEModal extends AdminLTE
 {
-
-
-    function form(Form\Form\Form $form)
+    public function form(Form\Form\Form $form)
     {
-
         $html = '';
         $form->addAttribute('role', 'form');
         $form->addClass('form-horizontal');
@@ -29,12 +26,12 @@ class AdminLTEModal extends AdminLTE
 
         $body = '';
         foreach ($form->getElements() as $e) {
-            /** @var $e \FrenchFrogs\Form\Element\Element */
+            /* @var $e \FrenchFrogs\Form\Element\Element */
             $body .= $e->render();
         }
 
         // body
-        $html .= html('div', ['class' => Style::MODAL_BODY_CLASS . ' form-body'], $body);
+        $html .= html('div', ['class' => Style::MODAL_BODY_CLASS.' form-body'], $body);
 
         // Actions
         if ($form->hasActions()) {

@@ -1,15 +1,15 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class Time extends Text
 {
-
     /**
-     * Constructor
+     * Constructor.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
     public function __construct($name, $label = '')
     {
@@ -22,11 +22,10 @@ class Time extends Text
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('time', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

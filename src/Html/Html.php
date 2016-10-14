@@ -1,40 +1,42 @@
-<?php namespace FrenchFrogs\Html;
+<?php
+
+namespace FrenchFrogs\Html;
 
 use FrenchFrogs\Renderer\Style\Style;
 
 /**
- * Trait for Html element management polymorphisme
+ * Trait for Html element management polymorphisme.
  *
  * Class Attributes
  */
-Trait Html
+trait Html
 {
     /**
-     * HTML tag
+     * HTML tag.
      *
      * @var string
      */
     protected $tag;
 
     /**
-     * Content of the HTML tag
+     * Content of the HTML tag.
      *
      * @var string
      */
     protected $content = '';
 
     /**
-     *
-     * Attributes of the HTML tag
+     * Attributes of the HTML tag.
      *
      * @var array
      */
     protected $attributes = [];
 
     /**
-     * Set all the "class" attribute as an array
+     * Set all the "class" attribute as an array.
      *
      * @param array $class
+     *
      * @return $this
      */
     public function setClasses(array $classes)
@@ -43,15 +45,15 @@ Trait Html
     }
 
     /**
-     * Add a single "class" to the "class" attribute
+     * Add a single "class" to the "class" attribute.
      *
      * @param $class
+     *
      * @return $this
      */
     public function addClass($class)
     {
-
-        if(!$this->hasClass($class)) {
+        if (!$this->hasClass($class)) {
             $attr = trim($this->getAttribute('class'));
             $attr = explode(' ', $attr);
             $attr[] = $class;
@@ -62,14 +64,14 @@ Trait Html
     }
 
     /**
-     * Remove a single "class" from the "class" attribute
+     * Remove a single "class" from the "class" attribute.
      *
      * @param $class
+     *
      * @return $this
      */
     public function removeClass($class)
     {
-
         $attr = $this->getAttribute('class');
         $attr = explode(' ', $attr);
         if (($i = array_search($class, $attr)) !== false) {
@@ -80,7 +82,7 @@ Trait Html
     }
 
     /**
-     * Clear the "class" attribute
+     * Clear the "class" attribute.
      *
      * @return $this
      */
@@ -90,20 +92,22 @@ Trait Html
     }
 
     /**
-     * Check if the "class" exist in the "class" attribute
+     * Check if the "class" exist in the "class" attribute.
      *
      * @param $class
+     *
      * @return bool
      */
     public function hasClass($class)
     {
         $attr = $this->getAttribute('class');
         $attr = explode(' ', $attr);
+
         return array_search($class, $attr) !== false;
     }
 
     /**
-     * Return an array of all "class"
+     * Return an array of all "class".
      *
      * @return string
      */
@@ -113,9 +117,10 @@ Trait Html
     }
 
     /**
-     * Set all the "style" attribute as an array
+     * Set all the "style" attribute as an array.
      *
      * @param array $style
+     *
      * @return $this
      */
     public function setStyles(array $styles)
@@ -123,48 +128,54 @@ Trait Html
         $result = [];
 
         // formatage du css
-        foreach($styles as $k => $v) {
-            $result[] = $k . ': ' .$v;
+        foreach ($styles as $k => $v) {
+            $result[] = $k.': '.$v;
         }
 
         return $this->addAttribute('style', implode(';', $result));
     }
 
     /**
-     * Add a single "style" to the "style" attribute
+     * Add a single "style" to the "style" attribute.
      *
      * @param $name
      * @param $value
+     *
      * @return $this
      */
     public function addStyle($name, $value)
     {
         $style = [];
 
-        foreach(explode(';', (string) $this->getAttribute('style')) as $data) {
-            if (empty($data)) {continue;}
+        foreach (explode(';', (string) $this->getAttribute('style')) as $data) {
+            if (empty($data)) {
+                continue;
+            }
             list($k, $v) = explode(':', $data, 2);
             $style[$k] = $v;
         }
 
         // Set de la valeur
         $style[$name] = $value;
+
         return $this->setStyles($style);
     }
 
     /**
-     * Remove a single "style" from the "style" attribute
+     * Remove a single "style" from the "style" attribute.
      *
      * @param $name
+     *
      * @return $this
      */
     public function removeStyle($name)
     {
-
         $style = [];
-        foreach(explode(';', (string) $this->getAttribute('style')) as $data) {
+        foreach (explode(';', (string) $this->getAttribute('style')) as $data) {
             list($k, $v) = explode(':', $data, 2);
-            if ($k == $name) {continue;}
+            if ($k == $name) {
+                continue;
+            }
             $style[$k] = $v;
         }
 
@@ -172,7 +183,7 @@ Trait Html
     }
 
     /**
-     *  Clear the "style" attribute
+     *  Clear the "style" attribute.
      *
      * @return $this
      */
@@ -182,41 +193,45 @@ Trait Html
     }
 
     /**
-     * Check if $style exist in the "style" attribute
+     * Check if $style exist in the "style" attribute.
      *
      * @param $class
+     *
      * @return bool
      */
     public function hasStyle($name)
     {
-
-        foreach(explode(';', (string) $this->getAttribute('style')) as $data) {
+        foreach (explode(';', (string) $this->getAttribute('style')) as $data) {
             list($k, $v) = explode(':', $data, 2);
-            if ($k == $name) {return true;}
+            if ($k == $name) {
+                return true;
+            }
         }
 
         return false;
     }
 
-
     /**
-     * Return the value of a single "style" from the "style" attribute
+     * Return the value of a single "style" from the "style" attribute.
      *
      * @param $name
+     *
      * @return bool
      */
     public function getStyle($name)
     {
-        foreach(explode(';', (string) $this->getAttribute('style')) as $data) {
+        foreach (explode(';', (string) $this->getAttribute('style')) as $data) {
             list($k, $v) = explode(':', $data, 2);
-            if ($k == $name) {return $v;}
+            if ($k == $name) {
+                return $v;
+            }
         }
 
         return false;
     }
 
     /**
-     * Return an array of all "style"
+     * Return an array of all "style".
      *
      * @return string
      */
@@ -225,37 +240,40 @@ Trait Html
         return $this->getAttribute('style');
     }
 
-
     /**
-     * Set all attributes as an array
+     * Set all attributes as an array.
      *
      * @param array $attribute
+     *
      * @return $this
      */
     public function setAttributes(array $attributes)
     {
         $this->attributes = $attributes;
+
         return $this;
     }
 
     /**
-     *
-     * Add a single attribute to the attributes container
+     * Add a single attribute to the attributes container.
      *
      * @param $name
      * @param $value
+     *
      * @return $this
      */
     public function addAttribute($name, $value)
     {
         $this->attributes[$name] = $value;
+
         return $this;
     }
 
     /**
-     * Return the attribute $name from the attributes container
+     * Return the attribute $name from the attributes container.
      *
      * @param $name
+     *
      * @return null
      */
     public function getAttribute($name)
@@ -264,37 +282,42 @@ Trait Html
     }
 
     /**
-     * Return an array of all attributes
+     * Return an array of all attributes.
      *
      * @return array
      */
-    public function getAttributes() {
-        foreach($this->attributes as &$atr){
-            if(!is_string($atr) && is_callable($atr)){$atr = call_user_func_array($atr, [$this]);}
+    public function getAttributes()
+    {
+        foreach ($this->attributes as &$atr) {
+            if (!is_string($atr) && is_callable($atr)) {
+                $atr = call_user_func_array($atr, [$this]);
+            }
         }
+
         return $this->attributes;
     }
 
     /**
-     * Remove a single attribute from de attributes container
+     * Remove a single attribute from de attributes container.
      *
      * @param $name
+     *
      * @return $this
      */
     public function removeAttribute($name)
     {
-        if(isset($this->attributes[$name])) {
+        if (isset($this->attributes[$name])) {
             unset($this->attributes[$name]);
         }
 
         return $this;
     }
 
-
     /**
-     * Return TRUE if the attribute $name is found in the attributes container
+     * Return TRUE if the attribute $name is found in the attributes container.
      *
      * @param $name
+     *
      * @return bool
      */
     public function hasAttribute($name)
@@ -303,7 +326,7 @@ Trait Html
     }
 
     /**
-     * Clear all attributes from the attributes container
+     * Clear all attributes from the attributes container.
      *
      * @return $this
      */
@@ -312,10 +335,8 @@ Trait Html
         return $this->setAttributes([]);
     }
 
-
-
     /**
-     * Return the content
+     * Return the content.
      *
      * @return string
      */
@@ -325,54 +346,61 @@ Trait Html
     }
 
     /**
-     * Set the content
+     * Set the content.
      *
      * @param string $content
+     *
      * @return $this
      */
     public function setContent($content)
     {
         $this->content = $content;
+
         return $this;
     }
 
     /**
-     * Append $content to the current content
+     * Append $content to the current content.
      *
      * @param $content
+     *
      * @return $this
      */
     public function appendContent($content)
     {
         $this->content .= strval($content);
+
         return $this;
     }
 
     /**
-     * Prepend $content to the current content
+     * Prepend $content to the current content.
      *
      * @param $content
+     *
      * @return $this
      */
     public function prependContent($content)
     {
-        $this->content = strval($content) . $this->content;
+        $this->content = strval($content).$this->content;
+
         return $this;
     }
 
     /**
-     * Clear the current content
+     * Clear the current content.
      *
      * @return $this
      */
     public function clearContent()
     {
-        $this->content  = '';
+        $this->content = '';
+
         return $this;
     }
 
     /**
-     * Set the tag
+     * Set the tag.
      *
      *
      * @return string
@@ -383,20 +411,21 @@ Trait Html
     }
 
     /**
-     * Return the tag
+     * Return the tag.
      *
      * @param string $tag
+     *
      * @return $this
      */
     public function setTag($tag)
     {
         $this->tag = $tag;
+
         return $this;
     }
 
-
     /**
-     * return the html version of the model
+     * return the html version of the model.
      *
      * @return string
      */
@@ -406,7 +435,7 @@ Trait Html
     }
 
     /**
-     * Add text position class for right positionning
+     * Add text position class for right positionning.
      *
      * @return $this
      */
@@ -415,11 +444,12 @@ Trait Html
         $this->removeClass(Style::TEXT_LEFT);
         $this->removeClass(Style::TEXT_CENTER);
         $this->addClass(Style::TEXT_RIGHT);
+
         return $this;
     }
 
     /**
-     * Add text position class for left positionning
+     * Add text position class for left positionning.
      *
      * @return $this
      */
@@ -428,11 +458,12 @@ Trait Html
         $this->removeClass(Style::TEXT_RIGHT);
         $this->removeClass(Style::TEXT_CENTER);
         $this->addClass(Style::TEXT_LEFT);
+
         return $this;
     }
 
     /**
-     * Add text position class for center positionning
+     * Add text position class for center positionning.
      *
      * @return $this
      */
@@ -441,6 +472,7 @@ Trait Html
         $this->removeClass(Style::TEXT_RIGHT);
         $this->removeClass(Style::TEXT_LEFT);
         $this->addClass(Style::TEXT_CENTER);
+
         return $this;
     }
 }

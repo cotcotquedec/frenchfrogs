@@ -1,9 +1,9 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class LabelDate extends Date
 {
-
     protected $is_discreet = true;
 
     /**
@@ -11,11 +11,10 @@ class LabelDate extends Date
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('label_date', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

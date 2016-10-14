@@ -1,5 +1,6 @@
-<?php namespace FrenchFrogs\Table\Column;
+<?php
 
+namespace FrenchFrogs\Table\Column;
 
 interface Exportable
 {

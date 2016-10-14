@@ -32,11 +32,13 @@ class MailTableCommand extends Command
      * @var \Illuminate\Support\Composer
      */
     protected $composer;
+
     /**
      * Create a new session table command instance.
      *
-     * @param  \Illuminate\Filesystem\Filesystem  $files
-     * @param  \Illuminate\Support\Composer  $composer
+     * @param \Illuminate\Filesystem\Filesystem $files
+     * @param \Illuminate\Support\Composer      $composer
+     *
      * @return void
      */
     public function __construct(Filesystem $files, Composer $composer)
@@ -45,6 +47,7 @@ class MailTableCommand extends Command
         $this->files = $files;
         $this->composer = $composer;
     }
+
     /**
      * Execute the console command.
      *
@@ -53,7 +56,7 @@ class MailTableCommand extends Command
     public function fire()
     {
         $fullPath = $this->createTable();
-        $this->files->put($fullPath, $this->files->get(__DIR__ . '/stubs/mail.stub'));
+        $this->files->put($fullPath, $this->files->get(__DIR__.'/stubs/mail.stub'));
         $this->info('Migration created successfully!');
         $this->composer->dumpAutoloads();
     }
@@ -67,6 +70,7 @@ class MailTableCommand extends Command
     {
         $name = 'create_mail_table';
         $path = $this->laravel->databasePath().'/migrations';
+
         return $this->laravel['migration.creator']->create($name, $path);
     }
 }

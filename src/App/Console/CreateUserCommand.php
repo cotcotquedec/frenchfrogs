@@ -1,11 +1,12 @@
-<?php namespace FrenchFrogs\App\Console;
+<?php
+
+namespace FrenchFrogs\App\Console;
 
 use FrenchFrogs\App\Models\Acl;
 use Illuminate\Console\Command;
 
 class CreateUserCommand extends Command
 {
-
     /**
      * The name and signature of the console command.
      *
@@ -60,9 +61,9 @@ class CreateUserCommand extends Command
         }
 
         // interface
-        $interface =  $this->option('interface');
+        $interface = $this->option('interface');
         if (empty($interface)) {
-            $interface = $this->ask('Interface',  Acl::INTERFACE_DEFAULT);
+            $interface = $this->ask('Interface', Acl::INTERFACE_DEFAULT);
         }
 
         // generation de l'utilisateur

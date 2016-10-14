@@ -4,8 +4,6 @@ namespace FrenchFrogs\App\Console;
 
 use FrenchFrogs\App\Models\Business\Mail;
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Composer;
 
 class MailSendCommand extends Command
 {
@@ -23,8 +21,6 @@ class MailSendCommand extends Command
      */
     protected $description = 'Envoie les emails';
 
-
-
     /**
      * Execute the console command.
      *
@@ -32,7 +28,8 @@ class MailSendCommand extends Command
      */
     public function handle()
     {
-        while(Mail::next() === true) {$this->info('Mail envoyé');}
+        while (Mail::next() === true) {
+            $this->info('Mail envoyé');
+        }
     }
-
 }

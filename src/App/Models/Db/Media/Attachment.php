@@ -1,5 +1,6 @@
-<?php namespace FrenchFrogs\App\Models\Db\Media;
+<?php
 
+namespace FrenchFrogs\App\Models\Db\Media;
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 

@@ -1,10 +1,11 @@
-<?php namespace FrenchFrogs\Laravel\Database\Eloquent;
+<?php
+
+namespace FrenchFrogs\Laravel\Database\Eloquent;
 
 use Illuminate\Database\Eloquent\Builder;
 
-
 /**
- * Class Model
+ * Class Model.
  *
  * @method static $this findOrNew() findOrNew($id)
  * @method static $this find() find($id)
@@ -13,20 +14,18 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static $this firstOrNew() firstOrNew(array $array)
  * @method static Builder orderBy() orderBy(string $column, string $direction = 'asc')
  * @method static Builder where() where($column, $operator = null, $value = null, $boolean = 'and')
- *
- * @package FrenchFrogs\Laravel\Database\Eloquent
  */
 class Model extends \Illuminate\Database\Eloquent\Model
 {
     /**
-     * Desactivate gard
+     * Desactivate gard.
      *
      * @var bool
      */
     protected static $unguarded = true;
 
     /**
-     * primary key generation
+     * primary key generation.
      *
      * @var bool
      */
@@ -35,8 +34,9 @@ class Model extends \Illuminate\Database\Eloquent\Model
     /**
      * Insert the given attributes and set the ID on the model.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  array  $attributes
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array                                 $attributes
+     *
      * @return void
      */
     protected function insertAndSetId(Builder $query, $attributes)
@@ -45,19 +45,17 @@ class Model extends \Illuminate\Database\Eloquent\Model
 
         // uuid management
         if ($this->primaryUuid) {
-
             $id = uuid();
             $attributes[$keyName] = $id;
             $query->insert($attributes);
 
         // auto increment
         } else {
-            $id = $query->insertGetId($attributes,$keyName);
+            $id = $query->insertGetId($attributes, $keyName);
         }
 
         $this->setAttribute($keyName, $id);
     }
-
 
     /**
      * Get the casts array.
@@ -66,7 +64,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
      */
     public function getCasts()
     {
-        if ($this->incrementing && !$this->primaryUuid){
+        if ($this->incrementing && !$this->primaryUuid) {
             return array_merge([
                 $this->getKeyName() => 'int',
             ], $this->casts);

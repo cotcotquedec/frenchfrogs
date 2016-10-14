@@ -1,24 +1,25 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class DateRange extends Date
 {
     /**
-     * name for FROM input element
+     * name for FROM input element.
      *
      * @var string
      */
     protected $from;
 
     /**
-     * name for TO input element
+     * name for TO input element.
      *
      * @var string
      */
     protected $to;
 
     /**
-     * Getter for $from
+     * Getter for $from.
      *
      * @return string
      */
@@ -28,19 +29,21 @@ class DateRange extends Date
     }
 
     /**
-     * Setter for $from
+     * Setter for $from.
      *
      * @param $from
+     *
      * @return $this
      */
     public function setFrom($from)
     {
         $this->from = $from;
+
         return $this;
     }
 
     /**
-     * Getter for $to
+     * Getter for $to.
      *
      * @return string
      */
@@ -50,30 +53,32 @@ class DateRange extends Date
     }
 
     /**
-     * Setter for $to
+     * Setter for $to.
      *
      * @param $to
+     *
      * @return $this
      */
     public function setTo($to)
     {
         $this->to = $to;
+
         return $this;
     }
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
     public function __construct($name, $label = '', $from = null, $to = null, $formatDisplay = null, $formatStore = null, $attr = [])
     {
         parent::__construct($name, $label, $formatDisplay, $formatStore, $attr);
 
-        $this->setTo(is_null($to) ? $name . '_to' : $to);
-        $this->setFrom(is_null($from) ? $name . '_from' : $from);
+        $this->setTo(is_null($to) ? $name.'_to' : $to);
+        $this->setFrom(is_null($from) ? $name.'_from' : $from);
     }
 
     /**
@@ -81,11 +86,10 @@ class DateRange extends Date
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('date_range', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

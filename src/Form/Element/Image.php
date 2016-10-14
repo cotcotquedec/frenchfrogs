@@ -1,17 +1,15 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class Image extends Label
 {
-
-
-
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
     public function __construct($name, $label = '', $width = null, $height = null)
     {
@@ -24,7 +22,6 @@ class Image extends Label
         if (!is_null($height)) {
             $this->addStyle('height', $height);
         }
-
     }
 
     /**
@@ -32,11 +29,10 @@ class Image extends Label
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('image', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

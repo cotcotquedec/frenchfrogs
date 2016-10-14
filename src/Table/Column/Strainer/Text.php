@@ -1,4 +1,6 @@
-<?php namespace FrenchFrogs\Table\Column\Strainer;
+<?php
+
+namespace FrenchFrogs\Table\Column\Strainer;
 
 use FrenchFrogs\Form\Element\Element;
 use FrenchFrogs\Form\Element\Text as FormText;
@@ -6,14 +8,10 @@ use FrenchFrogs\Table\Column\Column;
 
 class Text extends Strainer
 {
-
     /**
-     *
-     *
      * @var Element
      */
     protected $element;
-
 
     public function __construct(Column $column, $options = [], $callable = null, $attr = [])
     {
@@ -23,22 +21,22 @@ class Text extends Strainer
         $this->setElement($element);
     }
 
-
     /**
-     * Setter for $element attribute
+     * Setter for $element attribute.
      *
      * @param Element $element
+     *
      * @return $this
      */
     public function setElement(FormText $element)
     {
         $this->element = $element;
+
         return $this;
     }
 
-
     /**
-     * Getter for $element attribute
+     * Getter for $element attribute.
      *
      * @return Element
      */
@@ -47,9 +45,8 @@ class Text extends Strainer
         return $this->element;
     }
 
-
     /**
-     * Return TRUE if $element is set
+     * Return TRUE if $element is set.
      *
      * @return bool
      */
@@ -59,23 +56,26 @@ class Text extends Strainer
     }
 
     /**
-     * Unset $element attribute
+     * Unset $element attribute.
      *
      * @return $this
      */
     public function removeElement()
     {
         unset($this->element);
+
         return $this;
     }
 
     /**
-     * Execute strainer
+     * Execute strainer.
      *
      * @param \FrenchFrogs\Table\Table\Table $table
      * @param array ...$params
-     * @return $this
+     *
      * @throws \Exception
+     *
+     * @return $this
      */
     public function call(\FrenchFrogs\Table\Table\Table $table, ...$params)
     {
@@ -88,15 +88,13 @@ class Text extends Strainer
                 throw new \Exception('Table source is not an instance of query builder');
             }
 
-            $table->getSource()->where($this->getField(), 'LIKE', '%' . $params[0] . '%');
+            $table->getSource()->where($this->getField(), 'LIKE', '%'.$params[0].'%');
         }
 
         return $this;
     }
 
     /**
-     *
-     *
      * @return string
      */
     public function render()
@@ -104,7 +102,7 @@ class Text extends Strainer
         $render = '';
         try {
             $render = $this->getRenderer()->render('strainerText', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

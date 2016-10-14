@@ -1,9 +1,9 @@
-<?php namespace FrenchFrogs\Container;
+<?php
 
+namespace FrenchFrogs\Container;
 
 class Container
 {
-
     const NAMESPACE_DEFAULT = 'default';
 
     /**
@@ -13,36 +13,35 @@ class Container
 
 
     /**
-     * Glue for g"nération
+     * Glue for g"nération.
      *
      * @var string
      */
     protected $glue = PHP_EOL;
 
     /**
-     * Instances
+     * Instances.
      *
      * @var array
      */
-    static protected $instances = [];
-
+    protected static $instances = [];
 
     /**
-     * Protected constructor for singleton
+     * Protected constructor for singleton.
      *
      * Container constructor.
      */
-    protected function __construct() {
-
+    protected function __construct()
+    {
     }
 
     /**
-     * constructor du singleton
+     * constructor du singleton.
      *
      * @return Container
      */
-    static function getInstance($namespace = null) {
-
+    public static function getInstance($namespace = null)
+    {
         $namespace = is_null($namespace) ? static::NAMESPACE_DEFAULT : $namespace;
 
         if (!array_key_exists($namespace, static::$instances)) {
@@ -53,20 +52,21 @@ class Container
     }
 
     /**
-     * Setter for $glue
+     * Setter for $glue.
      *
      * @param $glue
+     *
      * @return $this
      */
     public function setGlue($glue)
     {
         $this->glue = $glue;
+
         return $this;
     }
 
-
     /**
-     * Getter for $glue
+     * Getter for $glue.
      *
      * @return string
      */
@@ -75,22 +75,22 @@ class Container
         return $this->glue;
     }
 
-
     /**
-     * Setter for $container attribute
+     * Setter for $container attribute.
      *
      * @param $container
+     *
      * @return $this
      */
     public function set(array $container)
     {
         $this->container = $container;
+
         return $this;
     }
 
-
     /**
-     * Getter for $ container attribute
+     * Getter for $ container attribute.
      *
      * @return string
      */
@@ -99,48 +99,47 @@ class Container
         return $this->container;
     }
 
-
     /**
-     * Clear the $container attribute
+     * Clear the $container attribute.
      *
      * @return $this
      */
     public function clear()
     {
         $this->container = [];
+
         return $this;
     }
 
     /**
-     * Append raw string
+     * Append raw string.
      *
      * @param $container
+     *
      * @return $this
      */
     public function append($container)
     {
         $this->container[] = $container;
+
         return $this;
     }
 
-
-
     /**
-     * Prepend $container into container attribute
+     * Prepend $container into container attribute.
      *
      * @param $container
+     *
      * @return $this
      */
     public function prepend($container)
     {
         array_unshift($this->container, $container);
+
         return $this;
     }
 
-
     /**
-     *
-     *
      * @return string
      */
     public function __toString()

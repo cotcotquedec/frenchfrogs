@@ -1,27 +1,25 @@
-<?php namespace FrenchFrogs\Filterer;
+<?php
 
+namespace FrenchFrogs\Filterer;
 
 /**
- * Class model used to apply filter to values
+ * Class model used to apply filter to values.
  *
  * Use polymorphisme with Trait \FrenchFrogs\Core\Filterer
  *
  * Class Filterer
- * @package FrenchFrogs\Filterer
  */
 class Filterer
 {
-
     /**
-     * Main container
+     * Main container.
      *
      * @var array
      */
     protected $filters = [];
 
-
     /**
-     * Constructor
+     * Constructor.
      *
      * @param ...$params
      */
@@ -35,18 +33,17 @@ class Filterer
     }
 
     /**
-     * Set all filter as an array
+     * Set all filter as an array.
      *
      * @param $filters
+     *
      * @return $this
      */
     public function setFilters($filters)
     {
-
         if (!is_array($filters)) {
-
             $this->clearFilters();
-            foreach(explode('|', $filters) as $filter) {
+            foreach (explode('|', $filters) as $filter) {
                 // searching for optional params
                 $params = [];
                 if (strpos($filter, ':')) {
@@ -64,26 +61,26 @@ class Filterer
     }
 
     /**
-     * Add a single filter to the filters container
+     * Add a single filter to the filters container.
      *
      * @param $index
      * @param null $method
      * @param ...$params
+     *
      * @return $this
      */
     public function addFilter($index, $method = null, ...$params)
     {
         $this->filters[$index] = [$method, $params];
+
         return $this;
     }
 
-
-
     /**
-     *
-     * Remove a single filter from de filter container
+     * Remove a single filter from de filter container.
      *
      * @param $index
+     *
      * @return $this
      */
     public function removeFilter($index)
@@ -96,7 +93,7 @@ class Filterer
     }
 
     /**
-     * Clear all filters from the filters container
+     * Clear all filters from the filters container.
      *
      *
      * @return $this
@@ -109,9 +106,10 @@ class Filterer
     }
 
     /**
-     * Check if the filter exist in the filters container from the filter index
+     * Check if the filter exist in the filters container from the filter index.
      *
      * @param $index
+     *
      * @return bool
      */
     public function hasFilter($index)
@@ -120,24 +118,25 @@ class Filterer
     }
 
     /**
-     * Return the filter from the filters container from the filter container
+     * Return the filter from the filters container from the filter container.
      *
      * @param $index
-     * @return mixed
+     *
      * @throws \Exception
+     *
+     * @return mixed
      */
     public function getFilter($index)
     {
         if (!$this->hasFilter($index)) {
-            throw new \Exception('Impossible de trouver le filtre : ' . $index);
+            throw new \Exception('Impossible de trouver le filtre : '.$index);
         }
 
         return $this->filters[$index];
     }
 
-
     /**
-     * Return array of all filters
+     * Return array of all filters.
      *
      * @return array
      */
@@ -146,19 +145,20 @@ class Filterer
         return $this->filters;
     }
 
-
     /**
-     * Filter de value
+     * Filter de value.
      *
      * Main method of the class
      *
      * @param $value
-     * @return mixed
+     *
      * @throws \Exception
+     *
+     * @return mixed
      */
     public function filter($value)
     {
-        foreach($this->getFilters() as $index => $filter) {
+        foreach ($this->getFilters() as $index => $filter) {
             // Extract the params
             list($method, $params) = $filter;
 
@@ -170,14 +170,12 @@ class Filterer
 
             // If it's a anonymous function
             if (!is_string($method) && is_callable($method)) {
-
                 $value = call_user_func_array($method, $params);
 
                 // if it's a local method
             } else {
-
                 if (!method_exists($this, $method)) {
-                    throw new \Exception('Method "'. $method .'" not found for filter : ' . $index);
+                    throw new \Exception('Method "'.$method.'" not found for filter : '.$index);
                 }
 
                 $value = call_user_func_array([$this, $method], $params);
@@ -187,10 +185,8 @@ class Filterer
         return $value;
     }
 
-
-
     /**
-     *******************************
+     *******************************.
      *
      * Built in filter
      *
@@ -198,11 +194,11 @@ class Filterer
      * *****************************
      */
 
-
     /**
-     * return $value in lower case
+     * return $value in lower case.
      *
      * @param $value
+     *
      * @return string
      */
     public function lower($value)
@@ -211,9 +207,10 @@ class Filterer
     }
 
     /**
-     * return $value in uppercase
+     * return $value in uppercase.
      *
      * @param $value
+     *
      * @return string
      */
     public function upper($value)
@@ -221,12 +218,12 @@ class Filterer
         return strtoupper($value);
     }
 
-
     /**
-     * Format a date
+     * Format a date.
      *
      * @param $value
      * @param string $format
+     *
      * @return string
      */
     public function dateFormat($value, $format = 'd/m/Y')
@@ -242,9 +239,9 @@ class Filterer
             if ($value == '0000-00-00 00:00:00') {
                 $value = '';
             } else {
-                $date = \DateTime::createFromFormat('Y-m-d H:i:s',$value);
+                $date = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
                 //Check que la value est compatible avec le format
-                if($date !== false  && !array_sum($date->getLastErrors())){
+                if ($date !== false && !array_sum($date->getLastErrors())) {
                     $value = $date->format($format);
                 }
             }
@@ -254,9 +251,10 @@ class Filterer
     }
 
     /**
-     * Remove all space
+     * Remove all space.
      *
      * @param $value
+     *
      * @return mixed
      */
     public function nowp($value)
@@ -265,9 +263,10 @@ class Filterer
     }
 
     /**
-     * Return only numeric
+     * Return only numeric.
      *
      * @param $value
+     *
      * @return mixed
      */
     public function num($value)
@@ -276,9 +275,10 @@ class Filterer
     }
 
     /**
-     * Return only alphanumeric
+     * Return only alphanumeric.
      *
      * @param $value
+     *
      * @return mixed
      */
     public function alpha($value)
@@ -287,9 +287,10 @@ class Filterer
     }
 
     /**
-     * trim vriable
+     * trim vriable.
      *
      * @param $value
+     *
      * @return string
      */
     public function trim($value)
@@ -297,11 +298,11 @@ class Filterer
         return trim($value);
     }
 
-
     /**
-     * voir hex2bin
+     * voir hex2bin.
      *
      * @param $value
+     *
      * @return string
      */
     public function hex2bin($value)
@@ -309,12 +310,12 @@ class Filterer
         return hex2bin($value);
     }
 
-
     /**
-     * Format a number into a french number format
+     * Format a number into a french number format.
      *
      * @param $value
      * @param int $dec
+     *
      * @return string
      */
     public function numfr($value, $dec = 0)
@@ -322,13 +323,13 @@ class Filterer
         return is_null($value) ? '' : number_format($value, $dec, ',', ' ');
     }
 
-
     /**
-     * Return a uuid in the desired format
+     * Return a uuid in the desired format.
      *
      * @param $value
      * @param string $format
-     * @return NULL|number|string
+     *
+     * @return null|number|string
      */
     public function uuid($value, $format = 'bytes')
     {
@@ -336,17 +337,19 @@ class Filterer
     }
 
     /**
-     * Return null if $value is empty
+     * Return null if $value is empty.
      *
      * @param $value
+     *
      * @return null
      */
-    public function nullable($value) {
+    public function nullable($value)
+    {
         return empty($value) ? null : $value;
     }
 
     /**
-     * Perform a regular expression search and replace
+     * Perform a regular expression search and replace.
      *
      * @param $value
      * @param $pattern
@@ -354,13 +357,13 @@ class Filterer
      *
      * @return string
      */
-    public function pregreplace($value, $pattern , $replacement = '') {
-        return preg_replace($pattern,$replacement,$value);
+    public function pregreplace($value, $pattern, $replacement = '')
+    {
+        return preg_replace($pattern, $replacement, $value);
     }
 
-
     /**
-     * Wrap string
+     * Wrap string.
      *
      * @param $value
      * @param $size
@@ -369,7 +372,7 @@ class Filterer
     public function wrap($value, $size, $replacement = '...')
     {
         if (strlen($value) > ($size - strlen($replacement))) {
-            $value = substr($value, 0, $size) .$replacement;
+            $value = substr($value, 0, $size).$replacement;
         }
 
         return $value;

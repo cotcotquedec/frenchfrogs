@@ -1,14 +1,14 @@
-<?php namespace FrenchFrogs\Form\Form;
+<?php
+
+namespace FrenchFrogs\Form\Form;
 
 use FrenchFrogs;
 use InvalidArgumentException;
 
-
 trait Element
 {
-
     /**
-     * Elements container
+     * Elements container.
      *
      * @var array
      */
@@ -16,17 +16,17 @@ trait Element
 
 
     /**
-     * Action (form submission) containers
+     * Action (form submission) containers.
      *
      * @var array
      */
     protected $actions = [];
 
-
     /**
-     * Add a single element to the elements container
+     * Add a single element to the elements container.
      *
      * @param \FrenchFrogs\Form\Element\Element $element
+     *
      * @return $this
      */
     public function addElement(\FrenchFrogs\Form\Element\Element $element, FrenchFrogs\Renderer\Renderer $renderer = null)
@@ -40,14 +40,14 @@ trait Element
     }
 
     /**
-     * Remove element $name from elements container
+     * Remove element $name from elements container.
      *
      * @param $name
+     *
      * @return $this
      */
     public function removeElement($name)
     {
-
         if (isset($this->elements[$name])) {
             unset($this->elements[$name]);
         }
@@ -56,28 +56,28 @@ trait Element
     }
 
     /**
-     * Clear the elements container
+     * Clear the elements container.
      *
      * @return $this
      */
     public function clearElements()
     {
-
         $this->elements = [];
 
         return $this;
     }
 
     /**
-     * Return the element $name from the elements container
+     * Return the element $name from the elements container.
      *
      * @param $name
+     *
      * @throws InvalidArgumentException
+     *
      * @return \FrenchFrogs\Form\Element\Element
      */
     public function getElement($name)
     {
-
         if (!isset($this->elements[$name])) {
             throw new InvalidArgumentException(" Element not found : {$name}");
         }
@@ -86,9 +86,10 @@ trait Element
     }
 
     /**
-     * Return TRUE is an element $name is set in $elements container
+     * Return TRUE is an element $name is set in $elements container.
      *
      * @param $name
+     *
      * @return bool
      */
     public function hasElement($name)
@@ -106,43 +107,44 @@ trait Element
         return $this->elements;
     }
 
-
-
     /**
-     * Set the action container
+     * Set the action container.
      *
      * @param array $actions
+     *
      * @return $this
      */
     public function setActions(array $actions)
     {
         $this->actions = $actions;
+
         return $this;
     }
 
-
     /**
-     * Add an action to the action container
+     * Add an action to the action container.
      *
      * @param \FrenchFrogs\Form\Element\Element $element
+     *
      * @return $this
      */
     public function addAction(\FrenchFrogs\Form\Element\Element $element)
     {
         $element->setForm($this);
         $this->actions[$element->getName()] = $element;
+
         return $this;
     }
 
     /**
-     * Remove the action $name from the actions container
+     * Remove the action $name from the actions container.
      *
      * @param $name
+     *
      * @return $this
      */
     public function removeAction($name)
     {
-
         if (isset($this->actions[$name])) {
             unset($this->actions[$name]);
         }
@@ -151,18 +153,19 @@ trait Element
     }
 
     /**
-     * Clear all the actions from the action container
+     * Clear all the actions from the action container.
      *
      * @return $this
      */
     public function clearActions()
     {
         $this->actions = [];
+
         return $this;
     }
 
     /**
-     * Return TRU is $action container has at leas one element
+     * Return TRU is $action container has at leas one element.
      *
      * @return bool
      */
@@ -172,15 +175,16 @@ trait Element
     }
 
     /**
-     * Return the $name element from the actions container
+     * Return the $name element from the actions container.
      *
      * @param $name
+     *
      * @throws InvalidArgumentException
+     *
      * @return \FrenchFrogs\Form\Element\Element
      */
     public function getAction($name)
     {
-
         if (!isset($this->actions[$name])) {
             throw new InvalidArgumentException("Action not found : {$name}");
         }
@@ -189,7 +193,7 @@ trait Element
     }
 
     /**
-     * Return actions container as an array
+     * Return actions container as an array.
      *
      * @return array
      */
@@ -198,15 +202,13 @@ trait Element
         return $this->actions;
     }
 
-
-
-
     /**
-     * Add a input:text element
+     * Add a input:text element.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Text
      */
     public function addText($name, $label = '', $is_mandatory = true)
@@ -223,13 +225,13 @@ trait Element
         return $e;
     }
 
-
     /**
-     * Add a input:text with datepicker element
+     * Add a input:text with datepicker element.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Date
      */
     public function addDate($name, $label = '', $is_mandatory = true)
@@ -247,13 +249,14 @@ trait Element
     }
 
     /**
-     * Add 2 input for a date range element
+     * Add 2 input for a date range element.
      *
      * @param $name
      * @param string $label
      * @param string $from
      * @param string $to
-     * @param bool $is_mandatory
+     * @param bool   $is_mandatory
+     *
      * @return FrenchFrogs\Form\Element\DateRange
      */
     public function addDateRange($name, $label = '', $from = '', $to = '', $is_mandatory = true)
@@ -271,12 +274,12 @@ trait Element
     }
 
     /**
-     *
-     *  Add a input:text with timepicker element
+     *  Add a input:text with timepicker element.
      *
      * @param $name
      * @param string $label
-     * @param bool $is_mandatory
+     * @param bool   $is_mandatory
+     *
      * @return \FrenchFrogs\Form\Element\Date
      */
     public function addTime($name, $label = '', $is_mandatory = true)
@@ -294,14 +297,15 @@ trait Element
     }
 
     /**
-     * Add input:password element
+     * Add input:password element.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Password
      */
-    public function addPassword($name, $label = '',  $is_mandatory = true )
+    public function addPassword($name, $label = '', $is_mandatory = true)
     {
         $e = new \FrenchFrogs\Form\Element\Password($name, $label);
         $this->addElement($e);
@@ -316,14 +320,15 @@ trait Element
     }
 
     /**
-     * Add textarea element
+     * Add textarea element.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Textarea
      */
-    public function addTextarea($name, $label = '', $is_mandatory = true )
+    public function addTextarea($name, $label = '', $is_mandatory = true)
     {
         $e = new \FrenchFrogs\Form\Element\Textarea($name, $label);
         $this->addElement($e);
@@ -338,10 +343,11 @@ trait Element
     }
 
     /**
-     * Add action button
+     * Add action button.
      *
      * @param $name
      * @param array $attr
+     *
      * @return \FrenchFrogs\Form\Element\Submit
      */
     public function addSubmit($name, $attr = [])
@@ -350,55 +356,58 @@ trait Element
         $e->setValue($name);
         $e->setOptionAsPrimary();
         $this->addAction($e);
+
         return $e;
     }
 
-
     /**
-     * Add input checkbox element
+     * Add input checkbox element.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Checkbox
      */
-    public function addCheckbox($name, $label = '', $multi  = [], $attr = [] )
+    public function addCheckbox($name, $label = '', $multi = [], $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Checkbox($name, $label, $multi, $attr);
         $this->addElement($e);
+
         return $e;
     }
 
-
     /**
-     * Add Boolean Element
+     * Add Boolean Element.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Boolean
      */
-    public function addBoolean($name, $label = '', $attr = [] )
+    public function addBoolean($name, $label = '', $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Boolean($name, $label, $attr);
         $this->addElement($e);
+
         return $e;
     }
 
-
     /**
-     * Add phone element
+     * Add phone element.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Tel
      */
     public function addTel($name, $label = '', $is_mandatory = true)
     {
         $e = new \FrenchFrogs\Form\Element\Tel($name, $label);
         $this->addElement($e);
-        $e->addRule('laravel','laravel', ['regex:/^[+]{0,1}[0-9]{9,13}$/'],['regex' => 'Le champ doit être un numero valide . Il peut commencer par un + et ne doit contenir que des chiffres (Au moins 10)']);
+        $e->addRule('laravel', 'laravel', ['regex:/^[+]{0,1}[0-9]{9,13}$/'], ['regex' => 'Le champ doit être un numero valide . Il peut commencer par un + et ne doit contenir que des chiffres (Au moins 10)']);
 
         if ($is_mandatory) {
             $e->addRule('required');
@@ -410,14 +419,15 @@ trait Element
     }
 
     /**
-     * Add input:mail element
+     * Add input:mail element.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Email
      */
-    public function addEmail($name, $label = '',$is_mandatory = true )
+    public function addEmail($name, $label = '', $is_mandatory = true)
     {
         $e = new \FrenchFrogs\Form\Element\Email($name, $label);
         $this->addElement($e);
@@ -432,29 +442,31 @@ trait Element
         return $e;
     }
 
-
     /**
-     * Add input:hidden element
+     * Add input:hidden element.
      *
      *
      * @param $name
      * @param array $attr
-     * @return  \FrenchFrogs\Form\Element\Hidden
+     *
+     * @return \FrenchFrogs\Form\Element\Hidden
      */
     public function addHidden($name, $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Hidden($name, $attr);
         $this->addElement($e);
+
         return $e;
     }
 
     /**
-     * Add input:hidden element
+     * Add input:hidden element.
      *
      *
      * @param $name
      * @param array $attr
-     * @return  \FrenchFrogs\Form\Element\Hidden
+     *
+     * @return \FrenchFrogs\Form\Element\Hidden
      */
     public function addSelectRemote($name, $label = '', $url = '#', $length = 1, $is_mandatory = true)
     {
@@ -470,29 +482,30 @@ trait Element
         return $e;
     }
 
-
-
     /**
-     * Add label element (read-only element)
+     * Add label element (read-only element).
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Label
      */
-    public function addLabel($name, $label = '', $attr = [] )
+    public function addLabel($name, $label = '', $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Label($name, $label, $attr);
         $this->addElement($e);
+
         return $e;
     }
 
     /**
-     * Add label date element (read-only element)
+     * Add label date element (read-only element).
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Label
      */
     public function addLabelDate($name, $label = '')
@@ -503,120 +516,128 @@ trait Element
         return $e;
     }
 
-
     /**
-     * Add label element (read-only element)
+     * Add label element (read-only element).
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Label
      */
-    public function addPre($name, $label = '', $attr = [] )
+    public function addPre($name, $label = '', $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Pre($name, $label, $attr);
         $this->addElement($e);
+
         return $e;
     }
 
     /**
-     * Add Link element (read-only element)
+     * Add Link element (read-only element).
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Label
      */
-    public function addLink($name, $label = '', $attr = [] )
+    public function addLink($name, $label = '', $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Link($name, $label, $attr);
         $this->addElement($e);
+
         return $e;
     }
 
     /**
-     * Add Image element (read-only element)
+     * Add Image element (read-only element).
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Label
      */
-    public function addImage($name, $label = '', $width = null, $height = null )
+    public function addImage($name, $label = '', $width = null, $height = null)
     {
         $e = new \FrenchFrogs\Form\Element\Image($name, $label, $width, $height);
         $this->addElement($e);
+
         return $e;
     }
 
-
     /**
-     * Add button element
+     * Add button element.
      *
      * @param $label
      * @param array $attr
+     *
      * @return \FrenchFrogs\Form\Element\Button
      */
-    public function addButton($name, $label, $attr = [] )
+    public function addButton($name, $label, $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Button($name, $label, $attr);
         $this->addElement($e);
+
         return $e;
     }
 
-
     /**
-     * Add separation
+     * Add separation.
      *
      * @return \FrenchFrogs\Form\Element\Separator
      */
     public function addSeparator()
     {
         $e = new \FrenchFrogs\Form\Element\Separator();
-        $e->setName('separator-' . rand(1111, 9999));
+        $e->setName('separator-'.rand(1111, 9999));
         $e->enableDiscreet();
         $this->addElement($e);
+
         return $e;
     }
 
-
     /**
-     * Add a Title element
+     * Add a Title element.
      *
      * @param $name
      * @param array $attr
+     *
      * @return \FrenchFrogs\Form\Element\Title
      */
     public function addTitle($name, $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Title($name, $attr);
         $this->addElement($e);
+
         return $e;
     }
 
-
     /**
-     * Add format content
+     * Add format content.
      *
      * @param $label
      * @param string $content
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Content
      */
     public function addContent($label, $value = '', $fullwidth = true)
     {
         $e = new \FrenchFrogs\Form\Element\Content($label, $value, $fullwidth);
         $this->addElement($e);
+
         return $e;
     }
 
-
     /**
-     * Add input:number element
+     * Add input:number element.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Number
      */
     public function addNumber($name, $label = '', $is_mandatory = true)
@@ -633,17 +654,17 @@ trait Element
         return $e;
     }
 
-
     /**
-     * Add input:radio element
+     * Add input:radio element.
      *
      * @param $name
      * @param string $label
-     * @param array $multi
-     * @param array $attr
+     * @param array  $multi
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\Radio
      */
-    public function addRadio($name, $label = '', $multi  = [], $is_mandatory = true )
+    public function addRadio($name, $label = '', $multi = [], $is_mandatory = true)
     {
         $e = new \FrenchFrogs\Form\Element\Radio($name, $label, $multi);
         $this->addElement($e);
@@ -657,18 +678,18 @@ trait Element
         return $e;
     }
 
-
     /**
-     * Add select element
+     * Add select element.
      *
      *
      * @param $name
      * @param $label
      * @param array $multi
      * @param array $attr
+     *
      * @return \FrenchFrogs\Form\Element\Select
      */
-    public function addSelect($name, $label, $multi = [],  $is_mandatory = true)
+    public function addSelect($name, $label, $multi = [], $is_mandatory = true)
     {
         $e = new \FrenchFrogs\Form\Element\Select($name, $label, $multi);
         $this->addElement($e);
@@ -683,15 +704,16 @@ trait Element
     }
 
     /**
-     * Add list element
+     * Add list element.
      *
      * @param $name
      * @param $label
-     * @param array $options
+     * @param array     $options
      * @param bool|true $is_mandatory
+     *
      * @return FrenchFrogs\Form\Element\DataList
      */
-    public function addDataList($name, $label, $options = [],  $is_mandatory = true)
+    public function addDataList($name, $label, $options = [], $is_mandatory = true)
     {
         $e = new \FrenchFrogs\Form\Element\DataList($name, $label, $options);
         $this->addElement($e);
@@ -705,13 +727,13 @@ trait Element
         return $e;
     }
 
-
     /**
-     * Add file element
+     * Add file element.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Form\Element\File
      */
     public function addFile($name, $label = '', $is_mandatory = true)
@@ -727,8 +749,4 @@ trait Element
 
         return $e;
     }
-
-
-
-
 }

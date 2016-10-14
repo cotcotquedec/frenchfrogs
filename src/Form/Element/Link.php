@@ -1,5 +1,6 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class Link extends Label
 {
@@ -8,11 +9,10 @@ class Link extends Label
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('link', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

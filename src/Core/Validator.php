@@ -1,24 +1,23 @@
-<?php namespace FrenchFrogs\Core;
+<?php
+
+namespace FrenchFrogs\Core;
 
 /**
- * Trait for validator polymorphisme
+ * Trait for validator polymorphisme.
  *
  * Class Validator
- * @package FrenchFrogs\Core
  */
 trait Validator
 {
-
     /**
-     * Validator container
+     * Validator container.
      *
      * @var \FrenchFrogs\Validator\Validator
      */
     protected $validator;
 
-
     /**
-     * Getter
+     * Getter.
      *
      * @return \FrenchFrogs\Validator\Validator
      */
@@ -27,21 +26,22 @@ trait Validator
         return $this->validator;
     }
 
-
     /**
-     * Setter
+     * Setter.
      *
      * @param \FrenchFrogs\Validator\Validator $validator
+     *
      * @return $this
      */
     public function setValidator(\FrenchFrogs\Validator\Validator $validator)
     {
         $this->validator = $validator;
+
         return $this;
     }
 
     /**
-     * Return TRUE if validator is set
+     * Return TRUE if validator is set.
      *
      * @return bool
      */
@@ -50,14 +50,14 @@ trait Validator
         return isset($this->validator);
     }
 
-
     /**
-     * Add a single validator with message to the validator container
+     * Add a single validator with message to the validator container.
      *
      * @param $index
-     * @param null $method
+     * @param null  $method
      * @param array $params
-     * @param null $message
+     * @param null  $message
+     *
      * @return $this
      */
     public function addValidator($index, $method = null, array $params = [], $message = null)
@@ -76,23 +76,24 @@ trait Validator
         return $this;
     }
 
-
     /**
-     * Shortcut to the main function of the model
+     * Shortcut to the main function of the model.
      *
      * @param $value
-     * @return $this
+     *
      * @throws \Exception
+     *
+     * @return $this
      */
     public function valid($value)
     {
         $this->getValidator()->valid($value);
+
         return $this;
     }
 
-
     /**
-     * Return TRUE if the element is valid
+     * Return TRUE if the element is valid.
      *
      * @return bool
      */
@@ -101,9 +102,8 @@ trait Validator
         return $this->getValidator()->isValid();
     }
 
-
     /**
-     * Return the error message format as a string
+     * Return the error message format as a string.
      *
      * @return string
      */

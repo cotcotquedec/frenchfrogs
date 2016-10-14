@@ -1,73 +1,74 @@
-<?php namespace FrenchFrogs\App\Models\Business;
+<?php
 
-use FrenchFrogs\App\Models\Acl;
+namespace FrenchFrogs\App\Models\Business;
+
 use FrenchFrogs\App\Models\Db;
 use FrenchFrogs\Business\Business;
 
-
 /**
- * Class User
- *
- *
- * @package FrenchFrogs\App\Models\Business
+ * Class User.
  */
 class User extends Business
 {
-    static protected $modelClass = Db\User\User::class;
+    protected static $modelClass = Db\User\User::class;
 
     /**
-     * Nombre de caractère minimum pour la generation de mot de pass
+     * Nombre de caractère minimum pour la generation de mot de pass.
      */
     const PASSWORD_MIN_LENGTH = 8;
 
-
     /**
-     * Generation d'un mot passe
+     * Generation d'un mot passe.
      *
      * @return string
      */
-    static public function generateRandomPassword($size = 0)
+    public static function generateRandomPassword($size = 0)
     {
         $size = intval($size);
+
         return str_random($size < static::PASSWORD_MIN_LENGTH ? static::PASSWORD_MIN_LENGTH : $size);
     }
 
     /**
-     * Change le mot de passe d'un utilisateur
+     * Change le mot de passe d'un utilisateur.
      *
      * @param $password
+     *
      * @return $this
      */
     public function changePassword($password)
     {
         $this->getModel()->update(['password' => \Hash::make($password)]);
+
         return $this;
     }
 
     /**
-     * CReation d'un utilisatreur depuis les valeur de base
+     * CReation d'un utilisatreur depuis les valeur de base.
      *
      * @param $email
      * @param $password
      * @param $name
      * @param null $interface
-     * @return $this
+     *
      * @throws \Exception
+     *
+     * @return $this
      */
-    static public function init($email, $password, $interface, $name, $is_admin = false)
+    public static function init($email, $password, $interface, $name, $is_admin = false)
     {
         // recuperation de la classe de model principale
         $class = static::$modelClass;
 
         // on valide que l'utilisateur n'existe pas déjà
         $user = $class::firstOrNew([
-            'email' => $email,
-            'user_interface_id' => $interface
+            'email'             => $email,
+            'user_interface_id' => $interface,
         ]);
 
         // si l'utilisateur existe déjà on coupe le script
         if ($user->exists) {
-            throw new \Exception('L\'utilisateur "' . $email . '"" pour l\'interface "' . $interface. '"" existe déjà');
+            throw new \Exception('L\'utilisateur "'.$email.'"" pour l\'interface "'.$interface.'"" existe déjà');
         }
 
         // création de l'utilisateur
@@ -78,28 +79,29 @@ class User extends Business
         // si admin on donne accès a tout
         if ($is_admin) {
             $permission = Db\User\Permission::where('user_interface_id', $interface)->pluck('user_permission_id');
-            User::get($user->getKey())->setPermissions($permission->toArray());
+            self::get($user->getKey())->setPermissions($permission->toArray());
         }
 
         return static::get($user->user_id);
     }
 
-	/**
-	 * return groups
-	 *
-	 * @return array
-	 */
+    /**
+     * return groups.
+     *
+     * @return array
+     */
     public function getGroups()
     {
         return \query('user_group_user', ['user_group_id'])->where('user_id', $this->getId())->pluck('user_group_id')->toArray();
     }
 
-	/**
-	 * Set groups for an user
-	 *
-	 * @param $groups
-	 * @return $this
-	 */
+    /**
+     * Set groups for an user.
+     *
+     * @param $groups
+     *
+     * @return $this
+     */
     public function setGroups($groups)
     {
         // permission actuelles
@@ -107,8 +109,10 @@ class User extends Business
 
         // gestion des nouvelles permissions
         $insert = [];
-        foreach(array_diff($groups, $current) as $g) {
-            if (empty($g)) {continue;}
+        foreach (array_diff($groups, $current) as $g) {
+            if (empty($g)) {
+                continue;
+            }
             $insert[] = ['user_group_user_id' => \uuid(), 'user_id' => $this->getId(), 'user_group_id' => $g];
         }
 
@@ -121,7 +125,7 @@ class User extends Business
     }
 
     /**
-     * Return list of user permission
+     * Return list of user permission.
      *
      * @return array
      */
@@ -131,9 +135,10 @@ class User extends Business
     }
 
     /**
-     * Synchronyse user permissions
+     * Synchronyse user permissions.
      *
      * @param $permissions
+     *
      * @return $this
      */
     public function setPermissions($permissions)
@@ -143,8 +148,10 @@ class User extends Business
 
         // gestion des nouvelles permissions
         $insert = [];
-        foreach(array_diff($permissions, $current) as $p) {
-            if (empty($p)) {continue;}
+        foreach (array_diff($permissions, $current) as $p) {
+            if (empty($p)) {
+                continue;
+            }
             $insert[] = ['user_permission_user_id' => \uuid(), 'user_id' => $this->getId(), 'user_permission_id' => $p];
         }
 
@@ -156,11 +163,11 @@ class User extends Business
         return $this;
     }
 
-
     /**
-     * Add a single permission to the user
+     * Add a single permission to the user.
      *
      * @param $permission
+     *
      * @return $this
      */
     public function addPermission($permission)
@@ -172,8 +179,8 @@ class User extends Business
             $this->getModel()->permissions()->insert(
                 [
                     'user_permission_user_id' => uuid(),
-                    'user_id' => $this->getId(),
-                    'user_permission_id' => $permission
+                    'user_id'                 => $this->getId(),
+                    'user_permission_id'      => $permission,
                 ]
             );
         }
@@ -182,58 +189,65 @@ class User extends Business
     }
 
     /**
-     * Remove a single permission from the user
+     * Remove a single permission from the user.
      *
      * @param $permission
+     *
      * @return $this
      */
     public function removePermission($permission)
     {
         $this->getModel()->permissions()->where('user_permission_id', $permission)->delete();
+
         return $this;
     }
 
-
     /**
-     * Setter for $parameters
+     * Setter for $parameters.
      *
      * @param array $parameters
+     *
      * @return $this
      */
     public function setParameters(array $parameters)
     {
         $this->getModel()->update(['parameters' => \json_encode($parameters)]);
+
         return $this;
     }
 
     /**
-     * Gertter for $parameters
+     * Gertter for $parameters.
      *
      * @return array
      */
     public function getParameters()
     {
         $parameters = $this->getModel()->parameters;
+
         return (array) \json_decode($parameters, JSON_OBJECT_AS_ARRAY);
     }
 
     /**
-     * Getter for a single parameter
+     * Getter for a single parameter.
      *
      * @param $key
+     *
      * @return mixed|null
      */
     public function getParameter($key)
     {
         $parameters = $this->getParameters();
+
         return isset($parameters[$key]) ? $parameters[$key] : null;
     }
 
     /**
-     * Add a single parameter
+     * Add a single parameter.
      *
      * @param $key
      * @param $value
+     *
      * @return $this
      */
     public function addParameter($key, $value)
@@ -241,14 +255,15 @@ class User extends Business
         $parameters = $this->getParameters();
         $parameters[$key] = $value;
         $this->setParameters($parameters);
+
         return $this;
     }
 
-
     /**
-     * Remove a single parameter
+     * Remove a single parameter.
      *
      * @param $key
+     *
      * @return $this
      */
     public function removeParameter($key)
@@ -256,6 +271,7 @@ class User extends Business
         $parameters = $this->getParameters();
         unset($parameters[$key]);
         $this->setParameters($parameters);
+
         return $this;
     }
 }

@@ -1,15 +1,16 @@
-<?php namespace FrenchFrogs\Table\Column;
+<?php
+
+namespace FrenchFrogs\Table\Column;
 
 use FrenchFrogs\Core;
 
 class Link extends Text
 {
-
     use Core\Remote;
 
 
     /**
-     * sprintf format url to inject $binds attribute
+     * sprintf format url to inject $binds attribute.
      *
      *
      * @var string lien
@@ -17,26 +18,26 @@ class Link extends Text
     protected $link = '%s';
 
     /**
-     * Variable contianer to inject in $link attribute
+     * Variable contianer to inject in $link attribute.
      *
      * @var array
      */
     protected $binds = [];
 
     /**
-     *
-     *
      * @param $link
+     *
      * @return $this
      */
     public function setLink($link)
     {
         $this->link = $link;
+
         return $this;
     }
 
     /**
-     * Getter for $link attribute
+     * Getter for $link attribute.
      *
      * @return mixed
      */
@@ -45,21 +46,22 @@ class Link extends Text
         return $this->link;
     }
 
-
     /**
-     * Setter for $binds
+     * Setter for $binds.
      *
      * @param array $binds
+     *
      * @return $this
      */
     public function setBinds(array $binds)
     {
         $this->binds = $binds;
+
         return $this;
     }
 
     /**
-     * Getter for $binds
+     * Getter for $binds.
      *
      * @return array
      */
@@ -68,44 +70,48 @@ class Link extends Text
         return $this->binds;
     }
 
-
     /**
-     * Clear $binds container
+     * Clear $binds container.
      *
      * @return $this
      */
     public function clearBinds()
     {
         $this->binds = [];
+
         return $this;
     }
 
     /**
-     * Add a single value to the end of $binds container
+     * Add a single value to the end of $binds container.
      *
      * @param $bind
+     *
      * @return $this
      */
     public function appendBind($bind)
     {
         $this->binds[] = $bind;
+
         return $this;
     }
 
     /**
-     * Add a single value to the begin of $binds container
+     * Add a single value to the begin of $binds container.
      *
      * @param $bind
+     *
      * @return $this
      */
     public function prependBind($bind)
     {
         array_unshift($this->binds, $bind);
+
         return $this;
     }
 
     /**
-     * Shift first element of $binds container
+     * Shift first element of $binds container.
      *
      * @return mixed
      */
@@ -115,7 +121,7 @@ class Link extends Text
     }
 
     /**
-     * Pop last element of $binds container
+     * Pop last element of $binds container.
      *
      * @return mixed
      */
@@ -124,17 +130,16 @@ class Link extends Text
         return array_pop($this->binds);
     }
 
-
     /**
-     * Constructor
+     * Constructor.
      *
      * @param $name
      * @param string $label
      * @param string $link
-     * @param array $binds
-     * @param array $attr
+     * @param array  $binds
+     * @param array  $attr
      */
-    public function __construct($name, $label = '%s', $link = '#', $binds = [], $attr = [] )
+    public function __construct($name, $label = '%s', $link = '#', $binds = [], $attr = [])
     {
         $this->setRemoteId(configurator()->get('modal.remote.id', $this->remoteId));
 
@@ -146,9 +151,10 @@ class Link extends Text
     }
 
     /**
-     * Return the binded link
+     * Return the binded link.
      *
      * @param array $row
+     *
      * @return string
      */
     public function getBindedLink($row = [])
@@ -157,12 +163,11 @@ class Link extends Text
 
         // patch pour les paramètre bindé en query
         $link = str_replace('%25', '%', $this->getLink());
+
         return vsprintf($link, $bind);
     }
 
     /**
-     *
-     *
      * @return string
      */
     public function render(array $row)
@@ -170,7 +175,7 @@ class Link extends Text
         $render = '';
         try {
             $render = $this->getRenderer()->render('link', $this, $row);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

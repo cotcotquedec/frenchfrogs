@@ -1,18 +1,16 @@
-<?php namespace FrenchFrogs\Table\Column\Strainer;
+<?php
+
+namespace FrenchFrogs\Table\Column\Strainer;
 
 use FrenchFrogs\Form\Element\Select as FormSelect;
 use FrenchFrogs\Table\Column\Column;
 
 class Select extends Strainer
 {
-
     /**
-     *
-     *
      * @var Select
      */
     protected $element;
-
 
     public function __construct(Column $column, $options = [], $callable = null, $attr = [])
     {
@@ -26,22 +24,22 @@ class Select extends Strainer
         }
     }
 
-
     /**
-     * Setter for $element attribute
+     * Setter for $element attribute.
      *
      * @param FormSelect $element
+     *
      * @return $this
      */
     public function setElement(FormSelect $element)
     {
         $this->element = $element;
+
         return $this;
     }
 
-
     /**
-     * Getter for $element attribute
+     * Getter for $element attribute.
      *
      * @return FormSelect
      */
@@ -50,9 +48,8 @@ class Select extends Strainer
         return $this->element;
     }
 
-
     /**
-     * Return TRUE if $element is set
+     * Return TRUE if $element is set.
      *
      * @return bool
      */
@@ -62,31 +59,32 @@ class Select extends Strainer
     }
 
     /**
-     * Unset $element attribute
+     * Unset $element attribute.
      *
      * @return $this
      */
     public function removeElement()
     {
         unset($this->element);
+
         return $this;
     }
 
     /**
-     * Set value to strainer element
+     * Set value to strainer element.
      *
      * @param $value
+     *
      * @return $this
      */
     public function setValue($value)
     {
         $this->element->setValue((array) $value);
+
         return $this;
     }
 
     /**
-     *
-     *
      * @return string
      */
     public function render()
@@ -94,7 +92,7 @@ class Select extends Strainer
         $render = '';
         try {
             $render = $this->getRenderer()->render('strainerSelect', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

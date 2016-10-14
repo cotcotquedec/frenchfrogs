@@ -1,32 +1,28 @@
-<?php namespace FrenchFrogs\Table\Column;
+<?php
 
-use FrenchFrogs\Core;
+namespace FrenchFrogs\Table\Column;
+
 use FrenchFrogs;
-
+use FrenchFrogs\Core;
 
 /**
- *
- *
- * Class Column
+ * Class Column.
  */
 abstract class Column
 {
-
     use \FrenchFrogs\Html\Html;
     use Core\Renderer;
     use Core\Filterer;
     use Strainer\Strainerable;
 
     /**
-     *
-     *
      * @var FrenchFrogs\Table\Table\Table
      */
     protected $table;
 
 
     /**
-     * Column label
+     * Column label.
      *
      * @var string
      */
@@ -34,7 +30,7 @@ abstract class Column
 
 
     /**
-     * Column name
+     * Column name.
      *
      * @var string
      */
@@ -42,21 +38,19 @@ abstract class Column
 
 
     /**
-     * Width of the datatable columns
+     * Width of the datatable columns.
      *
      * @var
      */
     protected $width;
 
     /**
-     *
-     *
      * @var mixed string|Callable
      */
     protected $order;
 
     /**
-     * Contain the order direction set to the columns
+     * Contain the order direction set to the columns.
      *
      * @var string
      */
@@ -64,7 +58,7 @@ abstract class Column
 
 
     /**
-     * Set if we want the column to render or not
+     * Set if we want the column to render or not.
      *
      * @var bool
      */
@@ -72,27 +66,28 @@ abstract class Column
 
 
     /**
-     * Description de la colonne
+     * Description de la colonne.
      *
      * @var
      */
     protected $description;
 
-
     /**
-     * Setter for $width attribute
+     * Setter for $width attribute.
      *
      * @param $width
+     *
      * @return $this
      */
     public function setWidth($width)
     {
         $this->width = $width;
+
         return $this;
     }
 
     /**
-     * Getter for $width attribute
+     * Getter for $width attribute.
      *
      * @return mixed
      */
@@ -101,9 +96,8 @@ abstract class Column
         return $this->width;
     }
 
-
     /**
-     * Return TRUE if $width attribute is set
+     * Return TRUE if $width attribute is set.
      *
      * @return bool
      */
@@ -112,22 +106,19 @@ abstract class Column
         return isset($this->width);
     }
 
-
     /**
-     * Unset $width attribute
+     * Unset $width attribute.
      *
      * @return $this
      */
     public function removeWidth()
     {
         unset($this->width);
+
         return $this;
     }
 
-
     /**
-     *
-     *
      * @param $index
      * @param null $method
      * @param ...$params
@@ -140,26 +131,27 @@ abstract class Column
 
         array_unshift($params, $index, $method);
 
-        call_user_func_array([$this->getFilterer(),'addFilter'], $params);
+        call_user_func_array([$this->getFilterer(), 'addFilter'], $params);
+
         return $this;
     }
 
-
     /**
-     * Setter for $table property
+     * Setter for $table property.
      *
      * @param \FrenchFrogs\Table\Table\Table $table
+     *
      * @return $this
      */
     public function setTable(\FrenchFrogs\Table\Table\Table $table)
     {
         $this->table = $table;
+
         return $this;
     }
 
-
     /**
-     * Getter for $table property
+     * Getter for $table property.
      *
      * @return \FrenchFrogs\Table\Table\Table
      */
@@ -169,7 +161,7 @@ abstract class Column
     }
 
     /**
-     * Return TRUE if the $table property id set
+     * Return TRUE if the $table property id set.
      *
      * @return bool
      */
@@ -179,19 +171,19 @@ abstract class Column
     }
 
     /**
-     * Unset the $table property
+     * Unset the $table property.
      *
      * @return $this
      */
     public function removeTable()
     {
         unset($this->table);
+
         return $this;
     }
 
-
     /**
-     * Getter for $label property
+     * Getter for $label property.
      *
      * @return string
      */
@@ -200,21 +192,22 @@ abstract class Column
         return $this->label;
     }
 
-
     /**
-     * Setter for $label property
+     * Setter for $label property.
      *
      * @param $label
+     *
      * @return $this
      */
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
 
     /**
-     * Return TRUE if label is set
+     * Return TRUE if label is set.
      *
      * @return bool
      */
@@ -223,32 +216,34 @@ abstract class Column
         return isset($this->label);
     }
 
-
     /**
-     * Unset label
+     * Unset label.
      *
      * @return $this
      */
     public function removeLabel()
     {
         unset($this->label);
+
         return $this;
     }
 
     /**
-     * Setter for $name property
+     * Setter for $name property.
      *
      * @param $name
+     *
      * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
     /**
-     * Getter for name property
+     * Getter for name property.
      *
      * @return string
      */
@@ -258,7 +253,7 @@ abstract class Column
     }
 
     /**
-     * Return TRUE if $name property is set
+     * Return TRUE if $name property is set.
      *
      * @return bool
      */
@@ -267,23 +262,23 @@ abstract class Column
         return isset($this->name);
     }
 
-
     /**
-     * unset $name property
+     * unset $name property.
      *
      * @return $this
      */
     public function removeName()
     {
         unset($this->name);
+
         return $this;
     }
 
-
     /**
-     * Default render
+     * Default render.
      *
      * @param array $row
+     *
      * @return mixed
      */
     public function render(array $row)
@@ -291,22 +286,22 @@ abstract class Column
         return $row[$this->name];
     }
 
-
     /**
-     * Setter for $order attribute
+     * Setter for $order attribute.
      *
      * @param $order
+     *
      * @return $this
      */
     public function setOrder($order)
     {
         $this->order = $order;
+
         return $this;
     }
 
-
     /**
-     * Getter for $order attribute
+     * Getter for $order attribute.
      *
      * @return mixed
      */
@@ -316,7 +311,7 @@ abstract class Column
     }
 
     /**
-     * Return TRUE if $order is set
+     * Return TRUE if $order is set.
      *
      * @return bool
      */
@@ -326,22 +321,23 @@ abstract class Column
     }
 
     /**
-     * Unset the order
-     *
+     * Unset the order.
      */
     public function removeOrder()
     {
         unset($this->order);
+
         return $this;
     }
 
-
     /**
-     * Order process for the column
+     * Order process for the column.
      *
      * @param $direction (asc or desc)
-     * @return $this
+     *
      * @throws \Exception
+     *
+     * @return $this
      */
     public function order($direction = null)
     {
@@ -356,7 +352,6 @@ abstract class Column
             if (!is_string($this->order) && is_callable($this->order)) {
                 call_user_func_array($this->order, $this);
             } else {
-
                 $table = $this->getTable();
 
                 // verify that source is a query
@@ -372,14 +367,14 @@ abstract class Column
     }
 
     /**
-     * Setter for $orderDirection attribute
+     * Setter for $orderDirection attribute.
      *
      * @param $direction
+     *
      * @return $this
      */
     public function setOrderDirection($direction)
     {
-
         $direction = strtolower($direction);
 
         if (!in_array($direction, ['asc', 'desc'])) {
@@ -387,11 +382,12 @@ abstract class Column
         }
 
         $this->orderDirection = $direction;
+
         return $this;
     }
 
     /**
-     * Getter for $orderDirection attribute
+     * Getter for $orderDirection attribute.
      *
      * @return string
      */
@@ -401,7 +397,7 @@ abstract class Column
     }
 
     /**
-     * Return TRUE if $orderDirection is set
+     * Return TRUE if $orderDirection is set.
      *
      * @return bool
      */
@@ -410,28 +406,27 @@ abstract class Column
         return isset($this->orderDirection);
     }
 
-
     /**
-     * Unset $orderDirection attribute
+     * Unset $orderDirection attribute.
      *
      * @return $this
      */
     public function removeOrderDirection()
     {
         unset($this->orderDirection);
+
         return $this;
     }
 
-
-
     /**
-     * Set $visible to TRUE
+     * Set $visible to TRUE.
      *
      * @return $this
      */
     public function enableVisible()
     {
         $this->visible = true;
+
         return $this;
     }
 
@@ -441,49 +436,52 @@ abstract class Column
     public function disableVisible()
     {
         $this->visible = false;
+
         return $this;
     }
 
-
     /**
-     * Set Visible to a callback
+     * Set Visible to a callback.
      *
      * @param $callback
+     *
      * @return $this
      */
     public function setVisibleCallback($callback)
     {
         $this->visible = $callback;
+
         return $this;
     }
 
     /**
-     * Return if the columns is visible
+     * Return if the columns is visible.
      *
      * @param $row
+     *
      * @return bool
      */
     public function isVisible($row = null)
     {
         $callable = !is_bool($this->visible) && !is_string($this->visible) && is_callable($this->visible);
+
         return (bool) ($callable ? call_user_func($this->visible, $this, $row) : $this->visible);
     }
 
-
-
     /**
-     * Setter for $description
+     * Setter for $description.
      *
      * @param $description
      */
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
     /**
-     * getter for $description
+     * getter for $description.
      *
      * @return mixed
      */
@@ -493,7 +491,7 @@ abstract class Column
     }
 
     /**
-     * Return TRUE is $description is set
+     * Return TRUE is $description is set.
      *
      * @return bool
      */
@@ -503,13 +501,14 @@ abstract class Column
     }
 
     /**
-     * Unset $description
+     * Unset $description.
      *
      * @return $this
      */
     public function removeDescription()
     {
         unset($this->description);
+
         return $this;
     }
 }

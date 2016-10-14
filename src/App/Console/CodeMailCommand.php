@@ -1,27 +1,25 @@
-<?php namespace FrenchFrogs\App\Console;
+<?php
 
+namespace FrenchFrogs\App\Console;
+
+use FrenchFrogs\Laravel\Mail\Mailable;
 use FrenchFrogs\Maker\Maker;
 use Illuminate\Filesystem\Filesystem;
-use FrenchFrogs\Laravel\Mail\Mailable;
 use Illuminate\Support\Composer;
 
 /**
- * Ajout d'un email
+ * Ajout d'un email.
  *
  * Class CodeMailCommand
- * @package FrenchFrogs\App\Console
  */
 class CodeMailCommand extends CodeCommand
 {
-
     /**
-     *
      * @var string
      */
     protected $classNamespace = 'app.mail.';
 
     /**
-     *
      * @var string
      */
     protected $viewPath = 'resources/views/';
@@ -44,7 +42,7 @@ class CodeMailCommand extends CodeCommand
      * Execute the console command.
      *
      * @param Filesystem $filesystem
-     * @param Composer $composer
+     * @param Composer   $composer
      */
     public function handle(Filesystem $filesystem, Composer $composer)
     {
@@ -59,7 +57,7 @@ class CodeMailCommand extends CodeCommand
         } while (empty($name));
 
         // creation de la class
-        $class = Maker::initFromShortName($this->classNamespace . $name);
+        $class = Maker::initFromShortName($this->classNamespace.$name);
         $class->addAlias('Mailable', Mailable::class);
         $class->setParent(Mailable::class);
         $class->addMethod('build');
@@ -78,17 +76,16 @@ class CodeMailCommand extends CodeCommand
                     $class->addProperty($param)->enablePublic();
                     $method->appendBody(sprintf('$this->%1$s = $%1$s;', $param));
                 }
-            } while($param != static::CHOICE_NO_MORE);
+            } while ($param != static::CHOICE_NO_MORE);
         }
 
         // TEXT
         if ($this->confirm('Dois-je créer une version text du mail?', true)) {
-
-            $text = 'emails.' . $name . '_text';
+            $text = 'emails.'.$name.'_text';
             $text = $this->ask('Quel est le nom de la vue ?', $text);
 
             // creation du fichier
-            $textFile = app_path('../' . $this->viewPath) .  str_replace('.', DIRECTORY_SEPARATOR, $text) . '.blade.php';
+            $textFile = app_path('../'.$this->viewPath).str_replace('.', DIRECTORY_SEPARATOR, $text).'.blade.php';
             $this->makeDirectory(dirname($textFile));
             $filesystem->put($textFile, '@todo');
 
@@ -99,12 +96,11 @@ class CodeMailCommand extends CodeCommand
 
         // HTML
         if ($this->confirm('Dois-je créer une version html du mail?', true)) {
-
-            $text = 'emails.' . $name;
+            $text = 'emails.'.$name;
             $text = $this->ask('Quel est le nom de la vue ?', $text);
 
             // creation du fichier
-            $textFile = app_path('../' . $this->viewPath) .  str_replace('.', DIRECTORY_SEPARATOR, $text) . '.blade.php';
+            $textFile = app_path('../'.$this->viewPath).str_replace('.', DIRECTORY_SEPARATOR, $text).'.blade.php';
             $this->makeDirectory(dirname($textFile));
             $filesystem->put($textFile, '@todo');
 

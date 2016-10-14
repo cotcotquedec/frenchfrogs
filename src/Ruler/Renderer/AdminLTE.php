@@ -1,14 +1,13 @@
-<?php namespace FrenchFrogs\Ruler\Renderer;
+<?php
+
+namespace FrenchFrogs\Ruler\Renderer;
 
 use FrenchFrogs\Renderer\Renderer;
 use FrenchFrogs\Ruler;
 
 class AdminLTE extends Renderer
 {
-
     /**
-     *
-     *
      * @var array
      */
     protected $renderers = [
@@ -16,17 +15,18 @@ class AdminLTE extends Renderer
         'page',
     ];
 
-
     /**
      * @param \FrenchFrogs\Ruler\Ruler\Ruler $rule
-     * @return string
+     *
      * @throws \Exception
+     *
+     * @return string
      */
     public function navigation(Ruler\Ruler\Ruler $rule)
     {
         $content = '';
         foreach ($rule->getPages() as $page) {
-            if ($page->hasPermission() && !$rule->hasPermission($page->getPermission())){
+            if ($page->hasPermission() && !$rule->hasPermission($page->getPermission())) {
                 continue;
             }
             $content .= $this->render('page', $page);
@@ -34,16 +34,15 @@ class AdminLTE extends Renderer
 
         $content = '<ul class="sidebar-menu">
                         <li class="header">NAVIGATION</li>
-                        '. $content .'
+                        '.$content.'
                     </ul>';
 
         return $content;
     }
 
     /**
-     *
-     *
      * @param \FrenchFrogs\Ruler\Page\Page $page
+     *
      * @return string
      */
     public function page(Ruler\Page\Page $page)
@@ -56,25 +55,24 @@ class AdminLTE extends Renderer
 
         // Render child page
         if ($page->hasChildren()) {
-
             $html .= '<i class="fa fa-angle-left pull-right"></i>';
 
-            foreach($page->getChildren() as $p) {
-                /**@var Ruler\Page\Page $p*/
+            foreach ($page->getChildren() as $p) {
+                /** @var Ruler\Page\Page $p */
                 $class = '';
                 if ($p->isCurrent()) {
-                    $page->addClass('active');// active for parent page
+                    $page->addClass('active'); // active for parent page
                     $class = 'class="active"';
                 }
 
-                if ($p->hasPermission() && !\ruler()->hasPermission($p->getPermission())){
+                if ($p->hasPermission() && !\ruler()->hasPermission($p->getPermission())) {
                     continue;
                 }
 
-                $children .= '<li '.$class.'>'.html('a', ['href' => $p->getLink()], '<i class="fa fa-circle-o"></i> ' . $p->getLabel()).'</li>';
+                $children .= '<li '.$class.'>'.html('a', ['href' => $p->getLink()], '<i class="fa fa-circle-o"></i> '.$p->getLabel()).'</li>';
             }
 
-            $children = '<ul class="treeview-menu">' . $children .'</ul>';
+            $children = '<ul class="treeview-menu">'.$children.'</ul>';
 
             // overcharge link for javascript opening menu
             $page->setLink('javascript:;');
@@ -84,12 +82,8 @@ class AdminLTE extends Renderer
 
         // render all
         $html = html('a', ['href' => $page->getLink()], $html);
-        $html = html('li', ['class' => $page->getClasses()], $html . $children);
+        $html = html('li', ['class' => $page->getClasses()], $html.$children);
 
         return $html;
     }
-
-
-
-
 }

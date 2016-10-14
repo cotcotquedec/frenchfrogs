@@ -1,17 +1,17 @@
-<?php namespace FrenchFrogs\Container;
+<?php
 
-use MatthiasMullie\Minify\CSS as MiniCss;
+namespace FrenchFrogs\Container;
+
 use Less_Parser;
+use MatthiasMullie\Minify\CSS as MiniCss;
 
 /**
- * Meta container
+ * Meta container.
  *
  * Class Javascript
- * @package FrenchFrogs\Container
  */
 class Css extends Container
 {
-
     use Minify;
 
     const NAMESPACE_DEFAULT = 'minify_css';
@@ -21,11 +21,12 @@ class Css extends Container
     const TYPE_LESS_FILE = 'less_file';
 
     /**
-     * Add link
+     * Add link.
      *
      * @param $href
      * @param string $rel
      * @param string $type
+     *
      * @return $this
      */
     public function styleFile($href)
@@ -34,9 +35,10 @@ class Css extends Container
     }
 
     /**
-     * Add css content
+     * Add css content.
      *
      * @param $content
+     *
      * @return $this
      */
     public function style($content)
@@ -45,9 +47,10 @@ class Css extends Container
     }
 
     /**
-     * Add less content
+     * Add less content.
      *
      * @param $content
+     *
      * @return $this
      */
     public function less($content)
@@ -55,11 +58,11 @@ class Css extends Container
         return $this->append([static::TYPE_LESS, $content]);
     }
 
-
     /**
-     * Add less file
+     * Add less file.
      *
      * @param $href
+     *
      * @return $this
      */
     public function lessFile($href)
@@ -67,10 +70,7 @@ class Css extends Container
         return $this->append([static::TYPE_LESS_FILE, $href]);
     }
 
-
     /**
-     *
-     *
      * @return string
      */
     public function __toString()
@@ -87,7 +87,7 @@ class Css extends Container
                 list($t, $c) = $content;
                 if ($t == static::TYPE_LESS_FILE) {
                     $parser->parseFile($c);
-                } elseif($t == static::TYPE_LESS) {
+                } elseif ($t == static::TYPE_LESS) {
                     $parser->parse($c);
                 }
             }
@@ -96,20 +96,18 @@ class Css extends Container
 
             // If we want to minify
             if ($this->isMinify()) {
-
                 $hash = '';
                 $contents = [];
 
                 // manage remote or local file
                 foreach ($this->container as $content) {
-
                     list($t, $c) = $content;
 
                     if ($t == static::TYPE_STYLE_FILE) {
 
                         // scheme case
                         if (preg_match('#^//.+$#', $c)) {
-                            $c = 'http:' . $c;
+                            $c = 'http:'.$c;
                             $contents[] = ['remote', $c];
                             $hash .= md5($c);
 
@@ -124,7 +122,7 @@ class Css extends Container
                             $hash .= md5_file($c);
                             $contents[] = ['local', $c];
                         }
-                    } elseif($t == static::TYPE_STYLE) {
+                    } elseif ($t == static::TYPE_STYLE) {
                         $hash .= md5($c);
                         $contents[] = ['style', $c];
                     }
@@ -141,7 +139,7 @@ class Css extends Container
                 if (substr($target, -1) != '/') {
                     $target .= '/';
                 }
-                $target .= md5($hash) . '.css';
+                $target .= md5($hash).'.css';
 
 
                 // add css to minifier
@@ -150,13 +148,11 @@ class Css extends Container
                     $minifier = new MiniCss();
 
                     // Remote file management
-                    foreach($contents as $content) {
-
+                    foreach ($contents as $content) {
                         list($t, $c) = $content;
 
                         // we get remote file content
                         if (in_array($t, ['remote', 'local'])) {
-
                             $ct = file_get_contents($c);
 
                             // formatage du path de fichier
@@ -168,7 +164,7 @@ class Css extends Container
                                     if (preg_match('#^(data:|http)#', $url)) {
                                         continue;
                                     }
-                                    $ct = str_replace($url, dirname($c) . DIRECTORY_SEPARATOR . $url, $ct);
+                                    $ct = str_replace($url, dirname($c).DIRECTORY_SEPARATOR.$url, $ct);
                                 }
                             }
                         }
@@ -184,30 +180,26 @@ class Css extends Container
                 $result .= html('link',
                     [
                         'href' => str_replace(public_path(), '', $target),
-                        'rel' => 'stylesheet',
+                        'rel'  => 'stylesheet',
                         'type' => 'text/css',
                     ]
-                ) . PHP_EOL;
-
+                ).PHP_EOL;
             } else {
-
                 foreach ($this->container as $content) {
-
                     list($t, $c) = $content;
 
                     // render file
                     if ($t == static::TYPE_STYLE_FILE) {
-
                         $result .= html('link',
                                 [
                                     'href' => $c,
-                                    'rel' => 'stylesheet',
+                                    'rel'  => 'stylesheet',
                                     'type' => 'text/css',
                                 ]
-                            ) . PHP_EOL;
+                            ).PHP_EOL;
 
                     // render style
-                    } elseif($t == static::TYPE_STYLE) {
+                    } elseif ($t == static::TYPE_STYLE) {
                         $result .= html('style', [], $c);
                     }
                 }
@@ -217,14 +209,12 @@ class Css extends Container
                     $result .= html('style', [], $less);
                 }
             }
-
-        } catch(\Exception $e) {
-
-            $result = '<!--' . PHP_EOL . 'Error on css generation' . PHP_EOL;
+        } catch (\Exception $e) {
+            $result = '<!--'.PHP_EOL.'Error on css generation'.PHP_EOL;
 
             // stack trace if in debug mode
             if (!is_debug()) {
-                $result .= $e->getMessage() . ' : ' . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
+                $result .= $e->getMessage().' : '.PHP_EOL.$e->getTraceAsString().PHP_EOL;
             }
             $result .= '-->';
         }

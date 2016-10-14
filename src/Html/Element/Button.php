@@ -1,20 +1,21 @@
-<?php namespace FrenchFrogs\Html\Element;
+<?php
 
+namespace FrenchFrogs\Html\Element;
 
 trait Button
 {
     /**
-     * Class of the button
+     * Class of the button.
      *
      * @see http://getbootstrap.com/css/#buttons-options
      *
-     * @var String
+     * @var string
      */
     protected $option;
 
 
     /**
-     * Class for the button's size
+     * Class for the button's size.
      *
      * @see http://getbootstrap.com/css/#buttons-sizes
      *
@@ -24,48 +25,51 @@ trait Button
 
 
     /**
-     * Icon class
+     * Icon class.
      *
      * @var string
      */
     protected $icon;
 
     /**
-     * Is TRUE render only icon
+     * Is TRUE render only icon.
      *
      * @var bool
      */
     protected $is_icon_only = true;
 
-
     /**
-     * Fast setting for icon
+     * Fast setting for icon.
      *
      * @param $icon
      * @param bool|true $is_icon_only
+     *
      * @return $this
      */
     public function icon($icon, $is_icon_only = true)
     {
         $this->setIcon($icon);
         ($is_icon_only) ? $this->enableIconOnly() : $this->disableIconOnly();
+
         return $this;
     }
 
     /**
-     * Setter for $icon attribute
+     * Setter for $icon attribute.
      *
      * @param $icon
+     *
      * @return $this
      */
     public function setIcon($icon)
     {
         $this->icon = $icon;
+
         return $this;
     }
 
     /**
-     * Getter for $icon attribute
+     * Getter for $icon attribute.
      *
      * @return string
      */
@@ -75,7 +79,7 @@ trait Button
     }
 
     /**
-     * return TRUE if an $icon is set
+     * return TRUE if an $icon is set.
      *
      * @return bool
      */
@@ -85,41 +89,43 @@ trait Button
     }
 
     /**
-     * Remove $icon attribute
+     * Remove $icon attribute.
      *
      * @return $this
      */
     public function removeIcon()
     {
         unset($this->icon);
+
         return $this;
     }
 
-
     /**
-     * Set $is_icon_only to TRUE
+     * Set $is_icon_only to TRUE.
      *
      * @return $this
      */
     public function enableIconOnly()
     {
         $this->is_icon_only = true;
+
         return $this;
     }
 
     /**
-     * Set $is_icon_only to TRUE
+     * Set $is_icon_only to TRUE.
      *
      * @return $this*
      */
     public function disableIconOnly()
     {
         $this->is_icon_only = false;
+
         return $this;
     }
 
     /**
-     * Return TRUE  if label is rendered with icon only
+     * Return TRUE  if label is rendered with icon only.
      *
      * @return bool
      */
@@ -128,24 +134,24 @@ trait Button
         return (bool) $this->is_icon_only;
     }
 
-
-
     /**
-     * Setter for $option attribute
+     * Setter for $option attribute.
      *
      * @param $option
+     *
      * @return $this
      */
     public function setOption($option)
     {
         $this->option = $option;
+
         return $this;
     }
 
     /**
-     * Getter for $options attribute
+     * Getter for $options attribute.
      *
-     * @return String
+     * @return string
      */
     public function getOption()
     {
@@ -153,7 +159,7 @@ trait Button
     }
 
     /**
-     * Return TRUE if $option is set
+     * Return TRUE if $option is set.
      *
      * @return bool
      */
@@ -162,113 +168,118 @@ trait Button
         return isset($this->option);
     }
 
-
     /**
-     * Unset $option attribute
+     * Unset $option attribute.
      *
      * @return $this
      */
     public function removeOption()
     {
         unset($this->option);
-        return $this;
 
+        return $this;
     }
 
-
     /**
-     * Set Option with OPTION_CLASS_DEFAULT
+     * Set Option with OPTION_CLASS_DEFAULT.
      *
      * @return $this
      */
     public function setOptionAsDefault()
     {
         $this->setOption('BUTTON_OPTION_CLASS_DEFAULT');
+
         return $this;
     }
 
-
     /**
-     * set $option with OPTION_CLASS_PRIMARY
+     * set $option with OPTION_CLASS_PRIMARY.
      *
      * @return $this
      */
     public function setOptionAsPrimary()
     {
         $this->setOption('BUTTON_OPTION_CLASS_PRIMARY');
+
         return $this;
     }
 
     /**
-     * Set $option with OPTION_CLASS_SUCCESS
+     * Set $option with OPTION_CLASS_SUCCESS.
      *
      * @return $this
      */
     public function setOptionAsSuccess()
     {
-        $this->setOption( 'BUTTON_OPTION_CLASS_SUCCESS');
+        $this->setOption('BUTTON_OPTION_CLASS_SUCCESS');
+
         return $this;
     }
 
     /**
-     * Set $option with OPTION_CLASS_INFO
+     * Set $option with OPTION_CLASS_INFO.
      *
      * @return $this
      */
     public function setOptionAsInfo()
     {
         $this->setOption('BUTTON_OPTION_CLASS_INFO');
+
         return $this;
     }
 
-
     /**
-     * Set $option with OPTION_CLASS_WARNING
+     * Set $option with OPTION_CLASS_WARNING.
      *
      * @return $this
      */
     public function setOptionAsWarning()
     {
         $this->setOption('BUTTON_OPTION_CLASS_WARNING');
+
         return $this;
     }
 
     /**
-     * Set $option with OPTION_CLASS_DANGER
+     * Set $option with OPTION_CLASS_DANGER.
      *
      * @return $this
      */
     public function setOptionAsDanger()
     {
         $this->setOption('BUTTON_OPTION_CLASS_DANGER');
+
         return $this;
     }
 
     /**
-     * Set $option with OPTION_CLASS_LINK
+     * Set $option with OPTION_CLASS_LINK.
      *
      * @return $this
      */
     public function setOptionAsLink()
     {
         $this->setOption('BUTTON_OPTION_CLASS_LINK');
+
         return $this;
     }
 
     /**
-     * Setter for $size attribute
+     * Setter for $size attribute.
      *
      * @param $size
+     *
      * @return $this
      */
     public function setSize($size)
     {
         $this->size = $size;
+
         return $this;
     }
 
     /**
-     * Getter for $size attribute
+     * Getter for $size attribute.
      *
      * @return mixed
      */
@@ -277,9 +288,8 @@ trait Button
         return $this->size;
     }
 
-
     /**
-     * Return TRUE if $size is set
+     * Return TRUE if $size is set.
      *
      * @return bool
      */
@@ -289,48 +299,50 @@ trait Button
     }
 
     /**
-     * Unset $size attribute
+     * Unset $size attribute.
      *
      * @return $this
      */
     public function removeSize()
     {
         unset($this->size);
+
         return $this;
     }
 
     /**
-     * Set $size with SIZE_CLASS_LARGE
+     * Set $size with SIZE_CLASS_LARGE.
      *
      * @return $this
      */
     public function setSizeAsLarge()
     {
         $this->setSize('BUTTON_SIZE_CLASS_LARGE');
+
         return $this;
     }
 
     /**
-     * Set $size with SIZE_CLASS_SMALL
+     * Set $size with SIZE_CLASS_SMALL.
      *
      * @return $this
      */
     public function setSizeAsSmall()
     {
         $this->setSize('BUTTON_SIZE_CLASS_SMALL');
+
         return $this;
     }
 
-
     /**
-     * Set $size with SIZE_CLASS_EXTRA_SMALL
+     * Set $size with SIZE_CLASS_EXTRA_SMALL.
      *
      * @return $this
      */
     public function setSizeAsExtraSmall()
     {
         $this->setSize('BUTTON_SIZE_CLASS_EXTRA_SMALL');
+
         return $this;
     }
-
 }

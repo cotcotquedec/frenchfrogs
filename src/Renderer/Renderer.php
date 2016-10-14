@@ -1,24 +1,22 @@
-<?php namespace FrenchFrogs\Renderer;
+<?php
 
+namespace FrenchFrogs\Renderer;
 
 /**
- * Class model used to render the element
+ * Class model used to render the element.
  *
  * Use polymorphisme with Trait \FrenchFrogs\Core\Renderer
  *
  * Class Renderer
- * @package FrenchFrogs\Renderer
  */
-class Renderer {
-
+class Renderer
+{
     /**
-     * Container
+     * Container.
      *
      * @var array container
      */
     protected $renderers = [];
-
-
 
     public function init()
     {
@@ -31,18 +29,16 @@ class Renderer {
 
         // ,rebuild renderer
         foreach ($renderer as $index => $method) {
-
             if (is_numeric($index)) {
                 $this->addRenderer($method);
             } else {
-                $this->addRenderer($index,$method);
+                $this->addRenderer($index, $method);
             }
         }
     }
 
-
     /**
-     * Constructor
+     * Constructor.
      *
      * @param ...$params
      */
@@ -54,41 +50,44 @@ class Renderer {
         }
     }
 
-
     /**
-     *  Set all renderer as an array
+     *  Set all renderer as an array.
      *
      * @param array $renderers
+     *
      * @return $this
      */
     public function setRenderers(array $renderers)
     {
         $this->renderers = $renderers;
+
         return $this;
     }
 
     /**
-     * Add a single renderer to the renderers container
+     * Add a single renderer to the renderers container.
      *
      * @param $index
      * @param $method
+     *
      * @return $this
      */
     public function addRenderer($index, $method = null)
     {
-        $this->renderers[$index] = is_null($method) ?  $index : $method;
+        $this->renderers[$index] = is_null($method) ? $index : $method;
+
         return $this;
     }
 
     /**
-     * Remove a single renderer from the renderers container
+     * Remove a single renderer from the renderers container.
      *
      * @param $index
+     *
      * @return $this
      */
     public function removeRenderer($index)
     {
-
         if ($this->hasRenderer($index)) {
             unset($this->renderers[$index]);
         }
@@ -97,7 +96,7 @@ class Renderer {
     }
 
     /**
-     * Clear all renderers from the renderers container
+     * Clear all renderers from the renderers container.
      *
      * @return $this
      */
@@ -109,9 +108,10 @@ class Renderer {
     }
 
     /**
-     * Check if the renderer $index exist in the renderer container
+     * Check if the renderer $index exist in the renderer container.
      *
      * @param $index
+     *
      * @return bool
      */
     public function hasRenderer($index)
@@ -120,22 +120,21 @@ class Renderer {
     }
 
     /**
-     *  Return the renderer $index from the filters renderer container
+     *  Return the renderer $index from the filters renderer container.
      *
      * @return mixed Callable | string
      */
     public function getRenderer($index)
     {
         if (!$this->hasRenderer($index)) {
-            throw new \Exception('Renderer not found : ' . $index);
+            throw new \Exception('Renderer not found : '.$index);
         }
 
         return $this->renderers[$index];
     }
 
-
     /**
-     * Return array of all renderers
+     * Return array of all renderers.
      *
      * @return array
      */
@@ -144,30 +143,28 @@ class Renderer {
         return $this->renderers;
     }
 
-
     /**
-     * Render element
+     * Render element.
      *
      * @param ...$params
+     *
      * @return mixed
      */
-    public function render($index , ...$params)
+    public function render($index, ...$params)
     {
-
         $renderer = $this->getRenderer($index);
 
         // If it's a anonymous function
-        if (!is_string($renderer)  && is_callable($renderer)) {
+        if (!is_string($renderer) && is_callable($renderer)) {
             $render = call_user_func_array($renderer, $params);
 
             // if it's a local method
         } else {
-
             if (!method_exists($this, $renderer)) {
-                throw new \Exception('Impossible de trouver la method pour le rendu : ' . $renderer);
+                throw new \Exception('Impossible de trouver la method pour le rendu : '.$renderer);
             }
 
-            $render =  call_user_func_array([$this, $renderer], $params);
+            $render = call_user_func_array([$this, $renderer], $params);
         }
 
         return $render;

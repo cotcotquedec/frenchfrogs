@@ -1,24 +1,16 @@
-<?php namespace FrenchFrogs\App\Http\Controllers;
+<?php
 
+namespace FrenchFrogs\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use FrenchFrogs\App\Models\Business\Mail;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
-use App\Http\Requests;
-use Models\Acl\Inside as Acl;
 
-
-/**
- *
- *
- */
 class MailController extends Controller
 {
     /**
-     * Liste des candidats
-     *
-     *
+     * Liste des candidats.
      */
     public static function mail()
     {
@@ -31,7 +23,7 @@ class MailController extends Controller
             'r.name',
             'm.created_at',
             'm.sent_at',
-            raw('message IS NOT NULL as error')
+            raw('message IS NOT NULL as error'),
         ])
             ->join('reference as r', function (JoinClause $join) {
                 $join->on('m.mail_status_id', 'reference_id')->where('collection', 'mail_status');
@@ -66,18 +58,18 @@ class MailController extends Controller
     }
 
     /**
-     * Gestion des email
-     *
+     * Gestion des email.
      */
-    function getIndex()
+    public function getIndex()
     {
         return $this->basic('Mail', static::mail());
     }
 
     /**
-     * Envoie un email
+     * Envoie un email.
      *
      * @param $uuid
+     *
      * @return \FrenchFrogs\Container\Javascript
      */
     public function postSend($uuid)
@@ -90,7 +82,6 @@ class MailController extends Controller
         );
 
         try {
-
             Mail::get($uuid)->send();
             \js()->success()->closeRemoteModal()->reloadDataTable();
         } catch (\Exception $e) {
@@ -100,11 +91,11 @@ class MailController extends Controller
         return \js();
     }
 
-
     /**
-     * Peview an email
+     * Peview an email.
      *
      * @param $uuid
+     *
      * @return string
      */
     public function postPreview($hexid)
@@ -130,10 +121,10 @@ class MailController extends Controller
         $form->addLabel('to', 'Destinataire')->setValue($mail->previewTo());
         $form->addTitle('Contenu HTML');
         $form->addContent('contenu', html('iframe', [
-            'width' => '100%',
+            'width'  => '100%',
             'height' => 800,
-            'style' => 'border:none',
-            'src' => action_url(static::class, 'getRender', $hexid)
+            'style'  => 'border:none',
+            'src'    => action_url(static::class, 'getRender', $hexid),
         ]));
 
         $form->addTitle('Contenu texte');
@@ -144,7 +135,7 @@ class MailController extends Controller
     }
 
     /**
-     * Rendu de l'ifrma e html du mail
+     * Rendu de l'ifrma e html du mail.
      *
      * @return string
      */

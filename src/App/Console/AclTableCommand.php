@@ -1,4 +1,6 @@
-<?php namespace FrenchFrogs\App\Console;
+<?php
+
+namespace FrenchFrogs\App\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
@@ -30,11 +32,13 @@ class AclTableCommand extends Command
      * @var \Illuminate\Support\Composer
      */
     protected $composer;
+
     /**
      * Create a new session table command instance.
      *
-     * @param  \Illuminate\Filesystem\Filesystem  $files
-     * @param  \Illuminate\Support\Composer  $composer
+     * @param \Illuminate\Filesystem\Filesystem $files
+     * @param \Illuminate\Support\Composer      $composer
+     *
      * @return void
      */
     public function __construct(Filesystem $files, Composer $composer)
@@ -43,6 +47,7 @@ class AclTableCommand extends Command
         $this->files = $files;
         $this->composer = $composer;
     }
+
     /**
      * Execute the console command.
      *
@@ -65,6 +70,7 @@ class AclTableCommand extends Command
     {
         $name = 'create_acl_table';
         $path = $this->laravel->databasePath().'/migrations';
+
         return $this->laravel['migration.creator']->create($name, $path);
     }
 }
