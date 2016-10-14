@@ -1,35 +1,37 @@
-<?php namespace FrenchFrogs\Core;
+<?php
+
+namespace FrenchFrogs\Core;
 
 use FrenchFrogs;
 
 trait Panel
 {
-
-
     /**
-     * Polliwog Panel
+     * Polliwog Panel.
      *
      * @var FrenchFrogs\Panel\Panel\Panel
      */
     protected $panel;
 
-
     /**
-     * Setter for $panel Attribute
+     * Setter for $panel Attribute.
      *
      * @param \FrenchFrogs\Panel\Panel\Panel $panel
+     *
      * @return $this
      */
     public function setPanel(FrenchFrogs\Panel\Panel\Panel $panel)
     {
         $this->panel = $panel;
+
         return $this;
     }
 
     /**
-     * Set default panel
+     * Set default panel.
      *
      * @param string $title
+     *
      * @return $this
      */
     public function useDefaultPanel($title = '')
@@ -37,14 +39,14 @@ trait Panel
 
         /** @var $panel \FrenchFrogs\Panel\Panel\Panel */
         $panel = configurator()->get('panel.class');
-        $panel = new $panel;
+        $panel = new $panel();
         $panel->setTitle(strval($title));
 
         return $this->setPanel($panel);
     }
 
     /**
-     * Getter for $panel attribute
+     * Getter for $panel attribute.
      *
      * @return \FrenchFrogs\Panel\Panel\Panel
      */
@@ -53,9 +55,8 @@ trait Panel
         return $this->panel;
     }
 
-
     /**
-     * Return TRUE if a Panel is set
+     * Return TRUE if a Panel is set.
      *
      * @return bool
      */
@@ -63,5 +64,4 @@ trait Panel
     {
         return isset($this->panel);
     }
-
 }

@@ -1,22 +1,22 @@
-<?php namespace FrenchFrogs\App\Http\Controllers;
+<?php
+
+namespace FrenchFrogs\App\Http\Controllers;
 
 /**
- * Class AclController
+ * Class AclController.
  *
  * Gestion des droits
- *
- * @package FrenchFrogs\Acl\Http\Controllers
  */
 trait ReferenceController
 {
     protected $permission;
 
     /**
-     * Build user table polliwog
+     * Build user table polliwog.
      *
      * @return \FrenchFrogs\Table\Table\Table
      */
-    static public function reference()
+    public static function reference()
     {
         $query = \query('reference')->orderBy('collection')->orderBy('name');
 
@@ -29,18 +29,19 @@ trait ReferenceController
         $table->addText('name', 'Nom')->setStrainerText('name');
         $table->addText('deleted_at', 'Désactive le');
         $table->setSearch('reference_id');
+
         return $table;
     }
 
-
     /**
-     * List all references
+     * List all references.
      *
      * @return \Illuminate\View\View
      */
     public function getIndex()
     {
         \ruler()->check($this->permission);
+
         return basic('Références', static::reference());
     }
 }

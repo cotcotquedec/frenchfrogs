@@ -1,33 +1,32 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class Hidden extends Text
 {
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $attr = [] )
+    public function __construct($name, $attr = [])
     {
         $this->setAttributes($attr);
         $this->setName($name);
         $this->addAttribute('type', 'hidden');
     }
 
-
     /**
      * @return string
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('hidden', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

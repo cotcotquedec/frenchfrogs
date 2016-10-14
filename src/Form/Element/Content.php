@@ -1,37 +1,37 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class Content extends Element
 {
-
-
     protected $is_full_width = true;
 
-
     /**
-     * Set $is_full_width to true
+     * Set $is_full_width to true.
      *
      * @return $this
      */
     public function enableFullWidth()
     {
         $this->is_full_width = true;
+
         return $this;
     }
 
     /**
-     * Set $is_full_width to false
+     * Set $is_full_width to false.
      *
      * @return $this
      */
     public function disableFullWidth()
     {
         $this->is_full_width = false;
+
         return $this;
     }
 
     /**
-     * getter for $is_full_width
+     * getter for $is_full_width.
      *
      * @return bool
      */
@@ -41,7 +41,7 @@ class Content extends Element
     }
 
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $label
      * @param array $attr
@@ -66,9 +66,8 @@ class Content extends Element
     {
         $render = '';
         try {
-
             $render = $this->getRenderer()->render('content', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

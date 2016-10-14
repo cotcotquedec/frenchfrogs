@@ -1,8 +1,9 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
+
+namespace FrenchFrogs\Form\Element;
 
 use FrenchFrogs\Core;
 use FrenchFrogs\Form\Form\Form;
-
 
 abstract class Element
 {
@@ -12,31 +13,29 @@ abstract class Element
     use Core\Filterer;
 
     /**
-     * Parent form
+     * Parent form.
      *
      * @var Bootstrap
-     *
      */
     protected $form;
 
     /**
-     * Field label
+     * Field label.
      *
      * @var string
      */
     protected $label;
 
     /**
-     * Field value
+     * Field value.
      *
-     * @var $value
-     *
+     * @var
      */
     protected $value;
 
 
     /**
-     * Description for element
+     * Description for element.
      *
      * @var string
      */
@@ -44,28 +43,28 @@ abstract class Element
 
 
     /**
-     * Name of belong element
+     * Name of belong element.
      *
      * @var string
      */
     protected $alias;
 
-
     /**
-     * Setter for $belongTo attribute
+     * Setter for $belongTo attribute.
      *
      * @param $name
+     *
      * @return $this
      */
     public function setAlias($name)
     {
         $this->alias = $name;
+
         return $this;
     }
 
-
     /**
-     * Getter $belongTo attribute
+     * Getter $belongTo attribute.
      *
      * @return mixed
      */
@@ -75,7 +74,7 @@ abstract class Element
     }
 
     /**
-     * Return TRUE if $belongTo attribute is set
+     * Return TRUE if $belongTo attribute is set.
      *
      * @return bool
      */
@@ -84,21 +83,20 @@ abstract class Element
         return isset($this->alias);
     }
 
-
     /**
-     * unset $belongTo attribute
+     * unset $belongTo attribute.
      *
      * @return $this
      */
     public function removeBelongTo()
     {
         unset($this->alias);
+
         return $this;
     }
 
     /**
-     * If the element has to be treat during global action
-     *
+     * If the element has to be treat during global action.
      */
     protected $is_discreet = false;
 
@@ -112,16 +110,18 @@ abstract class Element
 
     /**
      * @param Form $form
+     *
      * @return $this
      */
     public function setForm(Form $form)
     {
         $this->form = $form;
+
         return $this;
     }
 
     /**
-     * Retourn si l'element a un label
+     * Retourn si l'element a un label.
      *
      * @return bool
      */
@@ -131,18 +131,16 @@ abstract class Element
     }
 
     /**
-     * Supprime la liaison avec le formulaire
+     * Supprime la liaison avec le formulaire.
      *
      * @return $this
      */
     public function removeForm()
     {
         unset($this->form);
+
         return $this;
-
     }
-
-
 
     /**
      * @return string
@@ -154,16 +152,18 @@ abstract class Element
 
     /**
      * @param string $label
+     *
      * @return $this
      */
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
 
     /**
-     * Retourn si l'element a un label
+     * Retourn si l'element a un label.
      *
      * @return bool
      */
@@ -173,7 +173,7 @@ abstract class Element
     }
 
     /**
-     * Supprime le label de l'élément
+     * Supprime le label de l'élément.
      *
      * @return $this
      */
@@ -184,7 +184,6 @@ abstract class Element
         return $this;
     }
 
-
     /**
      * @return mixed
      */
@@ -194,17 +193,17 @@ abstract class Element
     }
 
     /**
-     *
      * @param mixed $value
      */
     public function setValue($value)
     {
         $this->value = $value;
+
         return $this;
     }
 
     /**
-     * Renvoie si une valeur est setter pour l'objet
+     * Renvoie si une valeur est setter pour l'objet.
      *
      * @return bool
      */
@@ -214,7 +213,7 @@ abstract class Element
     }
 
     /**
-     * Supprime la valeur de l'element
+     * Supprime la valeur de l'element.
      *
      * @return $this
      */
@@ -225,12 +224,11 @@ abstract class Element
         return $this;
     }
 
-
     /**
-     *
-     * Set le nom de l'élément
+     * Set le nom de l'élément.
      *
      * @param string $name
+     *
      * @return $this
      */
     public function setName($name)
@@ -239,7 +237,7 @@ abstract class Element
     }
 
     /**
-     * Get le nom de l'élément
+     * Get le nom de l'élément.
      *
      * @return string
      */
@@ -249,7 +247,7 @@ abstract class Element
     }
 
     /**
-     * Renvoie si l'element a une attribut name
+     * Renvoie si l'element a une attribut name.
      *
      * @return bool
      */
@@ -259,7 +257,7 @@ abstract class Element
     }
 
     /**
-     * Supprime le name de l'element
+     * Supprime le name de l'element.
      *
      * @return $this
      */
@@ -269,9 +267,10 @@ abstract class Element
     }
 
     /**
-     * Setter placeholder
+     * Setter placeholder.
      *
      * @param bool|false $value
+     *
      * @return $this
      */
     public function setPlaceholder($value = false)
@@ -284,9 +283,8 @@ abstract class Element
         return $this->addAttribute('placeholder', $value);
     }
 
-
     /**
-     * getter placeholder
+     * getter placeholder.
      *
      * @return null
      */
@@ -295,9 +293,8 @@ abstract class Element
         return $this->getAttribute('placeholder');
     }
 
-
     /**
-     * Si l'element a un placeholder
+     * Si l'element a un placeholder.
      *
      * @return bool
      */
@@ -307,7 +304,7 @@ abstract class Element
     }
 
     /**
-     * Suppression du placeholder
+     * Suppression du placeholder.
      *
      * @return $this
      */
@@ -316,22 +313,22 @@ abstract class Element
         return $this->removeAttribute('placeholder');
     }
 
-
-
     /**
-     * Setter for $description attribute
+     * Setter for $description attribute.
      *
      * @param $description
+     *
      * @return $this
      */
     public function setDescription($description)
     {
         $this->description = $description;
+
         return $this;
     }
 
     /**
-     * Getter for $description attribute
+     * Getter for $description attribute.
      *
      * @return string
      */
@@ -341,7 +338,7 @@ abstract class Element
     }
 
     /**
-     * Return TRUE if $description attribute is set
+     * Return TRUE if $description attribute is set.
      *
      * @return bool
      */
@@ -351,19 +348,19 @@ abstract class Element
     }
 
     /**
-     * Unset $description attribute
+     * Unset $description attribute.
      *
      * @return $this
      */
     public function removeDescription()
     {
         unset($this->description);
+
         return $this;
     }
 
-
     /**
-     * Getter for form renderer
+     * Getter for form renderer.
      *
      * @return \FrenchFrogs\Renderer\Renderer|null
      */
@@ -371,43 +368,44 @@ abstract class Element
     {
         if ($this->hasForm()) {
             return $this->getForm()->getRenderer();
-        } elseif($this->hasRenderer()) {
+        } elseif ($this->hasRenderer()) {
             return $this->renderer;
         } else {
-            return null;
+            return;
         }
     }
 
     /**
-     * getter for form validator
+     * getter for form validator.
      *
      * @return \FrenchFrogs\Validator\Validator|null
      */
     public function getValidator()
     {
-        if(!$this->hasValidator() && $this->hasForm()) {
+        if (!$this->hasValidator() && $this->hasForm()) {
             $this->setValidator(clone $this->getForm()->getValidator());
             $this->getValidator()->clearErrors()->clearMessages()->clearRules();
         }
+
         return $this->validator;
     }
 
     /**
-     * **************
+     * **************.
      *
      * VALIDATOR
      *
      * **************
      */
 
-
     /**
-     * Ajoute un validator
+     * Ajoute un validator.
      *
      * @param $rule
-     * @param null $method
+     * @param null  $method
      * @param array $params
-     * @param null $message
+     * @param null  $message
+     *
      * @return $this
      */
     public function addRule($rule, $method = null, $params = [], $message = null)
@@ -419,11 +417,11 @@ abstract class Element
         call_user_func_array([$this->getValidator(), 'addRule'], $params);
 
         if (!is_null($message)) {
-            if(is_array($message)){
-                foreach($message as $rule => $message){
+            if (is_array($message)) {
+                foreach ($message as $rule => $message) {
                     $this->getValidator()->addMessage($rule, $message);
                 }
-            }else{
+            } else {
                 $this->getValidator()->addMessage($rule, $message);
             }
         }
@@ -432,9 +430,10 @@ abstract class Element
     }
 
     /**
-     * Renvoie true si lee va
+     * Renvoie true si lee va.
      *
      * @param $rule
+     *
      * @return bool
      */
     public function hasRule($rule)
@@ -442,11 +441,11 @@ abstract class Element
         return $this->getValidator()->hasRule($rule);
     }
 
-
     /**
-     * Suppression d'un regle
+     * Suppression d'un regle.
      *
      * @param $rule
+     *
      * @return $this
      */
     public function removeRule($rule)
@@ -456,13 +455,14 @@ abstract class Element
         return $this;
     }
 
-
     /**
-     * Validation de la valeur courant de l'element
+     * Validation de la valeur courant de l'element.
      *
      * @param mixed $value
-     * @return $this
+     *
      * @throws \Exception
+     *
+     * @return $this
      */
     public function valid($value = null)
     {
@@ -481,7 +481,7 @@ abstract class Element
     }
 
     /**
-     * ******************
+     * ******************.
      *
      * FILTERER
      *
@@ -489,10 +489,11 @@ abstract class Element
      */
 
     /**
-     * Ajoute un filtre
+     * Ajoute un filtre.
      *
      * @param $filter
      * @param null $method
+     *
      * @return $this
      */
     public function addFilter($filter, $method = null, ...$params)
@@ -502,13 +503,15 @@ abstract class Element
         }
 
         call_user_func_array([$this->getFilterer(), 'addFilter'], func_get_args());
+
         return $this;
     }
 
     /**
-     * Shortcut pour l'ajout de filtre
+     * Shortcut pour l'ajout de filtre.
      *
      * @param $filters
+     *
      * @return $this
      */
     public function setFilters($filters)
@@ -518,40 +521,44 @@ abstract class Element
         }
 
         $this->getFilterer()->setFilters($filters);
+
         return $this;
     }
 
     /**
-     * Renvoie true si lee va
+     * Renvoie true si lee va.
      *
      * @param $filter
+     *
      * @return bool
      */
     public function hasFilter($filter)
     {
         $this->getFilterer()->hasFilter($filter);
+
         return $this;
     }
 
-
     /**
-     * Suppression d'un regle
+     * Suppression d'un regle.
      *
      * @param $filter
+     *
      * @return $this
      */
     public function removeFilter($filter)
     {
         $this->getFilterer()->removeFilter($filter);
+
         return $this;
     }
 
-
     /**
-     * Renvoie la valeur filtré
+     * Renvoie la valeur filtré.
+     *
+     * @throws \Exception
      *
      * @return mixed
-     * @throws \Exception
      */
     public function getFilteredValue()
     {
@@ -565,30 +572,31 @@ abstract class Element
     }
 
     /**
-     * Enable if the element has to be treated during global process
+     * Enable if the element has to be treated during global process.
      *
      * @return \FrenchFrogs\Form\Element\Element
      */
     public function enableDiscreet()
     {
         $this->is_discreet = true;
+
         return $this;
     }
 
     /**
-     * Disable if the element has to be treated during global process
+     * Disable if the element has to be treated during global process.
      *
      * @return \FrenchFrogs\Form\Element\Element
      */
     public function disableDiscreet()
     {
         $this->is_discreet = false;
+
         return $this;
     }
 
     /**
-     *
-     * Return TRUE if the element has to be treat during global process
+     * Return TRUE if the element has to be treat during global process.
      *
      * @return bool
      */

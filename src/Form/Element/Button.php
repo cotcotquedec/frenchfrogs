@@ -1,22 +1,23 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
+
+namespace FrenchFrogs\Form\Element;
 
 use FrenchFrogs\Core;
 use FrenchFrogs\Html;
 
 class Button extends Element
 {
-
     use Html\Element\Button;
     use Core\Remote;
 
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $label = '', $attr = [] )
+    public function __construct($name, $label = '', $attr = [])
     {
         $this->setAttributes($attr);
         $this->setName($name);
@@ -30,11 +31,10 @@ class Button extends Element
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('button', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

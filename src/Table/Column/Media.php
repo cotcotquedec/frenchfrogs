@@ -1,13 +1,11 @@
-<?php namespace FrenchFrogs\Table\Column;
+<?php
 
-use FrenchFrogs\Core;
+namespace FrenchFrogs\Table\Column;
 
 class Media extends Link
 {
-
-
     /**
-     * Media width
+     * Media width.
      *
      * @var int
      */
@@ -15,26 +13,26 @@ class Media extends Link
 
 
     /**
-     * Media height
+     * Media height.
      *
      * @var int
      */
-    protected  $media_height = 180;
-
+    protected $media_height = 180;
 
     /**
-     * SETTER for $media_with
+     * SETTER for $media_with.
      *
      * @param $width
      */
     public function setMediaWidth($width)
     {
         $this->media_width = $width;
+
         return $this;
     }
 
     /**
-     * GETTER for $media_with
+     * GETTER for $media_with.
      *
      * @return int
      */
@@ -44,31 +42,33 @@ class Media extends Link
     }
 
     /**
-     * Return the binded Label
+     * Return the binded Label.
      *
      * @param array $row
+     *
      * @return string
      */
     public function getBindedLabel($row = [])
     {
         $bind = isset($row[$this->getName()]) ? $row[$this->getName()] : false;
+
         return sprintf($this->getLabel(), $bind);
     }
 
-
     /**
-     * SETTER for $media_height
+     * SETTER for $media_height.
      *
      * @param $width
      */
     public function setMediaHeight($height)
     {
         $this->media_height = $height;
+
         return $this;
     }
 
     /**
-     * GETTER for $media_height
+     * GETTER for $media_height.
      *
      * @return int
      */
@@ -77,31 +77,28 @@ class Media extends Link
         return $this->media_height;
     }
 
-
     /**
-     * Constructor
+     * Constructor.
      *
      * @param $name
      * @param string $label
      * @param string $link
-     * @param array $binds
-     * @param array $attr
+     * @param array  $binds
+     * @param array  $attr
      */
-    public function __construct($name, $label, $link = '#', $binds = [], $width = 320, $height = 180 )
+    public function __construct($name, $label, $link = '#', $binds = [], $width = 320, $height = 180)
     {
         $this->setLabel($label);
         $this->setMediaHeight($height);
         $this->setMediaWidth($width);
         $this->setName($name);
         $this->setLink($link);
-        $this ->setWidth($width);
+        $this->setWidth($width);
         $this->setBinds((array) $binds);
         $this->center();
     }
 
     /**
-     *
-     *
      * @return string
      */
     public function render(array $row)
@@ -109,7 +106,7 @@ class Media extends Link
         $render = '';
         try {
             $render = $this->getRenderer()->render('media', $this, $row);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

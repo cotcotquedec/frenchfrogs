@@ -1,46 +1,44 @@
-<?php namespace FrenchFrogs\Validator;
+<?php
+
+namespace FrenchFrogs\Validator;
 
 /**
- *
- * Class model used to valid values
+ * Class model used to valid values.
  *
  * Use polymorphisme with Trait \FrenchFrogs\Core\Validator
  *
  * Class Validator
- * @package FrenchFrogs\Validator
  */
 class Validator
 {
-
     /**
-     * Rules container
+     * Rules container.
      *
      * @var array
      */
     protected $rules = [];
 
     /**
-     * Messages container
+     * Messages container.
      *
      * @var array
      */
     protected $messages = [];
 
     /**
-     * Error container
+     * Error container.
      *
      * @var array
      */
     protected $errors = [];
 
     /**
-     * Message d'erreur par default
-     *
+     * Message d'erreur par default.
      */
     const MESSAGE_DEFAULT_PATTERN = 'Validation error : "%s"';
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param ...$params
      */
@@ -53,34 +51,39 @@ class Validator
     }
 
     /**
-     * Set all the rules as an array
+     * Set all the rules as an array.
      *
      * @param array $rules
+     *
      * @return $this
      */
     public function setRules(array $rules)
     {
         $this->rules = $rules;
+
         return $this;
     }
 
     /**
-     * Add a single rule to the rules container
+     * Add a single rule to the rules container.
      *
      * @param $index
      * @param $rule
+     *
      * @return $this
      */
     public function addRule($index, $method = null, ...$params)
     {
         $this->rules[$index] = [$method, $params];
+
         return $this;
     }
 
     /**
-     * Remove a single rule from the rule container
+     * Remove a single rule from the rule container.
      *
      * @param $index
+     *
      * @return $this
      */
     public function removeRule($index)
@@ -93,7 +96,7 @@ class Validator
     }
 
     /**
-     * Clear all the rules container
+     * Clear all the rules container.
      *
      * @return $this
      */
@@ -105,9 +108,10 @@ class Validator
     }
 
     /**
-     * Return TRU if the rule $index exist in the rules container
+     * Return TRU if the rule $index exist in the rules container.
      *
      * @param $index
+     *
      * @return bool
      */
     public function hasRule($index)
@@ -116,22 +120,21 @@ class Validator
     }
 
     /**
-     * Return the rule $index from the rules container
+     * Return the rule $index from the rules container.
      *
      * @return mixed Callable | string
      */
     public function getRule($index)
     {
         if (!$this->hasRule($index)) {
-            throw new \Exception('Rule not found: ' . $index);
+            throw new \Exception('Rule not found: '.$index);
         }
 
         return $this->rules[$index];
     }
 
-
     /**
-     * Return all rules as an array
+     * Return all rules as an array.
      *
      * @return array
      */
@@ -140,37 +143,40 @@ class Validator
         return $this->rules;
     }
 
-
-
     /**
-     * Set all messages as an array
+     * Set all messages as an array.
      *
      * @param array $messages
+     *
      * @return $this
      */
     public function setMessages(array $messages)
     {
         $this->messages = $messages;
+
         return $this;
     }
 
     /**
-     * Add a single message to the messsages container
+     * Add a single message to the messsages container.
      *
      * @param $index
      * @param $method
+     *
      * @return $this
      */
     public function addMessage($index, $method)
     {
         $this->messages[$index] = $method;
+
         return $this;
     }
 
     /**
-     * Remove a single message from the messages container
+     * Remove a single message from the messages container.
      *
      * @param $index
+     *
      * @return $this
      */
     public function removeMessage($index)
@@ -183,7 +189,7 @@ class Validator
     }
 
     /**
-     * Clear all the messages container
+     * Clear all the messages container.
      *
      * @return $this
      */
@@ -195,9 +201,10 @@ class Validator
     }
 
     /**
-     * Return TRUE if the message $index exist in the messages container
+     * Return TRUE if the message $index exist in the messages container.
      *
      * @param $index
+     *
      * @return bool
      */
     public function hasMessage($index)
@@ -206,22 +213,21 @@ class Validator
     }
 
     /**
-     * Return the messages $index from the messages container
+     * Return the messages $index from the messages container.
      *
      * @return mixed Callable | string
      */
     public function getMessage($index)
     {
         if (!$this->hasMessage($index)) {
-            throw new \Exception('Message not found : ' . $index);
+            throw new \Exception('Message not found : '.$index);
         }
 
         return $this->messages[$index];
     }
 
-
     /**
-     * Return the messages container as an array
+     * Return the messages container as an array.
      *
      * @return array
      */
@@ -230,36 +236,40 @@ class Validator
         return $this->messages;
     }
 
-
     /**
-     * Set all the errors as an array
+     * Set all the errors as an array.
      *
      * @param array $errors
+     *
      * @return $this
      */
     public function setErrors(array $errors)
     {
         $this->errors = $errors;
+
         return $this;
     }
 
     /**
-     * Add a single error in the errors container
+     * Add a single error in the errors container.
      *
      * @param $index
      * @param $message
+     *
      * @return $this
      */
     public function addError($index, $message)
     {
         $this->errors[$index] = $message;
+
         return $this;
     }
 
     /**
-     * Remove the $index error from the errors container
+     * Remove the $index error from the errors container.
      *
      * @param $index
+     *
      * @return $this
      */
     public function removeError($index)
@@ -272,7 +282,7 @@ class Validator
     }
 
     /**
-     * Remove all the errors from the errors container
+     * Remove all the errors from the errors container.
      *
      * @return $this
      */
@@ -284,9 +294,10 @@ class Validator
     }
 
     /**
-     * Return TRU if the error $index exist in the errors container
+     * Return TRU if the error $index exist in the errors container.
      *
      * @param $index
+     *
      * @return bool
      */
     public function hasError($index)
@@ -295,22 +306,21 @@ class Validator
     }
 
     /**
-     * Return the error $index from the errors container
+     * Return the error $index from the errors container.
      *
      * @return mixed Callable | string
      */
     public function getError($index)
     {
         if (!$this->hasError($index)) {
-            throw new \Exception('Error not found : ' . $index);
+            throw new \Exception('Error not found : '.$index);
         }
 
         return $this->errors[$index];
     }
 
-
     /**
-     * Return the errors container as an array
+     * Return the errors container as an array.
      *
      * @return array
      */
@@ -319,14 +329,15 @@ class Validator
         return $this->errors;
     }
 
-
     /**
-     * Format an error
+     * Format an error.
      *
      * @param $index
      * @param $params
-     * @return string
+     *
      * @throws \Exception
+     *
+     * @return string
      */
     public function formatError($index, $params)
     {
@@ -335,17 +346,16 @@ class Validator
         return vsprintf($pattern, $params);
     }
 
-
     /**
-     * Valid the element
+     * Valid the element.
      *
      * @param $value
+     *
      * @return $this
      */
     public function valid($value)
     {
-
-        foreach($this->getRules() as $index => $rule) {
+        foreach ($this->getRules() as $index => $rule) {
 
             // check for required
             if (in_array($value, ['', null]) && !$this->hasRule('required')) {
@@ -363,15 +373,13 @@ class Validator
 
             // If it's a anonymous function
             if (!is_string($method) && is_callable($method)) {
-
                 if (!call_user_func_array($method, $params)) {
                     $this->addError($index, $this->formatError($index, $params));
                 }
-
             } else {// if it's a local method
 
                 if (!method_exists($this, $method)) {
-                    throw new \Exception('Method "'. $method .'" not found for validator : ' . $index);
+                    throw new \Exception('Method "'.$method.'" not found for validator : '.$index);
                 }
 
                 if (!call_user_func_array([$this, $method], $params)) {
@@ -383,26 +391,24 @@ class Validator
         return $this;
     }
 
-
     /**
-     * Return validation error formatted as a string
+     * Return validation error formatted as a string.
      *
      *
      * @return string
      */
     public function getErrorAsString()
     {
-        $errors  = [];
-        foreach($this->getErrors() as $index => $message){
+        $errors = [];
+        foreach ($this->getErrors() as $index => $message) {
             $errors[] = sprintf('%s: %s', $index, $message);
         }
+
         return implode(PHP_EOL, $errors);
     }
 
-
-
     /**
-     * Return TRUE if validation is a success
+     * Return TRUE if validation is a success.
      *
      * @return bool
      */
@@ -411,28 +417,24 @@ class Validator
         return empty($this->getErrors());
     }
 
-
-
     /**
-     * ******************************
+     * ******************************.
      *
      * BUILT IN VALIDATOR
      *
      * ******************************
-     *
      */
 
-
     /**
-     * Return FALSE if value is null or empty string
+     * Return FALSE if value is null or empty string.
      *
      * @param $value
+     *
      * @return bool
      */
     public function required($value)
     {
-
-        if(!$this->hasMessage('required')){
+        if (!$this->hasMessage('required')) {
             $this->addMessage('required', 'This value is required');
         }
 
@@ -444,77 +446,84 @@ class Validator
     }
 
     /**
-     * Return TRUE if $value match URL pattern
+     * Return TRUE if $value match URL pattern.
      *
      * @param $value
+     *
      * @return bool
      */
     public function url($value)
     {
         $this->addMessage('url', 'This value is not a valid URL :%s');
+
         return !(filter_var($value, FILTER_VALIDATE_URL) == false);
     }
 
-
     /**
-     * Return TRUE if $value match IP pattern
+     * Return TRUE if $value match IP pattern.
      *
      * @param $value
+     *
      * @return bool
      */
     public function ip($value)
     {
         $this->addMessage('ip', 'This value is not a valid IP :%s');
+
         return !(filter_var($value, FILTER_VALIDATE_IP) == false);
     }
 
     /**
-     * Return TRUE if $value match Email pattern
+     * Return TRUE if $value match Email pattern.
      *
      * @param $value
+     *
      * @return bool
      */
     public function email($value)
     {
         $this->addMessage('email', 'This value is not a valid email :%s');
+
         return !(filter_var($value, FILTER_VALIDATE_EMAIL) == false);
     }
 
     /**
-     *
-     * Return TRUE if $value match regex pattern $pattern
+     * Return TRUE if $value match regex pattern $pattern.
      *
      * @param $value
      * @param $pattern
+     *
      * @return int
      */
     public function regex($value, $pattern)
     {
-        $this->addMessage('regex',  'This value is not matching :%s');
+        $this->addMessage('regex', 'This value is not matching :%s');
+
         return preg_match($pattern, $value);
     }
 
-
     /**
-     * Return true if $value exist in $array values
+     * Return true if $value exist in $array values.
      *
      * @param $value
      * @param $array
+     *
      * @return bool
      */
     public function inArray($value, $array)
     {
         $this->addMessage('inArray', 'This value was not found : %s');
+
         return in_array($value, $array) !== false;
     }
 
-
     /**
-     * Return true if the value is correct with a laravel validator string
+     * Return true if the value is correct with a laravel validator string.
      *
      * @param $value
      * @param $validationString
      * @param $messages
+     *
      * @return array
      */
     public function laravel($value, $validationString, $messages = [])
@@ -526,8 +535,8 @@ class Validator
         // error message management
         if ($validator->fails() && !$this->hasMessage('laravel')) {
             $message = '';
-            foreach ( $validator->errors()->get('laravel') as $m) {
-                $message .= $m . ' ';
+            foreach ($validator->errors()->get('laravel') as $m) {
+                $message .= $m.' ';
             }
             $this->addMessage('laravel', $message);
         }

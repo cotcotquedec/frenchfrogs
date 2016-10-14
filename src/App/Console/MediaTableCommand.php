@@ -1,4 +1,6 @@
-<?php namespace FrenchFrogs\App\Console;
+<?php
+
+namespace FrenchFrogs\App\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
@@ -30,11 +32,13 @@ class MediaTableCommand extends Command
      * @var \Illuminate\Support\Composer
      */
     protected $composer;
+
     /**
      * Create a new session table command instance.
      *
-     * @param  \Illuminate\Filesystem\Filesystem  $files
-     * @param  \Illuminate\Support\Composer  $composer
+     * @param \Illuminate\Filesystem\Filesystem $files
+     * @param \Illuminate\Support\Composer      $composer
+     *
      * @return void
      */
     public function __construct(Filesystem $files, Composer $composer)
@@ -43,6 +47,7 @@ class MediaTableCommand extends Command
         $this->files = $files;
         $this->composer = $composer;
     }
+
     /**
      * Execute the console command.
      *
@@ -52,7 +57,7 @@ class MediaTableCommand extends Command
     {
         $fullPath = $this->createTable();
         $this->files->put($fullPath, $this->files->get(__DIR__.'/stubs/tables/media.stub'));
-        $this->info('Migration created successfully! : ' . $fullPath);
+        $this->info('Migration created successfully! : '.$fullPath);
         $this->composer->dumpAutoloads();
     }
 
@@ -65,6 +70,7 @@ class MediaTableCommand extends Command
     {
         $name = 'create_media_table';
         $path = $this->laravel->databasePath().'/migrations';
+
         return $this->laravel['migration.creator']->create($name, $path);
     }
 }

@@ -1,11 +1,11 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class SelectRemote extends Text
 {
-
     /**
-     * Length tptrigger search
+     * Length tptrigger search.
      *
      * @var int
      */
@@ -13,14 +13,14 @@ class SelectRemote extends Text
 
 
     /**
-     * Loading json url for select 2 data
+     * Loading json url for select 2 data.
      *
      * @var
      */
     protected $url;
 
     /**
-     * Getter for $url
+     * Getter for $url.
      *
      * @return mixed
      */
@@ -30,19 +30,21 @@ class SelectRemote extends Text
     }
 
     /**
-     * Setter for $url
+     * Setter for $url.
      *
      * @param $url
+     *
      * @return $this
      */
     public function setUrl($url)
     {
         $this->url = strval($url);
+
         return $this;
     }
 
     /**
-     * Return TRUE if $url is set
+     * Return TRUE if $url is set.
      *
      * @return bool
      */
@@ -52,20 +54,19 @@ class SelectRemote extends Text
     }
 
     /**
-     * Unset $url
+     * Unset $url.
      *
      * @return $this
      */
     public function removeUrl()
     {
         unset($this->url);
+
         return $this;
     }
 
-
     /**
-     *
-     * Getter for $length
+     * Getter for $length.
      *
      * @return int
      */
@@ -75,10 +76,11 @@ class SelectRemote extends Text
     }
 
     /**
-     * Setter for $length
+     * Setter for $length.
      *
      *
      * @param $length cannot be under 1
+     *
      * @return $this
      */
     public function setLength($length)
@@ -90,13 +92,13 @@ class SelectRemote extends Text
     }
 
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $label = '', $url = '#', $length = 1, $attr = [] )
+    public function __construct($name, $label = '', $url = '#', $length = 1, $attr = [])
     {
         $this->setAttributes($attr);
         $this->setName($name);
@@ -106,9 +108,6 @@ class SelectRemote extends Text
         $this->addAttribute('type', 'hidden');
     }
 
-
-
-
     /**
      * @return string
      */
@@ -116,9 +115,8 @@ class SelectRemote extends Text
     {
         $render = '';
         try {
-
             $render = $this->getRenderer()->render('select2', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

@@ -1,8 +1,9 @@
-<?php namespace FrenchFrogs\App\Models\Db\User;
+<?php
+
+namespace FrenchFrogs\App\Models\Db\User;
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 
 class Navigation extends Model
 {
@@ -11,9 +12,8 @@ class Navigation extends Model
     protected $primaryKey = 'user_navigation_id';
     protected $table = 'user_navigation';
 
-
     /**
-     * Renvoie la permissiopn lié aq l'ccès de cette page
+     * Renvoie la permissiopn lié aq l'ccès de cette page.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -23,7 +23,7 @@ class Navigation extends Model
     }
 
     /**
-     * Renvoie l'interface
+     * Renvoie l'interface.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

@@ -1,14 +1,15 @@
-<?php namespace FrenchFrogs\Table\Column;
+<?php
 
+namespace FrenchFrogs\Table\Column;
 
 class Number extends Text
 {
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
     public function __construct($name, $label = '', $decimal = 2)
     {
@@ -20,8 +21,6 @@ class Number extends Text
     }
 
     /**
-     *
-     *
      * @return string
      */
     public function render(array $row)
@@ -31,7 +30,7 @@ class Number extends Text
             if ($this->isVisible($row)) {
                 $render = $this->getRenderer()->render('number', $this, $row);
             }
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

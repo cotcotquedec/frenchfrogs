@@ -1,26 +1,23 @@
-<?php namespace FrenchFrogs\Table\Table;
+<?php
 
+namespace FrenchFrogs\Table\Table;
 
 use FrenchFrogs\Table\Renderer\Csv;
 
 /**
- * Trait pour la gestion des export CSV d'un table
+ * Trait pour la gestion des export CSV d'un table.
  *
  * Class Export
- * @package FrenchFrogs\Table\Table
  */
 trait Export
 {
-
     /**
-     * Nom du fichier d'export par default
-     *
+     * Nom du fichier d'export par default.
      */
     protected $filenameDefault = 'export.csv';
 
     /**
-     *
-     * Nom du fichier d'export CSV
+     * Nom du fichier d'export CSV.
      *
      * @var
      */
@@ -28,21 +25,22 @@ trait Export
 
 
     /**
-     * Callback pour la appeler avant l'export
+     * Callback pour la appeler avant l'export.
      *
      * C'est dans cette methode que l'on va ajuster les colonnes présente dans l'export
      *
-     * @var Callable
+     * @var callable
      */
     protected $export;
 
-
     /**
-     * Setter pour $export
+     * Setter pour $export.
      *
      * @param $function Callable
-     * @return $this
+     *
      * @throws \Exception
+     *
+     * @return $this
      */
     public function setExport($function)
     {
@@ -51,13 +49,14 @@ trait Export
         }
 
         $this->export = $function;
+
         return $this;
     }
 
     /**
-     * Getter for $export
+     * Getter for $export.
      *
-     * @return Callable
+     * @return callable
      */
     public function getExport()
     {
@@ -65,7 +64,7 @@ trait Export
     }
 
     /**
-     * Return TRUE if $export is set
+     * Return TRUE if $export is set.
      *
      * @return bool
      */
@@ -74,22 +73,22 @@ trait Export
         return isset($this->export);
     }
 
-
-
     /**
-     * Setter pour $exportFileName
+     * Setter pour $exportFileName.
      *
      * @param $name
+     *
      * @return $this
      */
     public function setFilename($name)
     {
         $this->filename = $name;
+
         return $this;
     }
 
     /**
-     * Getter pour $exportFileName
+     * Getter pour $exportFileName.
      *
      * @return mixed
      */
@@ -98,9 +97,8 @@ trait Export
         return $this->filename;
     }
 
-
     /**
-     * Return TRUE if filename is not empty
+     * Return TRUE if filename is not empty.
      *
      * @return bool
      */
@@ -110,10 +108,11 @@ trait Export
     }
 
     /**
-     * Export dans un fichier CSV
+     * Export dans un fichier CSV.
      *
      * @param $filename
      * @param bool $download
+     *
      * @return $this
      */
     public function toCsv($filename = null)
@@ -136,10 +135,10 @@ trait Export
         $this->setRenderer(new Csv());
 
         // appel du collback
-        if ($this->hasExport()){
+        if ($this->hasExport()) {
             call_user_func($this->export, $this);
         }
-        
+
         // rendu
         $this->render();
 
@@ -148,6 +147,4 @@ trait Export
 
         return $this;
     }
-
-
 }

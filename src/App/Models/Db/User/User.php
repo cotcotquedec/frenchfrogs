@@ -1,31 +1,33 @@
-<?php namespace FrenchFrogs\App\Models\Db\User;
+<?php
+
+namespace FrenchFrogs\App\Models\Db\User;
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Model  implements \Illuminate\Contracts\Auth\Authenticatable  {
+class User extends Model implements \Illuminate\Contracts\Auth\Authenticatable
+{
     use Authenticatable;
     use SoftDeletes;
 
     public $primaryUuid = true;
-    protected $primaryKey  = 'user_id';
+    protected $primaryKey = 'user_id';
     protected $table = 'user';
     protected $hidden = ['password', 'remember_token'];
 
-
     /**
-     * Permission liée a l'utilisateur
+     * Permission liée a l'utilisateur.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function permissions()
     {
-        return $this->hasMany(PermissionUser::class,'user_id',  'user_id');
+        return $this->hasMany(PermissionUser::class, 'user_id', 'user_id');
     }
 
     /**
-     * Groupe lié à l'utilisateur
+     * Groupe lié à l'utilisateur.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -34,4 +36,3 @@ class User extends Model  implements \Illuminate\Contracts\Auth\Authenticatable 
         return $this->hasMany(GroupUser::class, 'user_id', 'user_id');
     }
 }
-

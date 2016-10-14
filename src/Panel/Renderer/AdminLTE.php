@@ -1,32 +1,30 @@
-<?php namespace FrenchFrogs\Panel\Renderer;
+<?php
+
+namespace FrenchFrogs\Panel\Renderer;
 
 use FrenchFrogs\Panel;
-use FrenchFrogs\Form\Element;
 use FrenchFrogs\Renderer\Style\AdminLTE as Style;
 
 /**
- * Renderer for portlet conquer template
+ * Renderer for portlet conquer template.
  *
  * Class Conquer
- * @package FrenchFrogs\Panel\Renderer
  */
 class AdminLTE extends Bootstrap
 {
-
     /**
-     * Main renderer
+     * Main renderer.
      *
      * @param \FrenchFrogs\Panel\Panel\Panel $panel
      */
     public function panel(Panel\Panel\Panel $panel)
     {
-
         $html = '';
 
         //@todo Action render
         $actions = '';
-        foreach($panel->getActions() as $action) {
-            $actions .= $action->render() . PHP_EOL;
+        foreach ($panel->getActions() as $action) {
+            $actions .= $action->render().PHP_EOL;
         }
 
 
@@ -41,10 +39,9 @@ class AdminLTE extends Bootstrap
         $panel->addClass(Style::PANEL_CLASS);
 
         if ($panel->hasContext()) {
-            $panel->addClass(constant( Style::class . '::' . $panel->getContext()));
+            $panel->addClass(constant(Style::class.'::'.$panel->getContext()));
         }
 
         return html('div', $panel->getAttributes(), $html);
     }
-
 }

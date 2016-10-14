@@ -1,23 +1,24 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class Checkbox extends Element
 {
     /**
-     * Options values
+     * Options values.
      *
      * @var array
      */
     protected $options = [];
 
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $label = '', $options = [], $attr = [] )
+    public function __construct($name, $label = '', $options = [], $attr = [])
     {
         $this->setAttributes($attr);
         $this->setName($name);
@@ -27,22 +28,22 @@ class Checkbox extends Element
         $this->addAttribute('type', 'checkbox');
     }
 
-
-
     /**
-     * Set the options
+     * Set the options.
      *
      * @param $options
+     *
      * @return $this
      */
     public function setOptions(array $options)
     {
         $this->options = $options;
+
         return $this;
     }
 
     /**
-     * Get the options
+     * Get the options.
      *
      * @return array
      */
@@ -51,17 +52,15 @@ class Checkbox extends Element
         return $this->options;
     }
 
-
     /**
      * @return string
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('checkbox', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

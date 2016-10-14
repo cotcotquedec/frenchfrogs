@@ -1,14 +1,15 @@
-<?php namespace FrenchFrogs\Panel\Renderer;
+<?php
 
-use FrenchFrogs\Renderer\Renderer;
+namespace FrenchFrogs\Panel\Renderer;
+
 use FrenchFrogs\Panel;
+use FrenchFrogs\Renderer\Renderer;
 use FrenchFrogs\Renderer\Style\Style;
 
 class Bootstrap extends Renderer
 {
     /**
-     *
-     * Available renderer
+     * Available renderer.
      *
      * @var array
      */
@@ -16,30 +17,28 @@ class Bootstrap extends Renderer
         'panel',
         'action',
         'button',
-        'selectremote'
+        'selectremote',
     ];
 
-
     /**
-     * Main renderer
+     * Main renderer.
      *
      * @param \FrenchFrogs\Panel\Panel\Panel $panel
      */
     public function panel(Panel\Panel\Panel $panel)
     {
-
         $html = '';
 
         //@todo Action render
         $actions = '';
-        foreach($panel->getActions() as $action) {
-            $actions .= $action->render() . PHP_EOL;
+        foreach ($panel->getActions() as $action) {
+            $actions .= $action->render().PHP_EOL;
         }
 
 
         $html .= html('div', ['class' => 'pull-right'], $actions);
-        $title = '<h4>' . $panel->getTitle() . '</h4>';
-        $html .= html('div', ['class' => Style::PANEL_HEAD_CLASS_TITLE . ' clearfix'], $title);
+        $title = '<h4>'.$panel->getTitle().'</h4>';
+        $html .= html('div', ['class' => Style::PANEL_HEAD_CLASS_TITLE.' clearfix'], $title);
         $html = html('div', ['class' => Style::PANEL_HEAD_CLASS], $html);
 
 
@@ -49,28 +48,26 @@ class Bootstrap extends Renderer
         $panel->addClass(Style::PANEL_CLASS);
 
         if ($panel->hasContext()) {
-            $panel->addClass(constant( Style::class . '::' . $panel->getContext()));
+            $panel->addClass(constant(Style::class.'::'.$panel->getContext()));
         }
 
         return html('div', $panel->getAttributes(), $html);
     }
 
-
     /**
-     *
-     *
      * @param \FrenchFrogs\Panel\Action\Button $action
+     *
      * @return string
      */
     public function button(Panel\Action\Button $action)
     {
         if ($action->hasOption()) {
-            $action->addClass(constant(  Style::class . '::' . $action->getOption()));
+            $action->addClass(constant(Style::class.'::'.$action->getOption()));
         }
 
         // SIZE
         $action->hasSize() ?: $action->setSizeAsSmall();
-        $action->addClass(constant(  Style::class . '::' . $action->getSize()));
+        $action->addClass(constant(Style::class.'::'.$action->getSize()));
 
         $action->addClass(Style::BUTTON_CLASS);
 
@@ -87,22 +84,21 @@ class Bootstrap extends Renderer
         }
 
         if ($action->isRemote()) {
-            $action->addAttribute('data-target', '#' . $action->getRemoteId())
+            $action->addAttribute('data-target', '#'.$action->getRemoteId())
                 ->addClass('modal-remote');
-        } elseif($action->isCallback()) {
+        } elseif ($action->isCallback()) {
             $action->addClass('callback-remote');
         }
 
         $action->addAttribute('title', $name);
 
-        $html = html('a',$action->getAttributes(), $label );
+        $html = html('a', $action->getAttributes(), $label);
 
         return $html;
     }
 
-
     /**
-     * Render a Select 2
+     * Render a Select 2.
      *
      * @param \FrenchFrogs\Panel\Action\SelectRemote $action
      */

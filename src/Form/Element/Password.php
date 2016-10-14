@@ -1,17 +1,17 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class Password extends Text
 {
-
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $label = '', $attr = [] )
+    public function __construct($name, $label = '', $attr = [])
     {
         $this->setAttributes($attr);
         $this->setName($name);
@@ -19,17 +19,15 @@ class Password extends Text
         $this->addAttribute('type', 'password');
     }
 
-
     /**
      * @return string
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('password', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

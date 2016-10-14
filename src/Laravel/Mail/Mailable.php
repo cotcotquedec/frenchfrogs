@@ -1,4 +1,6 @@
-<?php namespace FrenchFrogs\Laravel\Mail;
+<?php
+
+namespace FrenchFrogs\Laravel\Mail;
 
 class Mailable extends \Illuminate\Mail\Mailable implements \FrenchFrogs\Laravel\Contracts\Mail\MailablePreview
 {
@@ -8,14 +10,14 @@ class Mailable extends \Illuminate\Mail\Mailable implements \FrenchFrogs\Laravel
     protected $uuid;
 
     /**
-     * Pixel
+     * Pixel.
      *
      * @var string
      */
     public $pixel = '';
 
     /**
-     * Set UUID
+     * Set UUID.
      *
      * @return mixed
      */
@@ -25,49 +27,49 @@ class Mailable extends \Illuminate\Mail\Mailable implements \FrenchFrogs\Laravel
     }
 
     /**
-     * Return uuid
+     * Return uuid.
      *
      * @param $uuid
      */
     public function setUuid($uuid)
     {
         $this->uuid = \uuid('hex', $uuid);
+
         return $this;
     }
 
-
     /**
-     * Nom de la route
+     * Nom de la route.
      *
      * @var string
      */
-    static protected $pixelRoute = 'mail.pixel';
+    protected static $pixelRoute = 'mail.pixel';
 
     /**
-     * Getter for $pixelRoute
+     * Getter for $pixelRoute.
      *
      * @return string
      */
-    static public function getPixelRoute()
+    public static function getPixelRoute()
     {
         return static::$pixelRoute;
     }
 
     /**
-     * Setter for $pixelRoute
+     * Setter for $pixelRoute.
      *
      * @param $route
      */
-    static function setPixelRoute($route)
+    public static function setPixelRoute($route)
     {
         static::$pixelRoute = $route;
     }
 
-
     /**
-     * Render pixel for tracking
+     * Render pixel for tracking.
      *
      * @param array $query
+     *
      * @return string
      */
     public function renderPixel($query = [])
@@ -77,14 +79,13 @@ class Mailable extends \Illuminate\Mail\Mailable implements \FrenchFrogs\Laravel
 
         // gestion de la query
         if ($query) {
-            $url .= '?' . http_build_query($query);
+            $url .= '?'.http_build_query($query);
         }
 
         $this->pixel = html('img', ['src' => $url, 'width' => 1, 'height' => 1]);
     }
 
     /**
-     *
      * Preview the message using the given mailer.
      *
      * @return void
@@ -92,15 +93,14 @@ class Mailable extends \Illuminate\Mail\Mailable implements \FrenchFrogs\Laravel
     public function previewHtml()
     {
         $this->pixel = '';
+
         return \view($this->view, $this->buildViewData());
     }
 
     /**
-     *
-     * Rendu du mail en text
+     * Rendu du mail en text.
      *
      * return string
-     *
      */
     public function previewPlain()
     {
@@ -108,7 +108,7 @@ class Mailable extends \Illuminate\Mail\Mailable implements \FrenchFrogs\Laravel
     }
 
     /**
-     * Preview des destinataire
+     * Preview des destinataire.
      *
      * @return string
      */
@@ -116,8 +116,9 @@ class Mailable extends \Illuminate\Mail\Mailable implements \FrenchFrogs\Laravel
     {
         $to = [];
         foreach ($this->to as $row) {
-            $to[]= sprintf('%s < %s >',$row['name'], $row['address']);
+            $to[] = sprintf('%s < %s >', $row['name'], $row['address']);
         }
+
         return implode(',', $to);
     }
 
@@ -130,14 +131,14 @@ class Mailable extends \Illuminate\Mail\Mailable implements \FrenchFrogs\Laravel
     {
         $from = [];
         foreach ($this->from as $row) {
-            $from[]= sprintf('%s < %s >',$row['name'], $row['address']);
+            $from[] = sprintf('%s < %s >', $row['name'], $row['address']);
         }
+
         return implode(',', $from);
     }
 
-
     /**
-     * Getter for $subjecty
+     * Getter for $subjecty.
      *
      * @return string
      */

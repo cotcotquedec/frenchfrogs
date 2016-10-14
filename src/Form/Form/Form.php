@@ -1,14 +1,15 @@
-<?php namespace FrenchFrogs\Form\Form;
+<?php
 
-use FrenchFrogs\Core;
+namespace FrenchFrogs\Form\Form;
+
 use FrenchFrogs;
+use FrenchFrogs\Core;
 use FrenchFrogs\Form\Renderer;
 
 /**
- * Form polliwog
+ * Form polliwog.
  *
  * Class Form
- * @package FrenchFrogs\Form\Form
  */
 class Form
 {
@@ -21,7 +22,7 @@ class Form
     use Element;
 
     /**
-     * Legend of the form (title)
+     * Legend of the form (title).
      *
      * @var
      */
@@ -29,7 +30,7 @@ class Form
 
 
     /**
-     * Specify if the form will render csrf token
+     * Specify if the form will render csrf token.
      *
      * @var
      */
@@ -37,58 +38,62 @@ class Form
 
 
     /**
-     * Specify if label must be displayed
+     * Specify if label must be displayed.
      *
      * @var
      */
     protected $has_label = true;
 
     /**
-     * Set $has_csrfToken to TRUE
+     * Set $has_csrfToken to TRUE.
      *
      * @return $this
      */
     public function enableCsrfToken()
     {
         $this->has_csrfToken = true;
+
         return $this;
     }
 
     /**
-     * Set $has_csrfToken to FALSE
+     * Set $has_csrfToken to FALSE.
      *
      * @return $this
      */
     public function disableCsrfToken()
     {
         $this->has_csrfToken = false;
+
         return $this;
     }
 
     /**
-     * enable hasLabel
+     * enable hasLabel.
      *
      * @return $this
      */
     public function enableLabel()
     {
         $this->has_label = true;
+
         return $this;
     }
 
     /**
-     * disable hasLabel
+     * disable hasLabel.
      *
      * @return $this
      */
     public function disableLabel()
     {
         $this->has_label = false;
+
         return $this;
     }
 
     /**
-     * getter hasLabel
+     * getter hasLabel.
      *
      * @return bool
      */
@@ -96,8 +101,9 @@ class Form
     {
         return $this->has_label;
     }
+
     /**
-     * Getter for $has_csrfToken
+     * Getter for $has_csrfToken.
      *
      * @return mixed
      */
@@ -106,21 +112,22 @@ class Form
         return $this->has_csrfToken;
     }
 
-
     /**
-     * Setter for $legend attribute
+     * Setter for $legend attribute.
      *
      * @param $legend
+     *
      * @return $this
      */
     public function setLegend($legend)
     {
         $this->legend = strval($legend);
+
         return $this;
     }
 
     /**
-     * Getter for $legend attribute
+     * Getter for $legend attribute.
      *
      * @return mixed
      */
@@ -130,7 +137,7 @@ class Form
     }
 
     /**
-     * Return TRUE if $$legend attribute is set
+     * Return TRUE if $$legend attribute is set.
      *
      * @return bool
      */
@@ -139,10 +146,8 @@ class Form
         return isset($this->legend);
     }
 
-
-
     /**
-     * Constructor
+     * Constructor.
      *
      * @param string $url
      * @param string $method
@@ -154,19 +159,19 @@ class Form
         */
         $c = configurator();
         $class = $c->get('form.renderer.class');
-        $this->setRenderer(new $class);
+        $this->setRenderer(new $class());
 
         $class = $c->get('form.validator.class');
-        $this->setValidator(new $class);
+        $this->setValidator(new $class());
 
         $class = $c->get('form.filterer.class');
-        $this->setFilterer(new $class);
+        $this->setFilterer(new $class());
 
         $this->has_csrfToken = $c->get('form.default.has_csrfToken', true);
 
 
         //default configuration
-        $this->addAttribute('id', 'form-' . rand());
+        $this->addAttribute('id', 'form-'.rand());
 
         // if method "init" exist, we call it.
         if (method_exists($this, 'init')) {
@@ -184,9 +189,10 @@ class Form
     }
 
     /**
-     * Set method
+     * Set method.
      *
      * @param $method
+     *
      * @return $this
      */
     public function setMethod($method)
@@ -194,9 +200,8 @@ class Form
         return $this->addAttribute('method', $method);
     }
 
-
     /**
-     * Get method
+     * Get method.
      *
      * @return string
      */
@@ -206,19 +211,21 @@ class Form
     }
 
     /**
-     * Set action URL
+     * Set action URL.
      *
      * @param $action
+     *
      * @return $this
      */
     public function setUrl($action)
     {
         $this->addAttribute('action', $action);
+
         return $this->addAttribute('url', $action);
     }
 
     /**
-     * get action URL
+     * get action URL.
      *
      *
      * @return string
@@ -228,32 +235,30 @@ class Form
         return $this->getAttribute('url');
     }
 
-
     /**
-     * Magic method for exceptional use
+     * Magic method for exceptional use.
      *
      * @param $name
      * @param $arguments
      */
-    function __call($name, $arguments)
+    public function __call($name, $arguments)
     {
-
-        if (preg_match('#add(?<type>\w+)#', $name, $match)){
+        if (preg_match('#add(?<type>\w+)#', $name, $match)) {
 
             // cas des action
             if (substr($match['type'], 0, 6) == 'Action') {
                 $type = substr($match['type'], 6);
-                $class = new \ReflectionClass(__NAMESPACE__ . '\Element\\' . $type);
+                $class = new \ReflectionClass(__NAMESPACE__.'\Element\\'.$type);
                 $e = $class->newInstanceArgs($arguments);
                 $this->addAction($e);
 
                 // cas des element
             } else {
                 $namespace = __NAMESPACE__;
-                if(!empty(configurator()->get('form.namespace'))){
+                if (!empty(configurator()->get('form.namespace'))) {
                     $namespace = configurator()->get('form.namespace');
                 }
-                $class = new \ReflectionClass($namespace . '\Element\\' . $match['type']);
+                $class = new \ReflectionClass($namespace.'\Element\\'.$match['type']);
                 $e = $class->newInstanceArgs($arguments);
                 $this->addElement($e);
             }
@@ -261,7 +266,7 @@ class Form
     }
 
     /**
-     * Render the polliwog
+     * Render the polliwog.
      *
      * @return mixed|string
      */
@@ -270,39 +275,34 @@ class Form
         $render = '';
         try {
             $render = $this->getRenderer()->render('form', $this);
-        } catch(\Exception $e){
-            dd($e->getMessage());//@todo find a good way to warn the developper
+        } catch (\Exception $e) {
+            dd($e->getMessage()); //@todo find a good way to warn the developper
         }
 
         return $render;
     }
 
-
     /**
-     * Overload parent method for form specification
+     * Overload parent method for form specification.
      *
      * @return string
-     *
      */
     public function __toString()
     {
         return $this->render();
     }
 
-
     /**
-     *
-     * Fill the form with $values
+     * Fill the form with $values.
      *
      * @param array $values
+     *
      * @return $this
      */
     public function populate(array $values, $alias = false)
     {
-
-
-        foreach($this->getElements() as $e) {
-            /** @var $e \FrenchFrogs\Form\Element\Element */
+        foreach ($this->getElements() as $e) {
+            /* @var $e \FrenchFrogs\Form\Element\Element */
             $name = $alias && $e->hasAlias() ? $e->getAlias() : $e->getName();
             if (array_key_exists($name, $values) !== false) {
                 $e->setValue($values[$name]);
@@ -312,11 +312,11 @@ class Form
         return $this;
     }
 
-
     /**
-     * Return the value single value of the $name element
+     * Return the value single value of the $name element.
      *
      * @param $name
+     *
      * @return mixed
      */
     public function getValue($name)
@@ -324,30 +324,30 @@ class Form
         return $this->getElement($name)->getValue();
     }
 
-
     /**
-     * Return all values from all elements
+     * Return all values from all elements.
      *
      * @return array
      */
     public function getValues()
     {
-
         $values = [];
-        foreach($this->getElements() as $name => $e) {
+        foreach ($this->getElements() as $name => $e) {
             /** @var $e \FrenchFrogs\Form\Element\Element */
-            if ($e->isDiscreet()) {continue;}
+            if ($e->isDiscreet()) {
+                continue;
+            }
             $values[$name] = $e->getValue();
         }
 
         return $values;
     }
 
-
     /**
-     * Return single filtered value from the $name element
+     * Return single filtered value from the $name element.
      *
      * @param $name
+     *
      * @return mixed
      */
     public function getFilteredValue($name)
@@ -355,9 +355,8 @@ class Form
         return $this->getElement($name)->getFilteredValue();
     }
 
-
     /**
-     * Return all filtered values from all elements
+     * Return all filtered values from all elements.
      *
      * @return array
      */
@@ -365,41 +364,47 @@ class Form
     {
         $values = [];
 
-        foreach($this->getElements() as $name => $e){
+        foreach ($this->getElements() as $name => $e) {
             /** @var \FrenchFrogs\Form\Element\Element $e */
-            if ($e->isDiscreet()) {continue;}
+            if ($e->isDiscreet()) {
+                continue;
+            }
             $values[$name] = $e->getFilteredValue();
         }
+
         return $values;
     }
 
-
     public function getFilteredAliasValues()
     {
-
         $values = [];
-        foreach($this->getElements() as $name => $e){
+        foreach ($this->getElements() as $name => $e) {
             /** @var \FrenchFrogs\Form\Element\Element $e */
-            if ($e->isDiscreet()) {continue;}
+            if ($e->isDiscreet()) {
+                continue;
+            }
             $name = $e->hasAlias() ? $e->getAlias() : $name;
 
             if ($e instanceof \FrenchFrogs\Form\Element\Checkbox) {
-                if(empty($values[$name])) {
+                if (empty($values[$name])) {
                     $values[$name] = [];
                 }
 
-                foreach((array) $e->getFilteredValue() as $value) {
-                    if(!empty($value)){$values[$name][] = $value;}
+                foreach ((array) $e->getFilteredValue() as $value) {
+                    if (!empty($value)) {
+                        $values[$name][] = $value;
+                    }
                 }
             } else {
                 $values[$name] = $e->getFilteredValue();
             }
         }
+
         return $values;
     }
 
     /**
-     * *********************
+     * *********************.
      *
      * VALIDATOR
      *
@@ -407,17 +412,18 @@ class Form
      */
 
     /**
-     * Valid all the form elements
+     * Valid all the form elements.
      *
-     * @param array $values
+     * @param array     $values
      * @param bool|true $populate
+     *
      * @return $this
      */
     public function valid(array $values, $populate = true)
     {
-        foreach($this->getElements() as $index => &$element) {
-            if(!array_key_exists($index, $values)) {
-                if(is_a($element, 'FrenchFrogs\Form\Element\Boolean')){
+        foreach ($this->getElements() as $index => &$element) {
+            if (!array_key_exists($index, $values)) {
+                if (is_a($element, 'FrenchFrogs\Form\Element\Boolean')) {
                     $values[$index] = 0;
                 } else {
                     $values[$index] = '';
@@ -429,25 +435,24 @@ class Form
             if (!$element->isValid()) {
                 $this->getValidator()->addError($index, $element->getErrorAsString());
             }
-
         }
 
         return $this;
     }
 
-
     /**
-     * Return string formated error from the form validation
+     * Return string formated error from the form validation.
      *
      *
      * @return string
      */
     public function getErrorAsString()
     {
-        $errors  = [];
-        foreach($this->getValidator()->getErrors() as $index => $message){
+        $errors = [];
+        foreach ($this->getValidator()->getErrors() as $index => $message) {
             $errors[] = sprintf('%s:%s %s', $index, PHP_EOL, $message);
         }
+
         return implode(PHP_EOL, $errors);
     }
 }

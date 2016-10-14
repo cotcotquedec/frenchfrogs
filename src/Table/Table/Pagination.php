@@ -1,22 +1,23 @@
-<?php namespace FrenchFrogs\Table\Table;
+<?php
+
+namespace FrenchFrogs\Table\Table;
 
 /**
- * Pagination trait for table polliwog
+ * Pagination trait for table polliwog.
  *
  * Class Pagination
- * @package FrenchFrogs\Table\Table
  */
 trait Pagination
 {
     /**
-     * Item per table page
+     * Item per table page.
      *
      * @var int
      */
     protected $itemsPerPage = 25;
 
     /**
-     * Total number of item
+     * Total number of item.
      *
      * @var
      */
@@ -24,7 +25,7 @@ trait Pagination
 
 
     /**
-     * Actual page
+     * Actual page.
      *
      * @var int
      */
@@ -32,34 +33,35 @@ trait Pagination
 
 
     /**
-     * Url for navigation
+     * Url for navigation.
      *
      * @var
      */
     protected $url;
 
     /**
-     * Name of the $page param url
+     * Name of the $page param url.
      *
      * @var string
      */
     protected $paramPage = 'page';
 
-
     /**
-     * Setter for $paramPage attribute
+     * Setter for $paramPage attribute.
      *
      * @param $paramPage
+     *
      * @return $this
      */
     public function setParamPage($paramPage)
     {
         $this->paramPage = strval($paramPage);
+
         return $this;
     }
 
     /**
-     * Getter for $paramPage attribute
+     * Getter for $paramPage attribute.
      *
      * @return string
      */
@@ -68,9 +70,8 @@ trait Pagination
         return $this->paramPage;
     }
 
-
     /**
-     * getter for $itemsPerPage attribute
+     * getter for $itemsPerPage attribute.
      *
      * @return int
      */
@@ -80,19 +81,21 @@ trait Pagination
     }
 
     /**
-     * Setter for $itemsPerPage attribute
+     * Setter for $itemsPerPage attribute.
      *
      * @param $itemsPerPage
+     *
      * @return $this
      */
     public function setItemsPerPage($itemsPerPage)
     {
         $this->itemsPerPage = $itemsPerPage;
+
         return $this;
     }
 
     /**
-     * Getter for $ItemsTotal attribute
+     * Getter for $ItemsTotal attribute.
      *
      * @return mixed
      */
@@ -102,7 +105,7 @@ trait Pagination
     }
 
     /**
-     * Getter for $page attribute
+     * Getter for $page attribute.
      *
      * @return int
      */
@@ -111,22 +114,22 @@ trait Pagination
         return $this->page;
     }
 
-
     /**
-     * Setter for $page attribute
+     * Setter for $page attribute.
      *
      * @param $page
+     *
      * @return $this
      */
     public function setPage($page)
     {
         $this->page = $page;
+
         return $this;
     }
 
-
     /**
-     * Return the total number of page
+     * Return the total number of page.
      *
      * @return float
      */
@@ -135,9 +138,8 @@ trait Pagination
         return floor(($this->getItemsTotal() - 1) / $this->getItemsPerPage());
     }
 
-
     /**
-     * Return the item offset
+     * Return the item offset.
      *
      * @return float
      */
@@ -147,19 +149,21 @@ trait Pagination
     }
 
     /**
-     * Set page from an offset count items
+     * Set page from an offset count items.
      *
      * @param $items
+     *
      * @return $this
      */
     public function setPageFromItemsOffset($items)
     {
         $this->setPage(ceil(--$items / $this->getItemsPerPage()) + 1);
+
         return $this;
     }
 
     /**
-     * Getter for $url attribute
+     * Getter for $url attribute.
      *
      * @return mixed
      */
@@ -169,20 +173,22 @@ trait Pagination
     }
 
     /**
-     * Setter for $url attribute
+     * Setter for $url attribute.
      *
      *
      * @param $url
+     *
      * @return $this
      */
     public function setUrl($url)
     {
         $this->url = $url;
+
         return $this;
     }
 
     /**
-     * Return TRUE if the url is set
+     * Return TRUE if the url is set.
      *
      * @return bool
      */
@@ -191,23 +197,23 @@ trait Pagination
         return isset($this->url);
     }
 
-
     /**
-     *  Return the $page url
+     *  Return the $page url.
      *
      * @param $page
+     *
      * @return string
      */
     public function getPageUrl($page)
     {
-        return url($this->getUrl()) . '?' . http_build_query(['page' => $page]);
+        return url($this->getUrl()).'?'.http_build_query(['page' => $page]);
     }
 
-
     /**
-     * Fast pagination setup
+     * Fast pagination setup.
      *
      * @param array $params
+     *
      * @return $this
      */
     public function paginate(array $params)
@@ -220,5 +226,4 @@ trait Pagination
 
         return $this;
     }
-
 }

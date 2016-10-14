@@ -2,27 +2,27 @@
 
 use FrenchFrogs\Core\Configurator;
 
-
 if (!function_exists('html')) {
     /**
-     * Render an HTML tag
+     * Render an HTML tag.
      *
      * @param $tag
-     * @param array $attributes
+     * @param array  $attributes
      * @param string $content
+     *
      * @return string
      */
     function html($tag, $attributes = [], $content = '')
     {
         $autoclosed = [
             'area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input',
-            'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr'
+            'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr',
         ];
 
         // TAG
         $string = $tag;
-        if (!preg_match('#^(?<tag>[^\.^\#]+)(?<string>.*)#',$string, $match)) {
-            exc('Impossible d\'isoler le tag dans : ' . $string);
+        if (!preg_match('#^(?<tag>[^\.^\#]+)(?<string>.*)#', $string, $match)) {
+            exc('Impossible d\'isoler le tag dans : '.$string);
         }
 
         $tag = $match['tag'];
@@ -35,14 +35,14 @@ if (!function_exists('html')) {
         }
 
         // CLASS
-        if ( preg_match_all('#[\.](?<class>[^\.]+)#', $string, $match)) {
+        if (preg_match_all('#[\.](?<class>[^\.]+)#', $string, $match)) {
             empty($attributes['class']) ? $attributes['class'] = '' : $attributes['class'] .= '';
             $attributes['class'] .= implode(' ', $match['class']);
         }
 
         // Attributes
         foreach ($attributes as $key => &$value) {
-            $value = sprintf('%s="%s"', $key, str_replace('"', '&quot;', $value)) . ' ';
+            $value = sprintf('%s="%s"', $key, str_replace('"', '&quot;', $value)).' ';
         }
         $attributes = implode(' ', $attributes);
 
@@ -51,7 +51,7 @@ if (!function_exists('html')) {
 }
 
 
-/**
+/*
  * Debug => die function
  *
  * dd => debug die
@@ -59,47 +59,54 @@ if (!function_exists('html')) {
  *
  */
 if (!function_exists('dd')) {
-
     function dd()
     {
-        array_map(function($x) { !d($x); }, func_get_args());
-        d(microtime(),'Stats execution');
+        array_map(function ($x) {
+            !d($x);
+        }, func_get_args());
+        d(microtime(), 'Stats execution');
         die;
     }
 }
 
 
-if (! function_exists('d')) {
+if (!function_exists('d')) {
     /**
      * Dump the passed variables and end the script.
      *
      * @param  mixed
+     *
      * @return void
      */
     function d()
     {
         array_map(function ($x) {
-            (new Illuminate\Support\Debug\Dumper)->dump($x);
+            (new Illuminate\Support\Debug\Dumper())->dump($x);
         }, func_get_args());
     }
 }
 
 /**
- * Return human format octet size (mo, go etc...)
+ * Return human format octet size (mo, go etc...).
  *
  * @param unknown_type $size
  * @param unknown_type $round
+ *
  * @throws Exception
  */
-function human_size($size, $round = 1) {
-
-    $unit = array('Ko', 'Mo', 'Go', 'To');
+function human_size($size, $round = 1)
+{
+    $unit = ['Ko', 'Mo', 'Go', 'To'];
 
     // initialisation du resultat
-    $result = $size . 'o';
+    $result = $size.'o';
 
     // calcul
-    foreach ($unit as $u) {if (($size /= 1024) > 1) {$result = round($size, $round) . $u;}}
+    foreach ($unit as $u) {
+        if (($size /= 1024) > 1) {
+            $result = round($size, $round).$u;
+        }
+    }
 
     return $result;
 }
@@ -107,9 +114,10 @@ function human_size($size, $round = 1) {
 
 
 /**
- * Return the namespace configurator
+ * Return the namespace configurator.
  *
  * @param null $namespace
+ *
  * @return \FrenchFrogs\Core\Configurator
  */
 function configurator($namespace = null)
@@ -119,9 +127,10 @@ function configurator($namespace = null)
 
 
 /**
- * Return new panel polliwog instance
+ * Return new panel polliwog instance.
  *
  * @param ...$args
+ *
  * @return FrenchFrogs\Panel\Panel\Panel
  */
 function panel(...$args)
@@ -131,13 +140,15 @@ function panel(...$args)
 
     // build the instance
     $reflection = new ReflectionClass($class);
+
     return $reflection->newInstanceArgs($args);
 }
 
 /**
- * Return new table polliwog instance
+ * Return new table polliwog instance.
  *
  * @param ...$args
+ *
  * @return FrenchFrogs\Table\Table\Table
  */
 function table(...$args)
@@ -147,14 +158,16 @@ function table(...$args)
 
     // build the instance
     $reflection = new ReflectionClass($class);
+
     return $reflection->newInstanceArgs($args);
 }
 
 /**
- * Return a new form polliwog instance
+ * Return a new form polliwog instance.
  *
  * @param ...$args
- * @return  FrenchFrogs\Form\Form\Form
+ *
+ * @return FrenchFrogs\Form\Form\Form
  */
 function form(...$args)
 {
@@ -163,13 +176,15 @@ function form(...$args)
 
     // build the instance
     $reflection = new ReflectionClass($class);
+
     return $reflection->newInstanceArgs($args);
 }
 
 /**
- * Return new modal polliwog
+ * Return new modal polliwog.
  *
  * @param ...$args
+ *
  * @return FrenchFrogs\modal\Modal\Modal
  */
 function modal(...$args)
@@ -179,26 +194,29 @@ function modal(...$args)
 
     // build the instance
     $reflection = new ReflectionClass($class);
+
     return $reflection->newInstanceArgs($args);
 }
 
 /**
- * Return a Javascript Container polliwog
+ * Return a Javascript Container polliwog.
  *
  * @param $namespace
  * @param null $selector
  * @param null $function
  * @param ...$params
+ *
  * @return \FrenchFrogs\Container\Javascript
  */
-function js($namespace = null, $selector = null, $function = null, ...$params){
+function js($namespace = null, $selector = null, $function = null, ...$params)
+{
     /** @var $container FrenchFrogs\Container\Javascript */
     $container = FrenchFrogs\Container\Javascript::getInstance($namespace);
 
-    if (!is_null($function)){
+    if (!is_null($function)) {
         array_unshift($params, $selector, $function);
         call_user_func_array([$container, 'appendJs'], $params);
-    } elseif(!is_null($selector)) {
+    } elseif (!is_null($selector)) {
         $container->append($selector);
     }
 
@@ -207,55 +225,60 @@ function js($namespace = null, $selector = null, $function = null, ...$params){
 
 
 /**
- * Return css cointainer
+ * Return css cointainer.
  *
  * @param null $href
+ *
  * @return \FrenchFrogs\Container\Css
  */
-function css($namespace  = null) {
+function css($namespace = null)
+{
     return FrenchFrogs\Container\Css::getInstance($namespace);
 }
 
 
 /**
- * Return a head container
+ * Return a head container.
  *
  * @param $name
  * @param $value
  * @param null $conditional
+ *
  * @return $this
  */
-function h($name = null, $value = null, $conditional = null) {
+function h($name = null, $value = null, $conditional = null)
+{
     /** @var $container FrenchFrogs\Container\Head */
     $container = FrenchFrogs\Container\Head::getInstance();
 
     if (!is_null($name)) {
         $container->meta($name, $value, $conditional);
     }
+
     return $container;
 }
 
 /**
- * Return action form url
+ * Return action form url.
  *
  * @param $controller
  * @param string $action
- * @param array $params
+ * @param array  $params
+ *
  * @return string
  */
 function action_url($controller, $action = 'getIndex', $params = [], $query = [])
 {
-
     if ($controller[0] != '\\') {
-        $controller = '\\' . $controller;
+        $controller = '\\'.$controller;
     }
 
-    return URL::action($controller . '@' . $action, $params, false) . (empty($query) ? '' : ('?' . http_build_query($query)));
+    return URL::action($controller.'@'.$action, $params, false).(empty($query) ? '' : ('?'.http_build_query($query)));
 }
 
 
 /**
- * Return ruler polliwog
+ * Return ruler polliwog.
  *
  * @return \FrenchFrogs\App\Models\Acl
  */
@@ -270,24 +293,26 @@ function ruler($namespace = null)
 }
 
 /**
- *
- *
  * @param array ...$params
+ *
  * @return \Illuminate\Database\Query\Expression
  */
-function raw(...$params) {
+function raw(...$params)
+{
     return DB::raw(...$params);
 }
 
 /**
- * shortcut for transaction
+ * shortcut for transaction.
  *
  *
  * @param $callable
  * @param null $connection
- * @return mixed
+ *
  * @throws \Exception
  * @throws \Throwable
+ *
+ * @return mixed
  */
 function transaction($callable, $connection = null)
 {
@@ -299,14 +324,15 @@ function transaction($callable, $connection = null)
 }
 
 /**
- * Query Builder
+ * Query Builder.
  *
  * @param $table
  * @param array $columns
+ *
  * @return Illuminate\Database\Query\Builder
  */
-function query($table, $columns = null, $connection = null) {
-
+function query($table, $columns = null, $connection = null)
+{
     $query = DB::connection($connection)->table($table);
 
     if (!is_null($columns)) {
@@ -317,63 +343,72 @@ function query($table, $columns = null, $connection = null) {
 }
 
 /**
- * Generation ou formatage d'un uuid
+ * Generation ou formatage d'un uuid.
  *
  * @param string $format
- * @param null $uuid
- * @return NULL|number|string
+ * @param null   $uuid
+ *
  * @throws \Exception
+ *
+ * @return null|number|string
  */
-function uuid($format = 'bytes', $uuid = null) {
-    if(is_null($uuid)){
+function uuid($format = 'bytes', $uuid = null)
+{
+    if (is_null($uuid)) {
         $uuid = Uuid::generate(4)->$format;
-    }else{
+    } else {
         $uuid = Uuid::import($uuid)->$format;
     }
+
     return $uuid;
 }
 
 
 /**
- * Filter value
+ * Filter value.
  *
  * @param $value
  * @param $filters
  */
-function f($value, $filters) {
+function f($value, $filters)
+{
     $filter = new \FrenchFrogs\Filterer\Filterer();
     $filter->setFilters($filters);
+
     return $filter->filter($value);
 }
 
 /**
- * Validate value
+ * Validate value.
  *
  * @param $value
  * @param $validators
+ *
  * @return bool
  */
-function v($value, $validators) {
+function v($value, $validators)
+{
     $validator = Validator::make(['v' => $value], ['v' => $validators]);
+
     return !$validator->fails();
 }
 
 /**
- * Return the filtered value if correct, else return null
+ * Return the filtered value if correct, else return null.
  *
  * @param $value
  * @param null $filters
  * @param null $validators
+ *
  * @return mixed|null
  */
-function fv($value, $filters = null, $validators = null) {
-
+function fv($value, $filters = null, $validators = null)
+{
     if (!is_null($filters)) {
         $value = f($value, $filters);
     }
 
     if (!is_null($validators)) {
-
         if (!v($value, $validators)) {
             $value = null;
         }
@@ -384,27 +419,29 @@ function fv($value, $filters = null, $validators = null) {
 
 
 /**
- * Return true is application is in debug mode
+ * Return true is application is in debug mode.
  *
  * @return mixed
  */
-function is_debug() {
+function is_debug()
+{
     return config('app.debug');
 }
 
 /**
- * return true if application is in production mode
+ * return true if application is in production mode.
  *
  * @return bool
  */
-function production(){
+function production()
+{
     return app()->environment() == 'production';
 }
 
 
 
 /**
- * Log une erreur
+ * Log une erreur.
  *
  * @param $message
  * @param array $context
@@ -416,7 +453,7 @@ function le($message, $context = [])
 
 
 /**
- * Log un warning
+ * Log un warning.
  *
  * @param $message
  * @param array $context
@@ -428,10 +465,11 @@ function lw($message, $context = [])
 
 
 /**
- * Log une alerte
+ * Log une alerte.
  *
  * @param $message
  * @param array $context
+ *
  * @return bool
  */
 function la($message, $context = [])
@@ -440,10 +478,11 @@ function la($message, $context = [])
 }
 
 /**
- * Log une critique
+ * Log une critique.
  *
  * @param $message
  * @param array $context
+ *
  * @return bool
  */
 function lc($message, $context = [])
@@ -453,10 +492,11 @@ function lc($message, $context = [])
 
 
 /**
- * Log une info
+ * Log une info.
  *
  * @param $message
  * @param array $context
+ *
  * @return bool
  */
 function li($message, $context = [])
@@ -465,10 +505,11 @@ function li($message, $context = [])
 }
 
 /**
- * Log un debug
+ * Log un debug.
  *
  * @param $message
  * @param array $context
+ *
  * @return bool
  */
 function ld($message, $context = [])
@@ -478,17 +519,19 @@ function ld($message, $context = [])
 
 
 /**
- * Format a number in french format
+ * Format a number in french format.
  *
  * @param $i
  * @param int $decimal
+ *
  * @return string
  */
-function number_french($i, $decimal = 0) {
+function number_french($i, $decimal = 0)
+{
     return number_format($i, $decimal, '.', ' ');
 }
 
-/**
+/*
  * renvoie le characté est reel
  *
  * @param $u
@@ -497,11 +540,11 @@ function number_french($i, $decimal = 0) {
 if (!function_exists('ffunichr')) {
     function ffunichr($u)
     {
-        return mb_convert_encoding('&#' . intval($u) . ';', 'UTF-8', 'HTML-ENTITIES');
+        return mb_convert_encoding('&#'.intval($u).';', 'UTF-8', 'HTML-ENTITIES');
     }
 }
 
-/**
+/*
  * Extract meta data from url
  *
  * @param $url
@@ -510,7 +553,6 @@ if (!function_exists('ffunichr')) {
 if (!function_exists('extract_meta_url')) {
     function extract_meta_url($url)
     {
-
         $data = [];
         try {
             $client = new \GuzzleHttp\Client();
@@ -542,9 +584,7 @@ if (!function_exists('extract_meta_url')) {
 
                 // other meta
                 if (preg_match_all('#<meta[^>]+/?>#s', $content, $matches)) {
-
                     foreach ($matches[0] as $meta) {
-
                         if (preg_match('#property=.og:description.#', $meta)) {
                             if (preg_match('#content="(?<description>[^"]+)"#s', $meta, $match)) {
                                 $description = '';
@@ -555,7 +595,6 @@ if (!function_exists('extract_meta_url')) {
                             }
                         } elseif (preg_match('#property=.og:image[^:]#', $meta)) {
                             if (preg_match('#content="(?<image>[^"]+)"#', $meta, $match)) {
-
                                 $image = '';
                                 foreach (str_split($match['image']) as $c) {
                                     $image .= ffunichr(ord($c));
@@ -582,7 +621,7 @@ if (!function_exists('extract_meta_url')) {
     }
 }
 
-/**
+/*
  * Throw new Exception
  *
  * @param $message
@@ -590,8 +629,8 @@ if (!function_exists('extract_meta_url')) {
  * @throws \Exception
  */
 if (!function_exists('exc')) {
-    function exc($message, $quiet = false) {
-
+    function exc($message, $quiet = false)
+    {
         $e = new \Exception($message);
         le($e->getMessage());
         ld($e->getTraceAsString());
@@ -603,13 +642,13 @@ if (!function_exists('exc')) {
 }
 
 /**
- * Return auth user information
+ * Return auth user information.
  *
- * @package ACL
  *
  * @return mixed
  */
-function user($info = null) {
+function user($info = null)
+{
 
     // if $info is not null we send the wanted info
     if (!is_null($info)) {
@@ -624,12 +663,12 @@ function user($info = null) {
 
 
 /**
- * Return Reference for the collection
+ * Return Reference for the collection.
  *
- * @package Reference
  * @return \FrenchFrogs\App\Models\Reference
  */
-function ref($collection, $force_refresh = false) {
+function ref($collection, $force_refresh = false)
+{
 
     // recuperation de la collection
     $reference = \FrenchFrogs\App\Models\Reference::getInstance($collection);

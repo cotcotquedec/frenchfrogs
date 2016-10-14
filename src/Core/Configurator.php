@@ -1,91 +1,93 @@
-<?php namespace FrenchFrogs\Core;
+<?php
+
+namespace FrenchFrogs\Core;
 
 use FrenchFrogs;
 
-
 class Configurator
 {
-
     const NAMESPACE_DEFAULT = 'default';
 
     /**
-     * Namespace default
+     * Namespace default.
+     *
      * @var string
      */
     protected static $namespace_default;
 
     /**
-     * Config
+     * Config.
      *
      * @var array
      */
     protected $config = [
-        'panel.class' => FrenchFrogs\Panel\Panel\Panel::class,
-        'panel.renderer.class' =>  FrenchFrogs\Panel\Renderer\AdminLTE::class,
+        'panel.class'          => FrenchFrogs\Panel\Panel\Panel::class,
+        'panel.renderer.class' => FrenchFrogs\Panel\Renderer\AdminLTE::class,
 
 
-        'table.class' => FrenchFrogs\Table\Table\Table::class,
+        'table.class'          => FrenchFrogs\Table\Table\Table::class,
         'table.renderer.class' => FrenchFrogs\Table\Renderer\AdminLTE::class,
         'table.filterer.class' => FrenchFrogs\Filterer\Filterer::class,
 
-        'table.column.date.format' => 'd/m/Y',
+        'table.column.date.format'     => 'd/m/Y',
         'table.column.datetime.format' => 'd/m/Y h:i',
 
-        'form.renderer.class' => FrenchFrogs\Form\Renderer\AdminLTE::class,
+        'form.renderer.class'       => FrenchFrogs\Form\Renderer\AdminLTE::class,
         'form.renderer.modal.class' => FrenchFrogs\Form\Renderer\AdminLTEModal::class,
-        'form.validator.class' => FrenchFrogs\Validator\Validator::class,
-        'form.filterer.class' => FrenchFrogs\Filterer\Filterer::class,
+        'form.validator.class'      => FrenchFrogs\Validator\Validator::class,
+        'form.filterer.class'       => FrenchFrogs\Filterer\Filterer::class,
 
         'form.element.date.formatjs' => 'yyyy-mm-dd',
-        'form.element.date.format' => 'Y-m-d',
+        'form.element.date.format'   => 'Y-m-d',
 
 
-        'form.default.method' => 'POST',
+        'form.default.method'        => 'POST',
         'form.default.has_csrfToken' => true,
 
-        'modal.class' => FrenchFrogs\Modal\Modal\Modal::class,
-        'modal.renderer.class' => FrenchFrogs\Modal\Renderer\Bootstrap::class,
+        'modal.class'            => FrenchFrogs\Modal\Modal\Modal::class,
+        'modal.renderer.class'   => FrenchFrogs\Modal\Renderer\Bootstrap::class,
         'modal.closeButtonLabel' => 'Fermer',
-        'modal.backdrop' => true,
-        'modal.escToclose' => true,
-        'modal.is_remote' => false,
-        'modal.remote.id' => 'modal-remote',
+        'modal.backdrop'         => true,
+        'modal.escToclose'       => true,
+        'modal.is_remote'        => false,
+        'modal.remote.id'        => 'modal-remote',
 
 
-        'ruler.class' => FrenchFrogs\Ruler\Ruler\Ruler::class,
+        'ruler.class'          => FrenchFrogs\Ruler\Ruler\Ruler::class,
         'ruler.renderer.class' => FrenchFrogs\Ruler\Renderer\AdminLTE::class,
 
         'toastr.success.default' => 'Action realised with success',
-        'toastr.error.default' => 'Oups, something bad happened',
+        'toastr.error.default'   => 'Oups, something bad happened',
         'toastr.warning.default' => 'Something happened....',
 
 
-        'button.edit.icon' => 'fa fa-pencil',
-        'button.edit.name' => 'ff_edit',
+        'button.edit.icon'  => 'fa fa-pencil',
+        'button.edit.name'  => 'ff_edit',
         'button.edit.label' => 'Edit',
 
-        'button.delete.icon' => 'fa fa-trash-o',
-        'button.delete.name' => 'ff_delete',
+        'button.delete.icon'  => 'fa fa-trash-o',
+        'button.delete.name'  => 'ff_delete',
         'button.delete.label' => 'Delete',
 
 //        'container.css.targetPath' => ,
     ];
 
     /**
-     * Instances
+     * Instances.
      *
      * @var array
      */
     protected static $instances = [];
 
     /**
-     * constructor du singleton
+     * constructor du singleton.
      *
      * @param $namespace
+     *
      * @return static
      */
-    public static function getInstance($namespace = null) {
-
+    public static function getInstance($namespace = null)
+    {
         $namespace = is_null($namespace) ? static::getNamespaceDefault() : $namespace;
 
         if (!array_key_exists($namespace, self::$instances)) {
@@ -96,23 +98,22 @@ class Configurator
     }
 
     /**
-     * Constructor for a default configuration
+     * Constructor for a default configuration.
      */
     protected function __construct()
     {
-
     }
 
     /**
-     * Get a config from $index
+     * Get a config from $index.
      *
      * @param $index
      * @param null $default
+     *
      * @return mixed
      */
     public function get($index, $default = null)
     {
-
         if ($this->has($index)) {
             return $this->config[$index];
         }
@@ -120,32 +121,34 @@ class Configurator
         return $default;
     }
 
-
     /**
-     * Return an instantiated object
+     * Return an instantiated object.
      *
      * @param $index
-     * @param null $default
+     * @param null  $default
      * @param array $params
      *
-     * @return object
      * @throws \Exception
+     *
+     * @return object
      */
     public function build($index, $default = null, $params = [])
     {
         $class = $this->get($index, $default);
         if (!class_exists($class)) {
-            throw new \Exception('Class doesn\'t exist for the index : ' .$index);
+            throw new \Exception('Class doesn\'t exist for the index : '.$index);
         }
 
         $class = new \ReflectionClass($class);
+
         return $class->newInstanceArgs($params);
     }
 
     /**
-     * Return TRUE if $index exist in config container
+     * Return TRUE if $index exist in config container.
      *
      * @param $index
+     *
      * @return bool
      */
     public function has($index)
@@ -154,20 +157,21 @@ class Configurator
     }
 
     /**
-     * Merge $config with $config attribute
+     * Merge $config with $config attribute.
      *
      * @param array $config
+     *
      * @return $this
      */
     public function merge(array $config)
     {
-        $this->config = array_merge($this->config,$config);
+        $this->config = array_merge($this->config, $config);
+
         return $this;
     }
 
-
     /**
-     * Add a single config in $config
+     * Add a single config in $config.
      *
      * @param $index
      * @param $value
@@ -177,9 +181,8 @@ class Configurator
         $this->config[$index] = $value;
     }
 
-
     /**
-     * Remove a single config in $config container
+     * Remove a single config in $config container.
      *
      * @param $index
      */
@@ -191,18 +194,17 @@ class Configurator
     }
 
     /**
-     * Setter for all the $config container
+     * Setter for all the $config container.
      *
      * @param array $config
      */
     public function setAll(array $config)
     {
-       $this->config = $config;
+        $this->config = $config;
     }
 
-
     /**
-     * Getter for all $config container
+     * Getter for all $config container.
      *
      * @return array
      */
@@ -212,8 +214,7 @@ class Configurator
     }
 
     /**
-     * Clear $config container
-     *
+     * Clear $config container.
      */
     public function clearAll()
     {

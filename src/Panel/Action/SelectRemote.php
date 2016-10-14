@@ -1,8 +1,10 @@
-<?php namespace FrenchFrogs\Panel\Action;
+<?php
+
+namespace FrenchFrogs\Panel\Action;
 
 use FrenchFrogs\Core;
-use FrenchFrogs\Html\Element;
 use FrenchFrogs\Form\Element\SelectRemote as FormSelectRemote;
+use FrenchFrogs\Html\Element;
 
 class SelectRemote extends Action
 {
@@ -15,27 +17,28 @@ class SelectRemote extends Action
     protected $element;
 
     /**
-     * Url action
+     * Url action.
      *
      * @var
      */
     protected $url;
 
-
     /**
-     * Setter for $element
+     * Setter for $element.
      *
      * @param \FrenchFrogs\Form\Element\SelectRemote $element
+     *
      * @return $this
      */
     public function setElement(FormSelectRemote $element)
     {
         $this->element = $element;
+
         return $this;
     }
 
     /**
-     * Getter for $element
+     * Getter for $element.
      *
      * @return \FrenchFrogs\Form\Element\SelectRemote
      */
@@ -45,19 +48,21 @@ class SelectRemote extends Action
     }
 
     /**
-     * Setter for $url
+     * Setter for $url.
      *
      * @param $url
+     *
      * @return $this
      */
     public function setUrl($url)
     {
         $this->url = $url;
+
         return $this;
     }
 
     /**
-     * getter for $url
+     * getter for $url.
      *
      * @return mixed
      */
@@ -67,35 +72,31 @@ class SelectRemote extends Action
     }
 
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $placeholder,  $data_url, $action_url,  $length = 3 )
+    public function __construct($name, $placeholder, $data_url, $action_url, $length = 3)
     {
         $element = new FormSelectRemote($name, $placeholder, $data_url, $length);
         $this->setElement($element);
         $this->setUrl($action_url);
     }
 
-
     /**
      * @return string
      */
     public function render()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('selectremote', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 
         return $render;
     }
-
-
 }

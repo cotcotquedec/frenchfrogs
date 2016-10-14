@@ -1,4 +1,6 @@
-<?php namespace FrenchFrogs\App\Models\Db\User;
+<?php
+
+namespace FrenchFrogs\App\Models\Db\User;
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,9 +14,8 @@ class Group extends Model
     public $primaryUuid = true;
     protected $table = 'user_group';
 
-
     /**
-     * Renvoie les utilisateurs associés au groupe
+     * Renvoie les utilisateurs associés au groupe.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */

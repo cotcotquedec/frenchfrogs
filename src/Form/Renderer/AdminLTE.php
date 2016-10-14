@@ -1,16 +1,13 @@
-<?php namespace FrenchFrogs\Form\Renderer;
+<?php
 
-use FrenchFrogs\Renderer;
+namespace FrenchFrogs\Form\Renderer;
+
 use FrenchFrogs\Form;
 use FrenchFrogs\Renderer\Style\Style;
 
-
 class AdminLTE extends Inline
 {
-
     /**
-     *
-     *
      * @var array
      */
     protected $renderers = [
@@ -42,57 +39,59 @@ class AdminLTE extends Inline
         'boolean',
         'select2',
         'time',
-        'pre'
+        'pre',
     ];
 
-
     /**
-     * Render checkbox multi
+     * Render checkbox multi.
      *
      * @param \FrenchFrogs\Form\Element\Checkbox $element
+     *
      * @return string
      */
     public function checkbox(Form\Element\Checkbox $element)
     {
 
         // CLASS
-        $class =  Style::FORM_GROUP_CLASS;
+        $class = Style::FORM_GROUP_CLASS;
 
         /// ERROR
-        if($hasError = !$element->getValidator()->isValid()){
+        if ($hasError = !$element->getValidator()->isValid()) {
             $element->addClass('form-error');
-            if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
-            $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
-                $message .= $error . ' ';
+            if (empty($element->getAttribute('data-placement'))) {
+                $element->addAttribute('data-placement', 'bottom');
             }
-            $element->addAttribute('data-original-title',$message);
-            $class .= ' ' .Style::FORM_GROUP_ERROR;
+            $message = '';
+            foreach ($element->getValidator()->getErrors() as $error) {
+                $message .= $error.' ';
+            }
+            $element->addAttribute('data-original-title', $message);
+            $class .= ' '.Style::FORM_GROUP_ERROR;
         }
 
         // LABEL
         $elementLabel = '';
         if ($element->getForm()->hasLabel()) {
-            $elementLabel = '<label for="' . $element->getName() . '[]" class="col-md-3 control-label">' . $element->getLabel() . ($element->hasRule('required') ? ' *' : '') . '</label>';
+            $elementLabel = '<label for="'.$element->getName().'[]" class="col-md-3 control-label">'.$element->getLabel().($element->hasRule('required') ? ' *' : '').'</label>';
         }
 
         // OPTIONS
         $options = '';
-        foreach($element->getOptions() as $value => $label){
+        foreach ($element->getOptions() as $value => $label) {
             $opt = '';
 
             // INPUT
-            $attr = ['type' => 'checkbox', 'name' => $element->getName() . '[]', 'value' => $value];
+            $attr = ['type' => 'checkbox', 'name' => $element->getName().'[]', 'value' => $value];
 
             // VALUE
             $values = (array) $element->getValue();
-            if (!is_null( $element->getValue()) && in_array($value, $values)) {
+            if (!is_null($element->getValue()) && in_array($value, $values)) {
                 $attr['checked'] = 'checked';
             }
 
             $opt .= html('input', $attr);
             $opt .= $label;
-            $options .=  html('div', ['class' => 'checkbox'], '<label>'.$opt.'</label>');
+            $options .= html('div', ['class' => 'checkbox'], '<label>'.$opt.'</label>');
         }
 
         // DESCRIPTION
@@ -101,41 +100,44 @@ class AdminLTE extends Inline
         }
 
         // INPUT
-        $html =  html('div', [], $options);
+        $html = html('div', [], $options);
 
         // FINAL CONTAINER
         $html = html('div', ['class' => 'col-md-9 checkbox'], $html);
-        return html('div', compact('class'), $elementLabel . $html);
+
+        return html('div', compact('class'), $elementLabel.$html);
     }
 
     /**
-     * Render boolean element
+     * Render boolean element.
      *
      * @param \FrenchFrogs\Form\Element\Boolean $element
+     *
      * @return string$
      */
     public function boolean(Form\Element\Boolean $element)
     {
         // CLASS
-        $class =  Style::FORM_GROUP_CLASS . ' row';
+        $class = Style::FORM_GROUP_CLASS.' row';
 
         // ERROR
-        if($hasError = !$element->getValidator()->isValid()){
-
+        if ($hasError = !$element->getValidator()->isValid()) {
             $element->addClass('form-error');
-            if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
-            $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
-                $message .= $error . ' ';
+            if (empty($element->getAttribute('data-placement'))) {
+                $element->addAttribute('data-placement', 'bottom');
             }
-            $element->addAttribute('data-original-title',$message);
-            $class .= ' ' .Style::FORM_GROUP_ERROR;
+            $message = '';
+            foreach ($element->getValidator()->getErrors() as $error) {
+                $message .= $error.' ';
+            }
+            $element->addAttribute('data-original-title', $message);
+            $class .= ' '.Style::FORM_GROUP_ERROR;
         }
 
         // LABEL
         $label = '';
         if ($element->getForm()->hasLabel()) {
-            $label = '<label for="' . $element->getName() . '" class="col-md-3 control-label">' . $element->getLabel() . ($element->hasRule('required') ? ' *' : '') . '</label>' . PHP_EOL;
+            $label = '<label for="'.$element->getName().'" class="col-md-3 control-label">'.$element->getLabel().($element->hasRule('required') ? ' *' : '').'</label>'.PHP_EOL;
         }
 
         // INPUT
@@ -158,6 +160,7 @@ class AdminLTE extends Inline
 
         // FINAL CONTAINER
         $html = html('div', ['class' => 'col-md-9'], $html);
-        return html('div', compact('class'), $label . $html);
+
+        return html('div', compact('class'), $label.$html);
     }
 }

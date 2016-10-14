@@ -1,4 +1,6 @@
-<?php namespace FrenchFrogs\App\Http\Middleware;
+<?php
+
+namespace FrenchFrogs\App\Http\Middleware;
 
 use Carbon\Carbon;
 use Closure;
@@ -16,7 +18,8 @@ class AuthMiddleware
     /**
      * Create a new filter instance.
      *
-     * @param  Auth $auth
+     * @param Auth $auth
+     *
      * @return void
      */
     public function __construct(Auth $auth)
@@ -24,10 +27,7 @@ class AuthMiddleware
         $this->auth = $auth;
     }
 
-
     /**
-     *
-     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function login()
@@ -55,6 +55,7 @@ class AuthMiddleware
                 // redirection
                 $url = $this->getRedirect();
                 $this->forgetRedirect();
+
                 return \redirect()->to($url);
             }
         }
@@ -63,7 +64,7 @@ class AuthMiddleware
     }
 
     /**
-     * Setter for redicrection URL
+     * Setter for redicrection URL.
      *
      * @param $url
      */
@@ -73,7 +74,7 @@ class AuthMiddleware
     }
 
     /**
-     * Return TRUE if a redirection url is set
+     * Return TRUE if a redirection url is set.
      *
      * @return bool
      */
@@ -83,7 +84,7 @@ class AuthMiddleware
     }
 
     /**
-     * Gettyter foir redirection URL
+     * Gettyter foir redirection URL.
      *
      * @return mixed
      */
@@ -93,21 +94,19 @@ class AuthMiddleware
     }
 
     /**
-     *
-     * Forget redirection URL
-     *
+     * Forget redirection URL.
      */
     public function forgetRedirect()
     {
         \Session::forget($this->redirectionSessionKey);
     }
 
-
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next, $interface = null, $viewLogin = null)
@@ -137,12 +136,13 @@ class AuthMiddleware
                     }
 
                     // set redirection session key
-                    $this->redirectionSessionKey = 'login.' . \Auth::getName() . '.redirect';
+                    $this->redirectionSessionKey = 'login.'.\Auth::getName().'.redirect';
 
                     // gestion d'une url de redirection
                     $url = $request->getRequestUri();
                     if ($url != '/') {
                         $this->hasRedirect() ?: $this->setRedirect($url);
+
                         return \redirect()->to('/');
                     }
 

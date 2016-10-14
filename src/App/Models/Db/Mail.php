@@ -1,7 +1,8 @@
-<?php namespace FrenchFrogs\App\Models\Db;
+<?php
+
+namespace FrenchFrogs\App\Models\Db;
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Mail extends Model
 {
@@ -10,7 +11,7 @@ class Mail extends Model
     protected $table = 'mail';
 
     /**
-     * Return true if mail is sent
+     * Return true if mail is sent.
      *
      * @return bool
      */

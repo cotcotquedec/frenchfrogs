@@ -1,11 +1,10 @@
-<?php namespace FrenchFrogs\Table\Column;
+<?php
 
+namespace FrenchFrogs\Table\Column;
 
 class Pre extends Text
 {
     /**
-     *
-     *
      * @return string
      */
     public function render(array $row)
@@ -13,7 +12,7 @@ class Pre extends Text
         $render = '';
         try {
             $render = $this->getRenderer()->render('pre', $this, $row);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

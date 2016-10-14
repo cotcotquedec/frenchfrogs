@@ -1,24 +1,23 @@
-<?php namespace FrenchFrogs\Business;
+<?php
+
+namespace FrenchFrogs\Business;
 
 /**
- * Overload Eloquent model for better use
+ * Overload Eloquent model for better use.
  *
  * Class Business
- *
- * @package FrenchFrogs\Business
  */
 abstract class Business
 {
-
     /**
-     * Set to TRUE if Business is managed with UUID as primary key
+     * Set to TRUE if Business is managed with UUID as primary key.
      *
      * @var bool
      */
-    static protected $is_uuid = true;
+    protected static $is_uuid = true;
 
     /**
-     * Primary key
+     * Primary key.
      *
      * @var mixed
      */
@@ -26,22 +25,22 @@ abstract class Business
 
 
     /**
-     * Model
+     * Model.
      *
      * @var \Illuminate\Database\Eloquent\Model
      */
     protected $model;
 
 
-    /**
-     * Class Name of the main model
-     *
-     * @var string
-     */
-     static protected $modelClass;
+     /**
+      * Class Name of the main model.
+      *
+      * @var string
+      */
+     protected static $modelClass;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param $id
      */
@@ -50,20 +49,20 @@ abstract class Business
         $this->id = static::isUuid() ? uuid('bytes', $id) : $id;
     }
 
-
     /**
-     * factory
+     * factory.
      *
      * @param $id
+     *
      * @return $this
      */
-    static public function get($id)
+    public static function get($id)
     {
         return new static($id);
     }
 
     /**
-     * Getter for ID
+     * Getter for ID.
      *
      * @return mixed
      */
@@ -73,7 +72,7 @@ abstract class Business
     }
 
     /**
-     * Return User as an array
+     * Return User as an array.
      *
      * @return array
      */
@@ -83,9 +82,10 @@ abstract class Business
     }
 
     /**
-     * return the main model
+     * return the main model.
      *
      * @param bool|false $reload
+     *
      * @return \Illuminate\Database\Eloquent\Model
      */
     public function getModel($reload = false)
@@ -98,32 +98,34 @@ abstract class Business
         return $this->model;
     }
 
-
     /**
-     * Save the model
+     * Save the model.
      *
      * @param array $data
+     *
      * @return $this
      */
     public function save(array $data)
     {
         $model = $this->getModel();
         $model->update($data);
+
         return $this;
     }
 
     /**
-     * Factory
+     * Factory.
      *
      * @param $data
+     *
      * @return Business
      */
-    static public function create(array $data)
+    public static function create(array $data)
     {
         $class = static::$modelClass;
 
         /** @var \Illuminate\Database\Eloquent\Model $model */
-        $model = new $class;
+        $model = new $class();
 
         $model = $class::create($data);
 
@@ -131,43 +133,43 @@ abstract class Business
     }
 
     /**
-     * destroy the select business
+     * destroy the select business.
+     *
+     * @throws \Exception
      *
      * @return null
-     * @throws \Exception
      */
     public function destroy()
     {
         $this->getModel()->delete();
-        return null;
     }
 
-
     /**
-     * return true id user exist
+     * return true id user exist.
      *
      * @param $id
+     *
      * @return bool
      */
-    static public function exists($id)
+    public static function exists($id)
     {
         try {
             $class = static::$modelClass;
             $class::findOrFail(static::isUuid() ? uuid('bytes', $id) : $id);
+
             return true;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
 
     /**
-     * Return true if $is_uuid id true
+     * Return true if $is_uuid id true.
      *
      * @return bool
      */
-    static function isUuid()
+    public static function isUuid()
     {
         return (bool) static::$is_uuid;
     }
-
 }

@@ -1,17 +1,17 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class Boolean extends Element
 {
-
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $label = '', $attr = [] )
+    public function __construct($name, $label = '', $attr = [])
     {
         $this->setAttributes($attr);
         $this->setName($name);
@@ -21,9 +21,10 @@ class Boolean extends Element
     }
 
     /**
-     * Override of parent class
+     * Override of parent class.
      *
      * @param mixed $value
+     *
      * @return $this
      */
     public function setValue($value)
@@ -39,62 +40,63 @@ class Boolean extends Element
         return (bool) $this->value;
     }
 
-
     /**
-     * Set size to Small
+     * Set size to Small.
      *
      * @return $this
      */
     public function setSizeAtSmall()
     {
         $this->addAttribute('data-size', 'small');
+
         return $this;
     }
 
     /**
-     * Set size to normal
+     * Set size to normal.
      *
      * @return $this
      */
     public function setSizeAtNormal()
     {
         $this->addAttribute('data-size', 'normal');
+
         return $this;
     }
 
     /**
-     * Set size to large
+     * Set size to large.
      *
      * @return $this
      */
     public function setSizeAtLarge()
     {
         $this->addAttribute('data-size', 'large');
+
         return $this;
     }
 
     /**
-     * unset size
+     * unset size.
      *
      * @return $this
      */
     public function removeSize()
     {
         $this->removeAttribute('data-size');
+
         return $this;
     }
-
 
     /**
      * @return string
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('boolean', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

@@ -1,28 +1,25 @@
-<?php namespace FrenchFrogs\Table\Table;
+<?php
+
+namespace FrenchFrogs\Table\Table;
 
 use InvalidArgumentException;
 use Session;
 
 trait Datatable
 {
-
     /**
-     *
-     *
      * @var
      */
     protected $is_datatable;
 
     /**
-     *
-     *
      * @var
      */
     protected $is_remote;
 
 
     /**
-     * Session token for remote
+     * Session token for remote.
      *
      * @var
      */
@@ -30,15 +27,15 @@ trait Datatable
 
 
     /**
-     * If a single token if set, it mean that this class can only have a single instance
+     * If a single token if set, it mean that this class can only have a single instance.
      *
      * @var
      */
-    static protected $singleToken;
+    protected static $singleToken;
 
 
     /**
-     * String for remote constructor
+     * String for remote constructor.
      *
      * @var string
      */
@@ -46,15 +43,15 @@ trait Datatable
 
 
     /**
-     * Search function
+     * Search function.
      *
-     * @var Callable
+     * @var callable
      */
     protected $search;
 
 
     /**
-     * Button for Datatable
+     * Button for Datatable.
      *
      * @see https://datatables.net/reference/button/
      *
@@ -62,62 +59,68 @@ trait Datatable
      */
     protected $datatableButtons = [];
 
-
     /**
-     * Ajoute un bouton
+     * Ajoute un bouton.
      *
      * @param $text
      * @param $action
+     *
      * @return $this
      */
     public function addDatatableButton($text, $action)
     {
         $this->datatableButtons[] = ['text' => $text, 'action' => $action];
+
         return $this;
     }
 
     /**
-     * Ajoute un lien au button datatable
+     * Ajoute un lien au button datatable.
      *
      * @param $text
      * @param $url
+     *
      * @return $this
      */
     public function addDatatableButtonLink($text, $url)
     {
-        $this->addDatatableButton( $text, 'function() {window.open("'.$url.'")}');
+        $this->addDatatableButton($text, 'function() {window.open("'.$url.'")}');
+
         return $this;
     }
 
     /**
-     * Ajoute un Bouton d'export
+     * Ajoute un Bouton d'export.
      *
      * @param $text
      * @param $url
+     *
      * @return $this
      */
     public function addDatatableButtonExport($text = 'Export CSV')
     {
         $this->hasToken() ?: $this->generateToken();
         $this->addDatatableButtonLink($text, route('datatable-export', ['token' => $this->getToken()]));
+
         return $this;
     }
 
     /**
-     * Reset les filtres
+     * Reset les filtres.
      *
      * @param string $text
+     *
      * @return $this
      */
     public function addDatatableButtonReset($text = 'Reset')
     {
         $this->addDatatableButton($text, 'function() {jQuery("table#'.$this->getAttribute('id').'").dataTable().fnClearFilters();}');
+
         return $this;
     }
 
-
     /**
-     * Return TRUE si au moins un bouton est ajouté
+     * Return TRUE si au moins un bouton est ajouté.
      *
      * @return bool
      */
@@ -127,19 +130,19 @@ trait Datatable
     }
 
     /**
-     * Clear $buttons
+     * Clear $buttons.
      *
      * @return $this
      */
     public function clearDatatableButtons()
     {
         $this->datatableButtons = [];
+
         return $this;
     }
 
-
     /**
-     * Getter for $datatabaseButtons
+     * Getter for $datatabaseButtons.
      *
      * @return array
      */
@@ -148,17 +151,16 @@ trait Datatable
         return $this->datatableButtons;
     }
 
-
     /**
-     * Setter for $search callable function
+     * Setter for $search callable function.
      *
      * @param $function
+     *
      * @return $this
      */
     public function setSearch($function)
     {
         if (is_string($function)) {
-
             $field = $function;
             $function = function (Table $table, $query) use ($field) {
 
@@ -167,7 +169,7 @@ trait Datatable
                     throw new \Exception('Table source is not an instance of query builder');
                 }
 
-                $table->getSource()->where($field, 'LIKE', $query . '%');
+                $table->getSource()->where($field, 'LIKE', $query.'%');
             };
         }
 
@@ -176,12 +178,14 @@ trait Datatable
         }
 
         $this->search = $function;
+
         return $this;
     }
 
     public function removeSearch()
     {
         unset($this->search);
+
         return $this;
     }
 
@@ -191,14 +195,13 @@ trait Datatable
     }
 
     /**
-     * Search
+     * Search.
      *
      * @param null $query
      */
     public function search($query)
     {
         if ($this->hasSearch()) {
-
             $search = $this->search;
 
             // If it's a anonymous function
@@ -210,49 +213,48 @@ trait Datatable
         return $this;
     }
 
-
     /**
      * @return bool
      */
-    static public function hasSingleToken()
+    public static function hasSingleToken()
     {
         return !empty(static::$singleToken);
     }
 
     /**
-     *
      * @return mixed
      */
-    static public function getSingleToken()
+    public static function getSingleToken()
     {
         return static::$singleToken;
     }
 
-
     /**
-     * Set TRUE to $is_remote
+     * Set TRUE to $is_remote.
      *
      * @return $this
      */
     public function enableRemote()
     {
         $this->is_remote = true;
+
         return $this;
     }
 
     /**
-     * Set FALSE to $is_remote attribute
+     * Set FALSE to $is_remote attribute.
      *
      * @return $this
      */
     public function disableRemote()
     {
         $this->is_remote = false;
+
         return $this;
     }
 
     /**
-     * Return TRUE is datatable ajax is enable
+     * Return TRUE is datatable ajax is enable.
      *
      * @return mixed
      */
@@ -261,32 +263,34 @@ trait Datatable
         return $this->is_remote;
     }
 
-
     /**
-     * Set $is_datatable attribute
+     * Set $is_datatable attribute.
      *
      * @param $datatable
+     *
      * @return $this
      */
     public function enableDatatable()
     {
         $this->is_datatable = true;
+
         return $this;
     }
 
     /**
-     * Set to FALSE $is_datatable
+     * Set to FALSE $is_datatable.
      *
      * @return $this
      */
     public function disableDatatable()
     {
         $this->is_datatable = false;
+
         return $this;
     }
 
     /**
-     * Return TRUE if datatable is enabled
+     * Return TRUE if datatable is enabled.
      *
      * @return mixed
      */
@@ -296,7 +300,7 @@ trait Datatable
     }
 
     /**
-     * Return true if $is_datatable is set
+     * Return true if $is_datatable is set.
      *
      * @return bool
      */
@@ -306,30 +310,31 @@ trait Datatable
     }
 
     /**
-     * Getter for $token attribute
+     * Getter for $token attribute.
      *
      * @return mixed
      */
     public function getToken()
     {
-     return $this->token;
+        return $this->token;
     }
 
     /**
-     * Setter for $token attribute
+     * Setter for $token attribute.
      *
      * @param $token
+     *
      * @return $this
      */
     public function setToken($token)
     {
         $this->token = strval($token);
+
         return $this;
     }
 
-
     /**
-     * Return TRUE if the datatble have a token
+     * Return TRUE if the datatble have a token.
      *
      * @return bool
      */
@@ -339,18 +344,19 @@ trait Datatable
     }
 
     /**
-     * Generate a token and fill it
+     * Generate a token and fill it.
      *
      * @return $this
      */
     public function generateToken()
     {
-        $this->token = 'table.' . md5(static::class . microtime());
+        $this->token = 'table.'.md5(static::class.microtime());
+
         return $this;
     }
 
     /**
-     * Getter for $constructor attribute
+     * Getter for $constructor attribute.
      *
      * @return string
      */
@@ -360,42 +366,43 @@ trait Datatable
     }
 
     /**
-     * Setter for $constructor attribute
+     * Setter for $constructor attribute.
      *
      * @param $constructor
      * @param null $method
      * @param null $params
+     *
      * @return $this
      */
     public function setConstructor($constructor, $method = null, $params = null)
     {
-
-        if (!is_null($method)){
-            $constructor .= '::' . $method;
+        if (!is_null($method)) {
+            $constructor .= '::'.$method;
         }
 
         if (!is_null($params)) {
-            $constructor .= ':' . $params;
+            $constructor .= ':'.$params;
         }
 
         $this->constructor = $constructor;
+
         return $this;
     }
 
     /**
-     * Unset $constructor attribute
+     * Unset $constructor attribute.
      *
      * @return $this
      */
     public function removeConstructor()
     {
         unset($this->constructor);
+
         return $this;
     }
 
-
     /**
-     * Return TRUE if $constructor attribute is set
+     * Return TRUE if $constructor attribute is set.
      *
      * @return bool
      */
@@ -405,14 +412,13 @@ trait Datatable
     }
 
     /**
-     * Save the Table configuration in Session
-     *
+     * Save the Table configuration in Session.
      */
     public function save($query = null)
     {
 
         // si pas de token
-        if(!$this->hasToken()) {
+        if (!$this->hasToken()) {
             if (static::hasSingleToken()) {
                 $this->setToken(static::getSingleToken());
             } else {
@@ -427,17 +433,18 @@ trait Datatable
 
         // on enregistre la session
         Session::set($this->getToken(), json_encode(['constructor' => $this->getConstructor(), 'query' => $query]));
+
         return $this;
     }
 
-
     /**
-     * Load a datable from a token
+     * Load a datable from a token.
      *
      * @param $token
+     *
      * @return Table
      */
-    static public function load($token = null, $processQuery = false)
+    public static function load($token = null, $processQuery = false)
     {
         // if single token is set, we keep it
         if (is_null($token) && static::hasSingleToken()) {
@@ -445,11 +452,11 @@ trait Datatable
         }
 
         // if no session are set, we set a new one only is class has a singleToken
-        if (!Session::has($token)){
+        if (!Session::has($token)) {
             if (static::hasSingleToken()) {
                 Session::push($token, json_encode(['constructor' => static::class]));
             } else {
-                throw new \InvalidArgumentException('Token "' . $token . '" is not valid');
+                throw new \InvalidArgumentException('Token "'.$token.'" is not valid');
             }
         }
 
@@ -460,7 +467,6 @@ trait Datatable
 
         // construct Table polliwog
         if (preg_match('#(?<class>.+)::(?<method>.+)#', $constructor, $match)) {
-
             $method = $match['method'];
             // extract parameters
             $params = [];
@@ -497,18 +503,19 @@ trait Datatable
     }
 
     /**
-     * Process a query
+     * Process a query.
      *
      * @param $columns
      * @param null $search
      * @param null $order
+     *
      * @return $this
      */
     public function processQuery($columns, $search = null, $order = null)
     {
         // gestion des reccherches
         foreach ($columns as $c) {
-            if ($c['searchable'] == "true" && $c['search']['value'] != '') {
+            if ($c['searchable'] == 'true' && $c['search']['value'] != '') {
                 $this->getColumn($c['name'])->getStrainer()->call($this, $c['search']['value']);
             }
         }
@@ -520,7 +527,6 @@ trait Datatable
 
         // gestion du tri
         if (!empty($order)) {
-
             if ($this->isSourceQueryBuilder()) {
                 $this->getSource()->orders = [];
             }

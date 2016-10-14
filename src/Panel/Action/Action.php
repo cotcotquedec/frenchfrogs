@@ -1,7 +1,8 @@
-<?php namespace FrenchFrogs\Panel\Action;
+<?php
+
+namespace FrenchFrogs\Panel\Action;
 
 use FrenchFrogs\Core;
-
 
 abstract class Action
 {
@@ -9,21 +10,18 @@ abstract class Action
     use Core\Renderer;
 
     /**
-     * Field label
+     * Field label.
      *
      * @var string
      */
     protected $label;
 
     /**
-     * Field value
+     * Field value.
      *
-     * @var $value
-     *
+     * @var
      */
     protected $value;
-
-
 
     /**
      * @return string
@@ -35,16 +33,18 @@ abstract class Action
 
     /**
      * @param string $label
+     *
      * @return $this
      */
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
 
     /**
-     * Retourn si l'element a un label
+     * Retourn si l'element a un label.
      *
      * @return bool
      */
@@ -54,7 +54,7 @@ abstract class Action
     }
 
     /**
-     * Supprime le label de l'élément
+     * Supprime le label de l'élément.
      *
      * @return $this
      */
@@ -65,7 +65,6 @@ abstract class Action
         return $this;
     }
 
-
     /**
      * @return mixed
      */
@@ -75,17 +74,17 @@ abstract class Action
     }
 
     /**
-     *
      * @param mixed $value
      */
     public function setValue($value)
     {
         $this->value = $value;
+
         return $this;
     }
 
     /**
-     * Renvoie si une valeur est setter pour l'objet
+     * Renvoie si une valeur est setter pour l'objet.
      *
      * @return bool
      */
@@ -95,7 +94,7 @@ abstract class Action
     }
 
     /**
-     * Supprime la valeur de l'element
+     * Supprime la valeur de l'element.
      *
      * @return $this
      */
@@ -106,12 +105,11 @@ abstract class Action
         return $this;
     }
 
-
     /**
-     *
-     * Set le nom de l'élément
+     * Set le nom de l'élément.
      *
      * @param string $name
+     *
      * @return $this
      */
     public function setName($name)
@@ -120,7 +118,7 @@ abstract class Action
     }
 
     /**
-     * Get le nom de l'élément
+     * Get le nom de l'élément.
      *
      * @return string
      */
@@ -130,7 +128,7 @@ abstract class Action
     }
 
     /**
-     * Renvoie si l'element a une attribut name
+     * Renvoie si l'element a une attribut name.
      *
      * @return bool
      */
@@ -140,7 +138,7 @@ abstract class Action
     }
 
     /**
-     * Supprime le name de l'element
+     * Supprime le name de l'element.
      *
      * @return $this
      */
@@ -150,9 +148,10 @@ abstract class Action
     }
 
     /**
-     * Setter placeholder
+     * Setter placeholder.
      *
      * @param bool|false $value
+     *
      * @return $this
      */
     public function setPlaceholder($value = false)
@@ -165,9 +164,8 @@ abstract class Action
         return $this->addAttribute('placeholder', $value);
     }
 
-
     /**
-     * getter placeholder
+     * getter placeholder.
      *
      * @return null
      */
@@ -176,9 +174,8 @@ abstract class Action
         return $this->getAttribute('placeholder');
     }
 
-
     /**
-     * Si l'element a un placeholder
+     * Si l'element a un placeholder.
      *
      * @return bool
      */
@@ -188,7 +185,7 @@ abstract class Action
     }
 
     /**
-     * Suppression du placeholder
+     * Suppression du placeholder.
      *
      * @return $this
      */

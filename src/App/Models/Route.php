@@ -1,25 +1,26 @@
-<?php namespace FrenchFrogs\App\Models;
+<?php
+
+namespace FrenchFrogs\App\Models;
 
 use BetterReflection\Reflection\ReflectionClass;
 
 /**
- * Class Route
- * @package FrenchFrogs\App\Models
+ * Class Route.
  */
-class Route {
-
+class Route
+{
     /**
-     * Controller de l'application reflect
+     * Controller de l'application reflect.
      *
      * @var array
      */
     protected $controllers = [];
 
-
     /**
-     * Constructeur
+     * Constructeur.
      *
      * Route constructor.
+     *
      * @param array $controllers
      */
     public function __construct(array $controllers = [])
@@ -28,10 +29,10 @@ class Route {
     }
 
     /**
-     * Chargement des route a partir des controller
-     *
+     * Chargement des route a partir des controller.
      */
-    static function load(array $controllers = []) {
+    public static function load(array $controllers = [])
+    {
         $class = new static($controllers);
 
         foreach ($class->getControllers() as $prefix => $controller) {
@@ -40,7 +41,7 @@ class Route {
     }
 
     /**
-     * getter for $controllers
+     * getter for $controllers.
      *
      * @return array
      */
@@ -50,7 +51,7 @@ class Route {
     }
 
     /**
-     * Load route for $controller
+     * Load route for $controller.
      *
      * @param $prefix
      * @param $controller
@@ -82,15 +83,15 @@ class Route {
                 $title = str_slug($match['title']);
 
                 // construction de l'url
-                $uri = '/' . $prefix . ($title == 'index' ? '' : '/' . $title);
+                $uri = '/'.$prefix.($title == 'index' ? '' : '/'.$title);
 
                 // Gestion des paramètres
                 foreach ($method->getParameters() as $parameter) {
-                    $uri .= sprintf('/{%s%s}',  $parameter->getName(), $parameter->isDefaultValueAvailable() ? '?' : '' );
+                    $uri .= sprintf('/{%s%s}', $parameter->getName(), $parameter->isDefaultValueAvailable() ? '?' : '');
                 }
 
                 // création de la rout  e
-                $route = call_user_func_array([\Route::getFacadeRoot(), $action], [$uri, sprintf('%s@%s', '\\' . $controller, $name)]);
+                $route = call_user_func_array([\Route::getFacadeRoot(), $action], [$uri, sprintf('%s@%s', '\\'.$controller, $name)]);
 
                 // nomage de la route
                 $route->name(sprintf('%s.%s.%s', $prefix, $title, $action));

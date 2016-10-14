@@ -1,11 +1,11 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class Radio extends Element
 {
-
     /**
-     * Valeur pour le radio
+     * Valeur pour le radio.
      *
      *
      * @var array
@@ -13,13 +13,13 @@ class Radio extends Element
     protected $options = [];
 
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $label = '', $options = [], $attr = [] )
+    public function __construct($name, $label = '', $options = [], $attr = [])
     {
         $this->setAttributes($attr);
         $this->setName($name);
@@ -28,19 +28,21 @@ class Radio extends Element
     }
 
     /**
-     * Setter pour les options
+     * Setter pour les options.
      *
      * @param $options
+     *
      * @return $this
      */
     public function setOptions($options)
     {
         $this->options = $options;
+
         return $this;
     }
 
     /**
-     * Getter pour les options
+     * Getter pour les options.
      *
      * @return array
      */
@@ -49,18 +51,15 @@ class Radio extends Element
         return $this->options;
     }
 
-
-
     /**
      * @return string
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('radio', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

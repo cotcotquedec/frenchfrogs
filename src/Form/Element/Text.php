@@ -1,17 +1,17 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class Text extends Element
 {
-
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $label = '', $attr = [] )
+    public function __construct($name, $label = '', $attr = [])
     {
         $this->setAttributes($attr);
         $this->setName($name);
@@ -28,7 +28,6 @@ class Text extends Element
     }
 
     /**
-     *
      * @param mixed $value
      */
     public function setValue($value)
@@ -47,7 +46,7 @@ class Text extends Element
         $render = '';
         try {
             $render = $this->getRenderer()->render('text', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

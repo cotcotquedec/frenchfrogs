@@ -1,31 +1,30 @@
-<?php namespace FrenchFrogs\Table\Column\Strainer;
+<?php
 
+namespace FrenchFrogs\Table\Column\Strainer;
 
 use FrenchFrogs\Core\Renderer;
 
 class Strainer
 {
-
     use Renderer;
 
 
     /**
-     * Fields name for Eloquent search
+     * Fields name for Eloquent search.
      *
      * @var string
      */
     protected $field;
 
     /**
-     * Function executed foir strainer
+     * Function executed foir strainer.
      *
      * @var
      */
     protected $callable;
 
-
     /**
-     * Getter for $field attribute
+     * Getter for $field attribute.
      *
      * @return string
      */
@@ -35,7 +34,7 @@ class Strainer
     }
 
     /**
-     * Return TRUE if $field attribute
+     * Return TRUE if $field attribute.
      *
      * @return bool
      */
@@ -45,31 +44,33 @@ class Strainer
     }
 
     /**
-     * Unset $field attribute
+     * Unset $field attribute.
      *
      * @return $this
      */
     public function removeField()
     {
         unset($this->field);
+
         return $this;
     }
 
     /**
-     * Setter for $field attribute
+     * Setter for $field attribute.
      *
      * @param $field
+     *
      * @return $this
      */
     public function setField($field)
     {
         $this->field = $field;
+
         return $this;
     }
 
-
     /**
-     * Setter for $callbale attribute
+     * Setter for $callbale attribute.
      *
      * @param $callable
      */
@@ -79,7 +80,7 @@ class Strainer
     }
 
     /**
-     * Getter for ĉallable attribute
+     * Getter for ĉallable attribute.
      *
      * @return mixed
      */
@@ -89,7 +90,7 @@ class Strainer
     }
 
     /**
-     * Return TRUE if is $callable is set
+     * Return TRUE if is $callable is set.
      *
      * @return bool
      */
@@ -99,27 +100,29 @@ class Strainer
     }
 
     /**
-     * Unset $callable attribute
+     * Unset $callable attribute.
      *
      * @return $this
      */
     public function removeCallable()
     {
         unset($this->callable);
+
         return $this;
     }
 
     /**
-     * Execute strainer
+     * Execute strainer.
      *
      * @param \FrenchFrogs\Table\Table\Table $table
      * @param array ...$params
-     * @return $this
+     *
      * @throws \Exception
+     *
+     * @return $this
      */
     public function call(\FrenchFrogs\Table\Table\Table $table, ...$params)
     {
-
         if ($this->hasCallable()) {
             array_unshift($params, $this);
             array_unshift($params, $table);
@@ -138,16 +141,15 @@ class Strainer
         return $this;
     }
 
-
     /**
-     * Set value to strainer element
+     * Set value to strainer element.
      *
      * @param $value
+     *
      * @return $this
      */
     public function setValue($value)
     {
-
         if (isset($this->element)) {
             $this->element->setValue($value);
         }
@@ -155,19 +157,15 @@ class Strainer
         return $this;
     }
 
-
     /**
-     * Get value to strainer element
+     * Get value to strainer element.
      *
      * @return mixed
      */
     public function getValue()
     {
-
         if (isset($this->element)) {
             return $this->element->getValue();
         }
-
-        return;
     }
 }

@@ -1,23 +1,22 @@
-<?php namespace FrenchFrogs\Table\Renderer;
+<?php
+
+namespace FrenchFrogs\Table\Renderer;
 
 use FrenchFrogs\Table\Column\Exportable;
 use FrenchFrogs\Table\Table;
-use Illuminate\Database\Query\Builder;
 use League\Csv\Writer;
-use PhpParser\Node\Stmt\Foreach_;
 
 class Csv extends \FrenchFrogs\Renderer\Renderer
 {
-
     protected $renderers = [
-        'table'
+        'table',
     ];
 
-
     /**
-     * Overload render for array data output
+     * Overload render for array data output.
      *
      * @param \FrenchFrogs\Table\Table\Table $table
+     *
      * @return array
      */
     public function table(Table\Table $table)
@@ -53,5 +52,4 @@ class Csv extends \FrenchFrogs\Renderer\Renderer
         $csv->output($table->getFilename());
         exit;
     }
-
 }

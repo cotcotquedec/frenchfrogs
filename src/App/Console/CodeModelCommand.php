@@ -1,4 +1,6 @@
-<?php namespace FrenchFrogs\App\Console;
+<?php
+
+namespace FrenchFrogs\App\Console;
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 use FrenchFrogs\Maker\Maker;
@@ -7,7 +9,6 @@ use Illuminate\Support\Composer;
 
 class CodeModelCommand extends CodeCommand
 {
-
     protected $namespace = '\\Models\\Db\\';
     protected $directory = 'app/Models/Db/';
 
@@ -30,7 +31,7 @@ class CodeModelCommand extends CodeCommand
      * Execute the console command.
      *
      * @param Filesystem $filesystem
-     * @param Composer $composer
+     * @param Composer   $composer
      */
     public function handle(Filesystem $filesystem, Composer $composer)
     {
@@ -40,7 +41,6 @@ class CodeModelCommand extends CodeCommand
         //PERMISSION
         do {
             if (empty($name)) {
-
                 $tables = [];
                 foreach (\DB::select('SHOW TABLES') as $row) {
                     $tables[] = current($row);
@@ -51,14 +51,14 @@ class CodeModelCommand extends CodeCommand
 
 
         // nom de la class
-        $class = $this->namespace . ucfirst(camel_case($name));
+        $class = $this->namespace.ucfirst(camel_case($name));
         $class = $this->ask('Quelle est le nom de la classe?', $class);
 
-        $file = ($this->directory) . ucfirst(camel_case($name)) . '.php';
+        $file = ($this->directory).ucfirst(camel_case($name)).'.php';
         $file = $this->ask('Quelle est le nom du fichier?', $file);
 
         // recuperation des colonnes
-        $columns = \DB::select('SHOW COLUMNS FROM ' . $name);
+        $columns = \DB::select('SHOW COLUMNS FROM '.$name);
 
         // Creation de la classe
         $maker = file_exists($file) ? Maker::load($class) : Maker::init($class, $file);
@@ -75,7 +75,6 @@ class CodeModelCommand extends CodeCommand
         $delete = false;
 
         foreach ($columns as $row) {
-
             $type = null;
 
             //PRIMARY KEY
@@ -116,7 +115,7 @@ class CodeModelCommand extends CodeCommand
                 }
             }
 
-            $maker->addTagProperty('$' . $row['Field'], $type);
+            $maker->addTagProperty('$'.$row['Field'], $type);
         }
 
 

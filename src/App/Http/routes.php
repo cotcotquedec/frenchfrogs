@@ -2,7 +2,6 @@
 
 // gestion de la navigation Ajax
 Route::get('/ff/datatable/{token}', function ($token) {
-
     try {
         $request = request();
 
@@ -29,16 +28,14 @@ Route::get('/ff/datatable/{token}', function ($token) {
         $table->save(compact('columns', 'order', 'search'));
 
         return response()->json(['data' => $data, 'draw' => Input::get('draw'), 'recordsFiltered' => $table->getItemsTotal(), 'recordsTotal' => $table->getItemsTotal()]);
-
     } catch (\Exception $e) {
         //Si on catch une erreur on renvoi une reponse json avec le code 500
         return response()->json(['error' => $e->getMessage()], 500);
     }
-
 })->name('datatable');
 
 
-/**
+/*
  * Gestion de l'export CSV
  */
 Route::get('/ff/datatable/{token}/export', function ($token) {
@@ -48,17 +45,17 @@ Route::get('/ff/datatable/{token}/export', function ($token) {
 })->name('datatable-export');
 
 
-/**
+/*
  * Gestion de l'edition en remote
  *
  */
 Route::post('/ff/datatable/{token}', function ($token) {
     $request = request();
     $table = FrenchFrogs\Table\Table\Table::load($token);
+
     return $table->getColumn($request->get('column'))->remoteProcess($request->get('id'), $request->get('value'));
 });
 
 
 Route::get('/ff/media/{id}', '\FrenchFrogs\App\Http\Controllers\MediaController@show')->name('media-show');
 Route::get('/ff/media/dl/{id}', '\FrenchFrogs\App\Http\Controllers\MediaController@download')->name('media-dl');
-

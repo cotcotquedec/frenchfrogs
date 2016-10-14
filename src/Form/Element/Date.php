@@ -1,17 +1,17 @@
-<?php namespace FrenchFrogs\Form\Element;
+<?php
 
+namespace FrenchFrogs\Form\Element;
 
 class Date extends Text
 {
-
     protected $formatDisplay;
 
     protected $formatStore;
 
-
     public function setFormatDisplay($format)
     {
         $this->formatDisplay = $format;
+
         return $this;
     }
 
@@ -23,6 +23,7 @@ class Date extends Text
     public function setFormatStore($format)
     {
         $this->formatStore = $format;
+
         return $this;
     }
 
@@ -31,13 +32,12 @@ class Date extends Text
         return $this->formatStore;
     }
 
-
     /**
-     * Constructor
+     * Constructor.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
     public function __construct($name, $label = '', $formatDisplay = null, $formatStore = null, $attr = [])
     {
@@ -54,9 +54,10 @@ class Date extends Text
     }
 
     /**
-     * Overload set value
+     * Overload set value.
      *
      * @param mixed $value
+     *
      * @return $this
      */
     public function setValue($value)
@@ -66,14 +67,12 @@ class Date extends Text
                 $date = substr($value, 0, strlen(date($this->getFormatDisplay())));
                 $value = \Carbon\Carbon::createFromFormat($this->getFormatDisplay(), $date);
             } catch (\InvalidArgumentException $e) {
-
                 try {
                     $date = substr($value, 0, strlen(date($this->getFormatStore())));
                     $value = \Carbon\Carbon::createFromFormat($this->getFormatStore(), $date);
                 } catch (\InvalidArgumentException $e) {
                     throw $e;
                 }
-
             } finally {
                 $value = $value instanceof \Carbon\Carbon ? $value->format($this->getFormatStore()) : '';
             }
@@ -82,15 +81,13 @@ class Date extends Text
         return parent::setValue($value);
     }
 
-
     /**
-     * Overload getvalue
+     * Overload getvalue.
      *
      * @return mixed|string|static
      */
     public function getDisplayValue()
     {
-
         $value = parent::getValue();
 
         if (!empty($value)) {
@@ -107,48 +104,42 @@ class Date extends Text
         return $value;
     }
 
-
     /**
-     * overload
+     * overload.
      *
      * @return mixed|string|static
      */
     public function getFilteredValue()
     {
-
         $value = parent::getFilteredValue();
         if (!empty($value)) {
             try {
                 $date = substr($value, 0, strlen(date($this->getFormatDisplay())));
                 $value = \Carbon\Carbon::createFromFormat($this->getFormatDisplay(), $date);
             } catch (\InvalidArgumentException $e) {
-
                 try {
                     $date = substr($value, 0, strlen(date($this->getFormatStore())));
                     $value = \Carbon\Carbon::createFromFormat($this->getFormatStore(), $date);
                 } catch (\InvalidArgumentException $e) {
                     throw $e;
                 }
-
             } finally {
                 $value = $value instanceof \Carbon\Carbon ? $value->format($this->getFormatStore()) : '';
             }
         }
 
-       return $value;
+        return $value;
     }
-
 
     /**
      * @return string
      */
     public function __toString()
     {
-
         $render = '';
         try {
             $render = $this->getRenderer()->render('date', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

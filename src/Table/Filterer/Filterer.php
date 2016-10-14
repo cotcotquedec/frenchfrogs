@@ -1,8 +1,7 @@
-<?php namespace FrenchFrogs\Table\Filterer;
+<?php
 
-use FrenchFrogs\Core;
+namespace FrenchFrogs\Table\Filterer;
 
 class Filterer extends \FrenchFrogs\Filterer\Filterer
 {
-
 }

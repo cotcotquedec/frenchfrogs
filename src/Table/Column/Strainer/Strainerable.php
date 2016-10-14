@@ -1,21 +1,20 @@
-<?php namespace FrenchFrogs\Table\Column\Strainer;
+<?php
 
+namespace FrenchFrogs\Table\Column\Strainer;
 
 use Illuminate\Database\Query\Expression;
 
 trait Strainerable
 {
-
     /**
-     * Contain strainer for a column
+     * Contain strainer for a column.
      *
      * @var Strainer
      */
     protected $strainer;
 
-
     /**
-     *  Return the strainer for the column
+     *  Return the strainer for the column.
      *
      * @return Strainer
      */
@@ -25,19 +24,21 @@ trait Strainerable
     }
 
     /**
-     * Setter for $strainer attribute
+     * Setter for $strainer attribute.
      *
      * @param Strainer $strainer
+     *
      * @return $this
      */
     public function setStrainer(Strainer $strainer)
     {
         $this->strainer = $strainer;
+
         return $this;
     }
 
     /**
-     * Return TRUE if a sgtrainer is set
+     * Return TRUE if a sgtrainer is set.
      *
      * @return bool
      */
@@ -46,24 +47,24 @@ trait Strainerable
         return isset($this->strainer);
     }
 
-
     /**
-     * Unset $strainer attribute
+     * Unset $strainer attribute.
      *
      * @return $this
      */
     public function removeStrainer()
     {
         unset($this->strainer);
+
         return $this;
     }
 
-
     /**
-     * Set Strainer as a select form element
+     * Set Strainer as a select form element.
      *
      * @param array $options
      * @param array $attr
+     *
      * @return \FrenchFrogs\Table\Column\Strainer\Strainerable
      */
     public function setStrainerSelect($options = [], $callable = null, $attr = [])
@@ -87,7 +88,6 @@ trait Strainerable
         return $this->setStrainer($strainer);
     }
 
-
     public function setStrainerText($callable = null, $attr = [])
     {
         // if callable is a string , it's a field
@@ -98,7 +98,7 @@ trait Strainerable
 
         // create the strainer
         $strainer = new Text($this, $callable, $attr);
-        
+
         //if a fields is set, we configure the strainer
         if (isset($field)) {
             $strainer->setField($field);
@@ -107,12 +107,12 @@ trait Strainerable
         return $this->setStrainer($strainer);
     }
 
-
     /**
-     * Set strainer as a Boolean
+     * Set strainer as a Boolean.
      *
-     * @param null $callable
+     * @param null  $callable
      * @param array $attr
+     *
      * @return $this
      */
     public function setStrainerBoolean($callable = null, $attr = [])
@@ -134,12 +134,12 @@ trait Strainerable
         return $this->setStrainer($strainer);
     }
 
-
     /**
-     * Set a strainer as date from to
+     * Set a strainer as date from to.
      *
-     * @param null $callable
+     * @param null  $callable
      * @param array $attr
+     *
      * @return $this
      */
     public function setStrainerDateRange($callable = null, $attr = [])
@@ -161,5 +161,4 @@ trait Strainerable
 
         return $this->setStrainer($strainer);
     }
-
 }

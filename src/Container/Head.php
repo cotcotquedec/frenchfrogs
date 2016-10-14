@@ -1,23 +1,23 @@
-<?php namespace FrenchFrogs\Container;
+<?php
+
+namespace FrenchFrogs\Container;
 
 /**
- * Meta container
+ * Meta container.
  *
  * Class Javascript
- * @package FrenchFrogs\Container
  */
 class Head extends Container
 {
-
     const NAMESPACE_DEFAULT = 'meta';
 
-
     /**
-     * Meta
+     * Meta.
      *
      * @param $name
      * @param $content
      * @param null $conditional
+     *
      * @return $this
      */
     public function meta($name, $content, $conditional = null)
@@ -26,32 +26,33 @@ class Head extends Container
 
         // if conditionnal
         if (!is_null($conditional)) {
-            $meta = '<!--[if '.$conditional.']>'.PHP_EOL . $meta . PHP_EOL . '<![endif]-->';
+            $meta = '<!--[if '.$conditional.']>'.PHP_EOL.$meta.PHP_EOL.'<![endif]-->';
         }
 
         return $this->append($meta);
     }
 
-
     /**
-     * Fast identity set
+     * Fast identity set.
      *
      * @param $title
      * @param $description
+     *
      * @return $this
      */
     public function identity($title, $description)
     {
         $this->title($title);
         $this->meta('description', $description);
+
         return $this;
     }
 
-
     /**
-     * Title
+     * Title.
      *
      * @param $title
+     *
      * @return $this
      */
     public function title($title)
@@ -60,9 +61,10 @@ class Head extends Container
     }
 
     /**
-     * Charset
+     * Charset.
      *
      * @param string $charset
+     *
      * @return $this
      */
     public function charset($charset = 'utf-8')
@@ -71,10 +73,11 @@ class Head extends Container
     }
 
     /**
-     * Append a property
+     * Append a property.
      *
      * @param $name
      * @param $value
+     *
      * @return $this
      */
     public function property($name, $value)
@@ -83,7 +86,7 @@ class Head extends Container
     }
 
     /**
-     * Usefool facebook open graph
+     * Usefool facebook open graph.
      *
      * @param null $title
      * @param null $site
@@ -120,7 +123,7 @@ class Head extends Container
     }
 
     /**
-     * Set twitter meta
+     * Set twitter meta.
      *
      * @param string $card
      * @param $site
@@ -142,11 +145,12 @@ class Head extends Container
     }
 
     /**
-     * Add link
+     * Add link.
      *
      * @param $href
      * @param string $rel
      * @param string $type
+     *
      * @return $this
      */
     public function link($href, $rel = 'stylesheet', $type = 'text/css')
@@ -154,17 +158,15 @@ class Head extends Container
         return $this->append(html('link', compact('href', 'type', 'rel')));
     }
 
-
     /**
-     * Favicon management
+     * Favicon management.
      *
      * @param $favicon
+     *
      * @return $this
      */
     public function favicon($favicon)
     {
-        return $this->append(html('link', ['rel'=>'shortcut icon', 'href'=> $favicon]));
+        return $this->append(html('link', ['rel' => 'shortcut icon', 'href' => $favicon]));
     }
-
-
 }

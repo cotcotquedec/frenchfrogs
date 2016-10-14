@@ -1,7 +1,9 @@
-<?php namespace FrenchFrogs\App\Console;
+<?php
 
-use FrenchFrogs\Maker\Maker;
+namespace FrenchFrogs\App\Console;
+
 use FrenchFrogs\App\Models\Acl;
+use FrenchFrogs\Maker\Maker;
 use Illuminate\Console\Command;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Filesystem\Filesystem;
@@ -31,7 +33,7 @@ class CodePermissionCommand extends CodeCommand
 
 
     /**
-     * Rulker contenant les permissions
+     * Rulker contenant les permissions.
      *
      * @var Maker
      */
@@ -44,19 +46,21 @@ class CodePermissionCommand extends CodeCommand
     protected $migration;
 
     /**
-     * Setter for $migration
+     * Setter for $migration.
      *
      * @param Maker $migration
+     *
      * @return $this
      */
     public function setMigration(Maker $migration)
     {
         $this->migration = $migration;
+
         return $this;
     }
 
     /**
-     * Getter for $migration
+     * Getter for $migration.
      *
      * @return Maker
      */
@@ -65,9 +69,8 @@ class CodePermissionCommand extends CodeCommand
         return $this->migration;
     }
 
-
     /**
-     * Getter for $ruler
+     * Getter for $ruler.
      *
      * @return Maker
      */
@@ -77,19 +80,21 @@ class CodePermissionCommand extends CodeCommand
     }
 
     /**
-     * Setter for ruler
+     * Setter for ruler.
      *
      * @param Maker $ruler
+     *
      * @return $this
      */
     public function setRuler(Maker $ruler)
     {
         $this->ruler = $ruler;
+
         return $this;
     }
 
     /**
-     * Getter for $permission
+     * Getter for $permission.
      *
      * @return mixed
      */
@@ -99,23 +104,25 @@ class CodePermissionCommand extends CodeCommand
     }
 
     /**
-     * Setter for $permission
+     * Setter for $permission.
      *
      * @param $permission
+     *
      * @return $this
      */
     public function setPermission($permission)
     {
         $this->permission = $permission;
+
         return $this;
     }
 
-
     /**
-     *  CReation de la migration
+     *  CReation de la migration.
      *
      * @param $filesystem
      * @param $name
+     *
      * @return Maker
      */
     public function migration($filesystem, $name)
@@ -123,8 +130,8 @@ class CodePermissionCommand extends CodeCommand
         // Creation de la migration
         $this->info('Creation de la migration');
 
-        $filename = 'create_permission_' . $name . '_' . \uuid('hex');
-        $path = $this->laravel->databasePath() . '/migrations';
+        $filename = 'create_permission_'.$name.'_'.\uuid('hex');
+        $path = $this->laravel->databasePath().'/migrations';
         $filepath = $this->laravel['migration.creator']->create($filename, $path);
 
         // CLASS
@@ -138,7 +145,7 @@ class CodePermissionCommand extends CodeCommand
         $migration->addAlias('Acl', $this->getRuler()->getClass()->getName());
         $migration->addAlias('Migration', Migration::class);
         $migration->setParent(Migration::class);
-        $migration->setSummary('Migration pour l\'ajout de la permission "' . $this->getPermission() . '" en base de donnée');
+        $migration->setSummary('Migration pour l\'ajout de la permission "'.$this->getPermission().'" en base de donnée');
 
         // METHOD
         $migration->addMethod('up');
@@ -148,10 +155,8 @@ class CodePermissionCommand extends CodeCommand
         return $migration;
     }
 
-
     /**
-     * Choix du group
-     *
+     * Choix du group.
      */
     public function group()
     {
@@ -167,8 +172,8 @@ class CodePermissionCommand extends CodeCommand
 
             if ($group == static::CHOICE_NEW) {
                 $name = $this->ask('Comment voulez vous nommer le groupe?', $this->getPermission());
-                $group = 'PERMISSION_GROUP_' . strtoupper(str_replace('.', '_', $name));
-                if ($this->confirm('Créer le groupe ' . $group . '?', true)) {
+                $group = 'PERMISSION_GROUP_'.strtoupper(str_replace('.', '_', $name));
+                if ($this->confirm('Créer le groupe '.$group.'?', true)) {
 
                     // ajout de la constant
                     $label = $this->ask('Quel est le libélé du groupe?', ucfirst($name));
@@ -184,7 +189,7 @@ class CodePermissionCommand extends CodeCommand
         } while (empty($group));
 
 
-        $this->warn('Groupe ok : ' . $group);
+        $this->warn('Groupe ok : '.$group);
 
         return $group;
     }
@@ -193,7 +198,7 @@ class CodePermissionCommand extends CodeCommand
      * Execute the console command.
      *
      * @param Filesystem $filesystem
-     * @param Composer $composer
+     * @param Composer   $composer
      */
     public function handle(Filesystem $filesystem, Composer $composer)
     {
@@ -223,13 +228,13 @@ class CodePermissionCommand extends CodeCommand
 
         // RULER
         $rulers = Maker::findClasses(app_path('Models/Acl'));
-        $rulerClass = $this->choice('Quelle est la classe de gestion des Acl?', $rulers, array_search('\\' . configurator()->get('ruler.class'), $rulers));
+        $rulerClass = $this->choice('Quelle est la classe de gestion des Acl?', $rulers, array_search('\\'.configurator()->get('ruler.class'), $rulers));
         $ruler = Maker::load($rulerClass);
         $this->setRuler($ruler);
 
         // NOM
         $nice_permission = str_replace('.', '_', $permission);
-        $constant = $this->ask('Nom de la constante?', 'PERMISSION_' . strtoupper($nice_permission));
+        $constant = $this->ask('Nom de la constante?', 'PERMISSION_'.strtoupper($nice_permission));
         $constant = strtoupper($constant);
 
         // MIGRATION : INIT
@@ -239,10 +244,10 @@ class CodePermissionCommand extends CodeCommand
         foreach ($ruler->getConstants() as $name => $value) {
             if ($value == $permission) {
                 // si on remarque que la permission existe deja
-                exc('La permission "' . $permission . '" existe déjà avec le nom : ' . $name);
+                exc('La permission "'.$permission.'" existe déjà avec le nom : '.$name);
             } elseif ($name == $constant) {
                 // si on remarque que la permission existe deja
-                exc('Le nom "' . $permission . '" existe déjà avec la permission : ' . $value);
+                exc('Le nom "'.$permission.'" existe déjà avec la permission : '.$value);
             }
         }
 

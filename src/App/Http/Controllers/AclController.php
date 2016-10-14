@@ -1,26 +1,26 @@
-<?php namespace FrenchFrogs\App\Http\Controllers;
+<?php
+
+namespace FrenchFrogs\App\Http\Controllers;
+
 use FrenchFrogs\App\Models\Db\User\Group;
 use FrenchFrogs\App\Models\Db\User\User;
 use FrenchFrogs\App\Models\Db\User\UserInterface;
 
 /**
- * Class AclController
+ * Class AclController.
  *
  * Gestion des droits
- *
- * @package FrenchFrogs\Acl\Http\Controllers
  */
 trait AclController
 {
-
     protected $permission;
 
     /**
-     * Build user table polliwog
+     * Build user table polliwog.
      *
      * @return \FrenchFrogs\Table\Table\Table
      */
-    static public function user()
+    public static function user()
     {
 
         // QUERY
@@ -30,7 +30,7 @@ trait AclController
             'email',
             'i.name as interface_name',
             'loggedin_at',
-            raw('api_token IS NOT NULL as api_acess')
+            raw('api_token IS NOT NULL as api_acess'),
         ])
             ->join('user_interface as i', 'i.user_interface_id', '=', 'u.user_interface_id')
             ->whereNull('u.deleted_at');
@@ -62,16 +62,16 @@ trait AclController
         $container->addButtonRemote('api', 'Api', action_url(static::class, 'postApi', '%s'), 'user_id')->icon('fa fa-cloud');
         $container->addButtonEdit(action_url(static::class, 'postUser', '%s'), 'user_id');
         $container->addButtonDelete(action_url(static::class, 'deleteUser', '%s'), 'user_id');
+
         return $table;
     }
 
-
     /**
-     *
-     *
      * @param $id
-     * @return mixed
+     *
      * @throws \Exception
+     *
+     * @return mixed
      */
     public function postApi($id)
     {
@@ -85,7 +85,7 @@ trait AclController
 
         // FORM
         $form = \form()->enableRemote();
-        $form->setLegend('Utilisateur : ' . $user->name);
+        $form->setLegend('Utilisateur : '.$user->name);
         if ($user->api_token) {
             $form->addLabel('api_token', 'Token')->setValue($user->api_token);
             $form->addSubmit('revoke')->setLabel('Supprimer la clé')->setOptionAsDanger();
@@ -103,18 +103,18 @@ trait AclController
                     $user->save();
 
                     \js()->success()->closeRemoteModal()->reloadDataTable();
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     \js()->error($e->getMessage());
                 }
             }
         }
+
         return response()->modal($form);
     }
 
     /**
-     *
-     *
      * @param $id
+     *
      * @return mixed
      */
     public function postPassword($id)
@@ -129,7 +129,7 @@ trait AclController
         $user = User::findOrFail($uuid);
 
         $form = \form()->enableRemote();
-        $form->setLegend('Utilisateur : ' . $user->name);
+        $form->setLegend('Utilisateur : '.$user->name);
         $form->addText('password', 'Mot de passe');
         $form->addSubmit('Enregistrer');
 
@@ -141,7 +141,7 @@ trait AclController
                 try {
                     \FrenchFrogs\App\Models\Business\User::get($uuid)->changePassword($data['password']);
                     \js()->success()->closeRemoteModal()->reloadDataTable();
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     \js()->error($e->getMessage());
                 }
             }
@@ -153,9 +153,8 @@ trait AclController
     }
 
     /**
-     *
-     *
      * @param $id
+     *
      * @return mixed
      */
     public function postUser($id = null)
@@ -170,7 +169,7 @@ trait AclController
         $user = User::findOrNew($uuid);
 
         $form = \form()->enableRemote();
-        $form->setLegend('Utilisateur : ' . $user->name);
+        $form->setLegend('Utilisateur : '.$user->name);
         $form->addText('name', 'Nom');
         $form->addEmail('email', 'Email');
         if (!$user->exists) {
@@ -187,7 +186,6 @@ trait AclController
             if ($form->isValid()) {
                 $data = $form->getFilteredAliasValues();
                 try {
-
                     if ($user->exists) {
                         $user->email = $data['email'];
                         $user->user_interface_id = $data['user_interface_id'];
@@ -198,11 +196,11 @@ trait AclController
                     }
 
                     \js()->success()->closeRemoteModal()->reloadDataTable();
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     \js()->error($e->getMessage());
                 }
             }
-        } elseif($user->exists) {
+        } elseif ($user->exists) {
             $form->populate($user->toArray());
         } else {
             $form->populate(['password' => \FrenchFrogs\App\Models\Business\User::generateRandomPassword()]);
@@ -211,79 +209,79 @@ trait AclController
         return response()->modal($form);
     }
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
+    public function postUserGroup($id)
+    {
+        \ruler()->check(
+            $this->permission,
+            ['id' => 'exists:user,user_id'],
+            ['id' => $uuid = f($id, 'uuid')]
+        );
 
-	/**
-	 *
-	 *
-	 * @param $id
-	 * @return mixed
-	 */
-	public function postUserGroup($id)
-	{
-		\ruler()->check(
-			$this->permission,
-			['id' => 'exists:user,user_id'],
-			['id' => $uuid = f($id, 'uuid')]
-		);
+        // Recuperation du model
+        $user = \FrenchFrogs\App\Models\Business\User::get($uuid);
 
-		// Recuperation du model
-		$user = \FrenchFrogs\App\Models\Business\User::get($uuid);
+        $form = \form()->enableRemote();
+        $form->setLegend('Groupes : '.$user->getModel()->name);
+        $groups = \query('user_group', [raw('HEX(user_group_id) as id'), 'name'])->orderBy('name')->pluck('name', 'id');
 
-		$form = \form()->enableRemote();
-		$form->setLegend('Groupes : ' . $user->getModel()->name);
-		$groups = \query('user_group',[raw('HEX(user_group_id) as id'), 'name'])->orderBy('name')->pluck('name', 'id');
+        $form->addCheckbox('user_group_id', 'Groupes', $groups)->addFilter('uuid', function ($data) {
+            if (is_array($data)) {
+                array_walk($data, function (&$v) {
+                    $v = f($v, 'uuid');
+                });
+            }
 
-		$form->addCheckbox('user_group_id', 'Groupes', $groups )->addFilter('uuid', function($data) {
-			if (is_array($data)){
-				array_walk($data, function (&$v) {
-					$v = f($v, 'uuid');
-				});
-			}
-			return $data;
-		});
+            return $data;
+        });
 
-		$form->addSubmit('Enregistrer');
+        $form->addSubmit('Enregistrer');
 
-		// enregistrement
-		if (\request()->has('Enregistrer')) {
-			$form->valid(\request()->all());
-			if ($form->isValid()) {
-				$data = $form->getFilteredAliasValues();
-				try {
-					$user->setGroups($data['user_group_id']);
-					\js()->success()->closeRemoteModal()->reloadDataTable();
-				} catch(\Exception $e) {
-					dd($e);
-					\js()->error($e->getMessage());
-				}
-			}
-		} else {
-			$groups = $user->getGroups();
-			array_walk($groups, function(&$v) {$v = f($v,'uuid:hex|upper');});
-			$form->populate(['user_group_id' => $groups]);
-		}
+        // enregistrement
+        if (\request()->has('Enregistrer')) {
+            $form->valid(\request()->all());
+            if ($form->isValid()) {
+                $data = $form->getFilteredAliasValues();
+                try {
+                    $user->setGroups($data['user_group_id']);
+                    \js()->success()->closeRemoteModal()->reloadDataTable();
+                } catch (\Exception $e) {
+                    dd($e);
+                    \js()->error($e->getMessage());
+                }
+            }
+        } else {
+            $groups = $user->getGroups();
+            array_walk($groups, function (&$v) {
+                $v = f($v, 'uuid:hex|upper');
+            });
+            $form->populate(['user_group_id' => $groups]);
+        }
 
-		return response()->modal($form);
-	}
+        return response()->modal($form);
+    }
 
-
-
-	/**
-     * List all users
+    /**
+     * List all users.
      *
      * @return \Illuminate\View\View
      */
     public function getIndex()
     {
         \ruler()->check($this->permission);
+
         return basic('Utilisateurs', static::user());
     }
 
-
     /**
-     * Edit user permissions
+     * Edit user permissions.
      *
      * @param $id
+     *
      * @return string
      */
     public function postPermissions($id)
@@ -303,7 +301,7 @@ trait AclController
             'g.user_permission_group_id',
             'g.name as group_name',
             'p.user_permission_id',
-            'p.name'
+            'p.name',
         ])
             ->join('user_permission_group as g', 'p.user_permission_group_id', '=', 'g.user_permission_group_id')
             ->join('user_interface as i', 'i.user_interface_id', '=', 'p.user_interface_id')
@@ -314,7 +312,7 @@ trait AclController
         $groups = [];
         $permissions = [];
 
-        foreach($query->get() as $row) {
+        foreach ($query->get() as $row) {
 
             // gestion des interfaces
             if (empty($permissions[$row['interface_name']])) {
@@ -323,7 +321,7 @@ trait AclController
 
             // gestion des groupes
             if (empty($permissions[$row['interface_name']][$row['user_permission_group_id']])) {
-                $groups[$row['user_permission_group_id']] = $row['group_name'];// stackage des groupes
+                $groups[$row['user_permission_group_id']] = $row['group_name']; // stackage des groupes
                 $permissions[$row['interface_name']][$row['user_permission_group_id']] = [];
             }
 
@@ -332,10 +330,10 @@ trait AclController
         }
         // Formulaire
         $form = \form()->enableRemote();
-        $form->setLegend('Permissions : ' .$user->getModel()->name);
-        foreach($permissions as $interface => $group) {
+        $form->setLegend('Permissions : '.$user->getModel()->name);
+        foreach ($permissions as $interface => $group) {
             $form->addTitle($interface);
-            foreach($group as $g => $p) {
+            foreach ($group as $g => $p) {
                 $form->addCheckbox(str_replace('.', '_', $g), $groups[$g], $p)->setAlias('user_permission_id');
             }
         }
@@ -352,7 +350,7 @@ trait AclController
                     });
 
                     \js()->success()->closeRemoteModal()->reloadDataTable();
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     \js()->error($e->getMessage());
                 }
             }
@@ -363,9 +361,9 @@ trait AclController
         return response()->modal($form);
     }
 
-
     /**
      * @param $id
+     *
      * @throws \Exception
      */
     public function postParameter($id)
@@ -380,7 +378,7 @@ trait AclController
         $user = \FrenchFrogs\App\Models\Business\User::get($uuid);
 
         $form = \form()->enableRemote();
-        $form->setLegend('Paramètres : ' . $user->getModel()->name);
+        $form->setLegend('Paramètres : '.$user->getModel()->name);
         $form->addContent('??', 'Nothing here!');
         //@todo Make your form!!!!!
 //        $form->addSubmit('Enregistrer');
@@ -394,7 +392,7 @@ trait AclController
                 try {
                     $user->setParameters($data);
                     \js()->success()->closeRemoteModal()->reloadDataTable();
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     \js()->error($e->getMessage());
                 }
             }
@@ -405,64 +403,63 @@ trait AclController
         return response()->modal($form);
     }
 
-	/**
-	 *
-	 * Table de gestion des groupes
-	 *
-	 * @return \FrenchFrogs\Table\Table\Table
-	 */
-	public static function groups()
-	{
-		// QUERY
-		$query = \query('user_group', [
-			raw('HEX(id) as id'),
-			'name'
-		])
-			->whereNull('deleted_at')
-			->orderBy('name');
+    /**
+     * Table de gestion des groupes.
+     *
+     * @return \FrenchFrogs\Table\Table\Table
+     */
+    public static function groups()
+    {
+        // QUERY
+        $query = \query('user_group', [
+            raw('HEX(id) as id'),
+            'name',
+        ])
+            ->whereNull('deleted_at')
+            ->orderBy('name');
 
-		// TABLE
-		$table = \table($query);
-		$table->setConstructor(static::class, __FUNCTION__)->enableRemote()->enableDatatable();
-		$table->useDefaultPanel('Groupes')
-			->getPanel()
-			->addButton('add', 'Ajouter', action_url(static::class, 'postGroup'))
-			->setOptionAsPrimary()
-			->enableRemote();
+        // TABLE
+        $table = \table($query);
+        $table->setConstructor(static::class, __FUNCTION__)->enableRemote()->enableDatatable();
+        $table->useDefaultPanel('Groupes')
+            ->getPanel()
+            ->addButton('add', 'Ajouter', action_url(static::class, 'postGroup'))
+            ->setOptionAsPrimary()
+            ->enableRemote();
 
-		// COLMUMN
-		$table->addText('name', 'Nom')->setStrainerText('name');
+        // COLMUMN
+        $table->addText('name', 'Nom')->setStrainerText('name');
 
-		// ACTION
-		$action = $table->addContainer('action', 'Action')->right();
-		$action->addButtonEdit(action_url(static::class, 'postGroup', '%s'), 'id');
-		$action->addButtonDelete(action_url(static::class, 'deleteGroup', '%s'), 'id');
-		return $table;
-	}
+        // ACTION
+        $action = $table->addContainer('action', 'Action')->right();
+        $action->addButtonEdit(action_url(static::class, 'postGroup', '%s'), 'id');
+        $action->addButtonDelete(action_url(static::class, 'deleteGroup', '%s'), 'id');
 
+        return $table;
+    }
 
-	/**
-	 * Accueil de la gestion des groupes
-	 *
-	 * @return mixed
-	 */
-	public function getGroups()
-	{
-		//RULER
-		\ruler()->check(
-			$this->permission
-		);
+    /**
+     * Accueil de la gestion des groupes.
+     *
+     * @return mixed
+     */
+    public function getGroups()
+    {
+        //RULER
+        \ruler()->check(
+            $this->permission
+        );
 
-		return basic('Utilisateurs : Groupes', static::groups());
-	}
+        return basic('Utilisateurs : Groupes', static::groups());
+    }
 
-
-	/**
-	 * Formulaire de modification et d'ajout de groupe
-	 *
-	 * @param null $id
-	 * @return mixed
-	 */
+    /**
+     * Formulaire de modification et d'ajout de groupe.
+     *
+     * @param null $id
+     *
+     * @return mixed
+     */
     public function postGroup($id = null)
     {
         //RULER
@@ -477,7 +474,7 @@ trait AclController
 
         // FORM
         $form = \form()->enableRemote();
-        $form->setLegend('Groupes : ' . $model->exists ? $model->name : 'Ajouter');
+        $form->setLegend('Groupes : '.$model->exists ? $model->name : 'Ajouter');
 
         // ELEMENT
         $form->addText('name', 'Nom');
@@ -505,49 +502,51 @@ trait AclController
         return response()->modal($form);
     }
 
-	/**
-	 * @name Artisan
-	 * @generated 2016-07-05 11:13:42
-	 * @see php artisan ffmake:action
-	 * @param mixed $id
-	 */
-	public function deleteGroup($id)
-	{
-		//RULER
-		\ruler()->check(
-			$this->permission,
-			['id' => 'exists:user_group,user_group_id'],
-			['id' => $uuid = f($id, 'uuid')]
-		);
+    /**
+     * @name Artisan
+     * @generated 2016-07-05 11:13:42
+     *
+     * @see php artisan ffmake:action
+     *
+     * @param mixed $id
+     */
+    public function deleteGroup($id)
+    {
+        //RULER
+        \ruler()->check(
+            $this->permission,
+            ['id' => 'exists:user_group,user_group_id'],
+            ['id' => $uuid = f($id, 'uuid')]
+        );
 
-		// MODEL
-		$model = Group::findOrFail($uuid);
+        // MODEL
+        $model = Group::findOrFail($uuid);
 
-		// MODAL
-		$modal = \modal(null, 'Etes vous sûr de vouloir supprimer : <b>' . $model->name . '</b>');
-		$button = (new \FrenchFrogs\Form\Element\Button('yes', 'Supprimer !'))
-			->setOptionAsDanger()
-			->enableCallback('delete')
-			->addAttribute('href', request()->url() . '?delete=1');
-		$modal->appendAction($button);
+        // MODAL
+        $modal = \modal(null, 'Etes vous sûr de vouloir supprimer : <b>'.$model->name.'</b>');
+        $button = (new \FrenchFrogs\Form\Element\Button('yes', 'Supprimer !'))
+            ->setOptionAsDanger()
+            ->enableCallback('delete')
+            ->addAttribute('href', request()->url().'?delete=1');
+        $modal->appendAction($button);
 
-		// TRAITEMENT
-		if (\request()->has('delete')) {
-			try {
-				$model->delete();
-				\js()->success()->closeRemoteModal()->reloadDataTable();
-			} catch (\Exception $e) {
-				\js()->error($e->getMessage());
-			}
-			return js();
-		}
+        // TRAITEMENT
+        if (\request()->has('delete')) {
+            try {
+                $model->delete();
+                \js()->success()->closeRemoteModal()->reloadDataTable();
+            } catch (\Exception $e) {
+                \js()->error($e->getMessage());
+            }
 
-		return response()->modal($modal);
-	}
+            return js();
+        }
+
+        return response()->modal($modal);
+    }
 
     /**
-     * Suppression d'un utilisateur
-     *
+     * Suppression d'un utilisateur.
      */
     public function deleteUser($id)
     {
@@ -562,11 +561,11 @@ trait AclController
         $model = User::findOrFail($uuid);
 
         // MODAL
-        $modal = \modal(null, 'Etes vous sûr de vouloir supprimer : <b>' . $model->name . '</b>');
+        $modal = \modal(null, 'Etes vous sûr de vouloir supprimer : <b>'.$model->name.'</b>');
         $button = (new \FrenchFrogs\Form\Element\Button('yes', 'Supprimer !'))
             ->setOptionAsDanger()
             ->enableCallback('delete')
-            ->addAttribute('href', request()->url() . '?delete=1');
+            ->addAttribute('href', request()->url().'?delete=1');
         $modal->appendAction($button);
 
         // TRAITEMENT
@@ -577,6 +576,7 @@ trait AclController
             } catch (\Exception $e) {
                 \js()->error($e->getMessage());
             }
+
             return js();
         }
 

@@ -1,12 +1,12 @@
-<?php namespace FrenchFrogs\Table\Column\Strainer;
+<?php
+
+namespace FrenchFrogs\Table\Column\Strainer;
 
 use FrenchFrogs\Form\Element\DateRange as FormDateRange;
-use FrenchFrogs\Form\Form\Element;
 use FrenchFrogs\Table\Column\Column;
 
 class DateRange extends Text
 {
-
     public function __construct(Column $column, $options = [], $callable = null, $attr = [])
     {
         $element = new FormDateRange($column->getName(), '');
@@ -15,12 +15,14 @@ class DateRange extends Text
     }
 
     /**
-     * Execute strainer
+     * Execute strainer.
      *
      * @param \FrenchFrogs\Table\Table\Table $table
      * @param array ...$params
-     * @return $this
+     *
      * @throws \Exception
+     *
+     * @return $this
      */
     public function call(\FrenchFrogs\Table\Table\Table $table, ...$params)
     {
@@ -55,8 +57,6 @@ class DateRange extends Text
     }
 
     /**
-     *
-     *
      * @return string
      */
     public function render()
@@ -64,7 +64,7 @@ class DateRange extends Text
         $render = '';
         try {
             $render = $this->getRenderer()->render('strainerDateRange', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

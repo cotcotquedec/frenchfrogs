@@ -1,15 +1,14 @@
-<?php namespace FrenchFrogs\Form\Renderer;
+<?php
 
+namespace FrenchFrogs\Form\Renderer;
 
 use FrenchFrogs\Form;
 use FrenchFrogs\Renderer\Style\Style;
 
 class Modal extends Bootstrap
 {
-
-    function form(Form\Form\Form $form)
+    public function form(Form\Form\Form $form)
     {
-
         $html = '';
         $form->addAttribute('role', 'form');
 
@@ -26,7 +25,7 @@ class Modal extends Bootstrap
 
         $body = '';
         foreach ($form->getElements() as $e) {
-            /** @var $e \FrenchFrogs\Form\Element\Element */
+            /* @var $e \FrenchFrogs\Form\Element\Element */
             $body .= $e->render();
         }
 
@@ -50,8 +49,4 @@ class Modal extends Bootstrap
 
         return $html;
     }
-
-
-
-
 }

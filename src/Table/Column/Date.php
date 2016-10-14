@@ -1,16 +1,17 @@
-<?php namespace FrenchFrogs\Table\Column;
+<?php
 
+namespace FrenchFrogs\Table\Column;
 
 class Date extends Text
 {
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $label = '', $format = null, $attr = [] )
+    public function __construct($name, $label = '', $format = null, $attr = [])
     {
         parent::__construct($name, $label, $attr);
         $this->center();

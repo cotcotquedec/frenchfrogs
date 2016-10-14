@@ -1,26 +1,23 @@
-<?php namespace FrenchFrogs\Table\Column;
+<?php
 
+namespace FrenchFrogs\Table\Column;
 
 /**
- * Trait for column with remote process
+ * Trait for column with remote process.
  *
  * Class RemoteProcess
- * @package FrenchFrogs\Table\Column
  */
 trait RemoteProcess
 {
-
-
     /**
-     * frunction to process the column
+     * frunction to process the column.
      *
-     * @var Callable
+     * @var callable
      */
     protected $remoteProcess;
 
-
     /**
-     * Return TRUE if remote process is set
+     * Return TRUE if remote process is set.
      *
      * @return bool
      */
@@ -29,11 +26,11 @@ trait RemoteProcess
         return isset($this->remoteProcess) && is_callable($this->remoteProcess);
     }
 
-
     /**
-     * Set $remoteProcess
+     * Set $remoteProcess.
      *
      * @param $function
+     *
      * @return $this
      */
     public function setRemoteProcess($function)
@@ -43,31 +40,29 @@ trait RemoteProcess
         }
 
         $this->remoteProcess = $function;
+
         return $this;
     }
 
-
     /**
-     * Getter for $remoteProcess
+     * Getter for $remoteProcess.
      *
-     * @return Callable
+     * @return callable
      */
-    function getRemoteProcess()
+    public function getRemoteProcess()
     {
         return $this->remoteProcess;
     }
 
     /**
-     * Execute $remoteProcess with params
+     * Execute $remoteProcess with params.
      *
      * @param array ...$params
+     *
      * @return mixed
      */
-    function remoteProcess(...$params)
+    public function remoteProcess(...$params)
     {
         return call_user_func_array($this->remoteProcess, $params);
     }
-
-
-
 }

@@ -1,25 +1,26 @@
-<?php namespace FrenchFrogs\Table\Column;
+<?php
+
+namespace FrenchFrogs\Table\Column;
 
 /**
- * Boolean column with remote process
+ * Boolean column with remote process.
  *
  * Class BooleanSwitch
- * @package FrenchFrogs\Table\Column
  */
 class RemoteBoolean extends Boolean
 {
-
     use RemoteProcess;
 
     /**
-     * Overload the constdcteur
+     * Overload the constdcteur.
      *
      * BooleanSwitch constructor.
+     *
      * @param $name
      * @param string $label
-     * @param null $function
+     * @param null   $function
      */
-    public function __construct($name, $label = '', $function = null )
+    public function __construct($name, $label = '', $function = null)
     {
         parent::__construct($name, $label);
         $this->center();
@@ -30,8 +31,6 @@ class RemoteBoolean extends Boolean
     }
 
     /**
-     *
-     *
      * @return string
      */
     public function render(array $row)
@@ -39,7 +38,7 @@ class RemoteBoolean extends Boolean
         $render = '';
         try {
             $render = $this->getRenderer()->render('remote_boolean', $this, $row);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage(), $e->getTraceAsString());
         }
 

@@ -1,28 +1,29 @@
-<?php namespace FrenchFrogs\Table\Table;
+<?php
 
+namespace FrenchFrogs\Table\Table;
 
 use FrenchFrogs\Table\Column;
 
 trait Columns
 {
-
     protected $columns = [];
 
     /**
-     * Setter for $columns container
+     * Setter for $columns container.
      *
      * @param array $columns
+     *
      * @return $this
      */
     public function setColumns(array $columns)
     {
         $this->columns = $columns;
+
         return $this;
     }
 
-
     /**
-     * Getter for $columns container
+     * Getter for $columns container.
      *
      * @return Column\Column[]
      */
@@ -32,21 +33,22 @@ trait Columns
     }
 
     /**
-     * Clear the $columns container
+     * Clear the $columns container.
      *
      * @return $this
      */
     public function clearColumns()
     {
         $this->columns = [];
+
         return $this;
     }
 
-
     /**
-     * Add a single column to the column container
+     * Add a single column to the column container.
      *
      * @param Column\Column $column
+     *
      * @return $this
      */
     public function addColumn(Column\Column $column)
@@ -65,15 +67,15 @@ trait Columns
     }
 
     /**
-     * Remove $name columns from the $columns container
+     * Remove $name columns from the $columns container.
      *
      * @param $name
+     *
      * @return $this
      */
     public function removeColumn($name)
     {
-
-        if (isset($this->columns[$name])){
+        if (isset($this->columns[$name])) {
             unset($this->columns[$name]);
         }
 
@@ -81,9 +83,10 @@ trait Columns
     }
 
     /**
-     * Return TRUE if the column ame exist in the ĉolumns container
+     * Return TRUE if the column ame exist in the ĉolumns container.
      *
      * @param $name
+     *
      * @return bool
      */
     public function hasColumn($name)
@@ -91,11 +94,11 @@ trait Columns
         return isset($this->columns[$name]);
     }
 
-
     /**
-     * Return the $name column from $column container
+     * Return the $name column from $column container.
      *
      * @param $name
+     *
      * @return Column\Column $column
      */
     public function getColumn($name)
@@ -109,17 +112,15 @@ trait Columns
 
             // recursivity
             if (method_exists($column, 'hasColumn')) {
-               if ($column->hasColumn($name)) {
-                   return $column->getColumn($name);
-               }
+                if ($column->hasColumn($name)) {
+                    return $column->getColumn($name);
+                }
             }
         }
-
-        return null;
     }
 
     /**
-     * Return the column from his index
+     * Return the column from his index.
      *
      * @return Column\Column $column
      */
@@ -127,131 +128,140 @@ trait Columns
     {
         $keys = array_keys($this->columns);
         if (empty($keys[$index]) || empty($column = $this->columns[$keys[$index]])) {
-            throw new \InvalidArgumentException('Table don\'t have a column index : ' . $index);
+            throw new \InvalidArgumentException('Table don\'t have a column index : '.$index);
         }
 
         return $column;
     }
 
-    
     /**
-     * Add Text column to $columns container
+     * Add Text column to $columns container.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Text
      */
     public function addText($name, $label = '', $attr = [])
     {
         $c = new Column\Text($name, $label, $attr);
         $this->addColumn($c);
+
         return $c;
     }
 
     /**
-     * Add number column to $columns container
+     * Add number column to $columns container.
      *
      * @param $name
      * @param string $label
-     * @param int $decimal
+     * @param int    $decimal
+     *
      * @return \FrenchFrogs\Table\Column\Number
      */
     public function addNumber($name, $label = '', $decimal = 2)
     {
         $c = new Column\Number($name, $label, $decimal);
         $this->addColumn($c);
+
         return $c;
     }
 
     /**
-     * Add Code column to $columns container
+     * Add Code column to $columns container.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Code
      */
     public function addCode($name, $label = '', $attr = [])
     {
         $c = new Column\Code($name, $label, $attr);
         $this->addColumn($c);
+
         return $c;
     }
 
     /**
-     * Add Pre column to $columns container
+     * Add Pre column to $columns container.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Code
      */
     public function addPre($name, $label = '', $attr = [])
     {
         $c = new Column\Pre($name, $label, $attr);
         $this->addColumn($c);
+
         return $c;
     }
 
     /**
-     *
-     *
      * @param $name
      * @param $label
      * @param $function
+     *
      * @return mixed
      */
     public function addCustom($name, $label, $function)
     {
         $c = new Column\Custom($name, $label, $function);
         $this->addColumn($c);
+
         return $c;
     }
 
-
     /**
-     * Add Date column to $columns container
+     * Add Date column to $columns container.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Date
      */
     public function addDate($name, $label = '', $format = null, $attr = [])
     {
         $c = new Column\Date($name, $label, $format, $attr);
         $this->addColumn($c);
+
         return $c;
     }
 
     /**
-     * Add Datetime column to $columns container
+     * Add Datetime column to $columns container.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Datetime
      */
     public function addDatetime($name, $label = '', $format = null, $attr = [])
     {
         $c = new Column\Datetime($name, $label, $format, $attr);
         $this->addColumn($c);
+
         return $c;
     }
 
-
     /**
-     * Add Boolean column to $columns container
+     * Add Boolean column to $columns container.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Text
      */
     public function addBoolean($name, $label = '', $attr = [])
     {
-
         $c = new Column\Boolean($name, $label, $attr);
         $this->addColumn($c);
 
@@ -259,10 +269,11 @@ trait Columns
     }
 
     /**
-     * Add boolean switch
+     * Add boolean switch.
      *
      * @param $name
      * @param string $label
+     *
      * @return \FrenchFrogs\Table\Column\RemoteBoolean
      */
     public function addRemoteBoolean($name, $label = '', $function = null)
@@ -273,12 +284,12 @@ trait Columns
         return $c;
     }
 
-
     /**
-     * Add remote text
+     * Add remote text.
      *
      * @param $name
      * @param string $label
+     *
      * @return \FrenchFrogs\Table\Column\RemoteText
      */
     public function addRemoteText($name, $label = '', $function = null)
@@ -290,10 +301,11 @@ trait Columns
     }
 
     /**
-     * Add remote select
+     * Add remote select.
      *
      * @param $name
      * @param string $label
+     *
      * @return \FrenchFrogs\Table\Column\RemoteSelect
      */
     public function addRemoteSelect($name, $label = '', $index = null, $option = [], $function = null)
@@ -305,34 +317,34 @@ trait Columns
     }
 
     /**
-     * Add Boolean column to $columns container
+     * Add Boolean column to $columns container.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Text
      */
     public function addIcon($name, $label = '', $mapping = [])
     {
-
         $c = new Column\Icon($name, $label, $mapping);
         $this->addColumn($c);
 
         return $c;
     }
 
-
     /**
-     * Add Link columns to $columns container
+     * Add Link columns to $columns container.
      *
      * @param $name
      * @param string $label
      * @param string $link
-     * @param array $binds
-     * @param array $attr
+     * @param array  $binds
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Link
      */
-    public function addLink($name, $label = '', $link = '#', $binds = [], $attr = [] )
+    public function addLink($name, $label = '', $link = '#', $binds = [], $attr = [])
     {
         $c = new Column\Link($name, $label, $link, $binds, $attr);
         $this->addColumn($c);
@@ -341,16 +353,17 @@ trait Columns
     }
 
     /**
-     * Add Link columns to $columns container
+     * Add Link columns to $columns container.
      *
      * @param $name
      * @param string $label
      * @param string $link
-     * @param array $binds
-     * @param array $attr
+     * @param array  $binds
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Link
      */
-    public function addMedia($name, $label, $link = '#', $binds = [],  $width = 320, $height = 180)
+    public function addMedia($name, $label, $link = '#', $binds = [], $width = 320, $height = 180)
     {
         $c = new Column\Media($name, $label, $link, $binds, $width, $height);
         $this->addColumn($c);
@@ -358,18 +371,18 @@ trait Columns
         return $c;
     }
 
-
     /**
-     * Add as Button Column
+     * Add as Button Column.
      *
      * @param $name
      * @param string $label
      * @param string $link
-     * @param array $binds
-     * @param array $attr
+     * @param array  $binds
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Button
      */
-    public function addButton($name, $label = '%s', $link = '#', $binds = [], $attr = [] )
+    public function addButton($name, $label = '%s', $link = '#', $binds = [], $attr = [])
     {
         $c = new Column\Button($name, $label, $link, $binds, $attr);
         $c->setOptionAsDefault();
@@ -379,48 +392,48 @@ trait Columns
     }
 
     /**
-     * Add remote button as column
+     * Add remote button as column.
      *
      * @param $name
      * @param string $label
      * @param string $link
-     * @param array $binds
-     * @param array $attr
+     * @param array  $binds
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Button
      */
-    public function addButtonRemote($name, $label = '%s', $link = '#', $binds = [], $method = 'post' )
+    public function addButtonRemote($name, $label = '%s', $link = '#', $binds = [], $method = 'post')
     {
         return $this->addButton($name, $label, $link, $binds)->enableRemote($method);
     }
 
     /**
-     * Add remote button as column
+     * Add remote button as column.
      *
      * @param $name
      * @param string $label
      * @param string $link
-     * @param array $binds
-     * @param array $attr
+     * @param array  $binds
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Button
      */
-    public function addButtonCallback($name, $label = '%s', $link = '#', $binds = [], $method = 'post' )
+    public function addButtonCallback($name, $label = '%s', $link = '#', $binds = [], $method = 'post')
     {
         return $this->addButton($name, $label, $link, $binds)->enableCallback($method);
     }
 
-
     /**
-     * Add default edit button
+     * Add default edit button.
      *
      * @param string $link
-     * @param array $binds
-     * @param array $attr
+     * @param array  $binds
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Button
      */
     public function addButtonEdit($link = '#', $binds = [], $is_remote = true, $method = 'post')
     {
-
-
         $c = new Column\Button(configurator()->get('button.edit.name'), configurator()->get('button.edit.label'), $link, $binds);
         $c->setOptionAsPrimary();
         $c->icon(configurator()->get('button.edit.icon'));
@@ -429,15 +442,17 @@ trait Columns
         }
 
         $this->addColumn($c);
+
         return $c;
     }
 
     /**
-     * Add default delete button
+     * Add default delete button.
      *
      * @param string $link
-     * @param array $binds
-     * @param array $attr
+     * @param array  $binds
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Button
      */
     public function addButtonDelete($link = '#', $binds = [], $is_remote = true, $method = 'delete')
@@ -449,23 +464,24 @@ trait Columns
             $c->enableRemote($method);
         }
         $this->addColumn($c);
+
         return $c;
     }
 
-
-
     /**
-     * Add a container columns
+     * Add a container columns.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
+     *
      * @return \FrenchFrogs\Table\Column\Container
      */
     public function addContainer($name, $label = '', $attr = [])
     {
         $c = new Column\Container($name, $label, $attr);
         $this->addColumn($c);
+
         return $c;
     }
 }

@@ -32,11 +32,13 @@ class ScheduleTableCommand extends Command
      * @var \Illuminate\Support\Composer
      */
     protected $composer;
+
     /**
      * Create a new session table command instance.
      *
-     * @param  \Illuminate\Filesystem\Filesystem  $files
-     * @param  \Illuminate\Support\Composer  $composer
+     * @param \Illuminate\Filesystem\Filesystem $files
+     * @param \Illuminate\Support\Composer      $composer
+     *
      * @return void
      */
     public function __construct(Filesystem $files, Composer $composer)
@@ -45,6 +47,7 @@ class ScheduleTableCommand extends Command
         $this->files = $files;
         $this->composer = $composer;
     }
+
     /**
      * Execute the console command.
      *
@@ -67,6 +70,7 @@ class ScheduleTableCommand extends Command
     {
         $name = 'create_schedule_table';
         $path = $this->laravel->databasePath().'/migrations';
+
         return $this->laravel['migration.creator']->create($name, $path);
     }
 }

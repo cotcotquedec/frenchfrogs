@@ -1,10 +1,11 @@
-<?php namespace FrenchFrogs\App\Models\Db\Media;
+<?php
+
+namespace FrenchFrogs\App\Models\Db\Media;
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 
 class Media extends Model
 {
-
     protected $table = 'media';
     protected $primaryKey = 'uuid';
     public $primaryUuid = true;

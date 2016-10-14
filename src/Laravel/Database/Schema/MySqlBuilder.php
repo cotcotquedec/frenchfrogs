@@ -1,15 +1,17 @@
-<?php namespace FrenchFrogs\Laravel\Database\Schema;
+<?php
+
+namespace FrenchFrogs\Laravel\Database\Schema;
 
 use Closure;
 
 class MySqlBuilder extends \Illuminate\Database\Schema\MySqlBuilder
 {
-
     /**
      * Create a new command set with a Closure.
      *
-     * @param  string  $table
-     * @param  \Closure|null  $callback
+     * @param string        $table
+     * @param \Closure|null $callback
+     *
      * @return \Illuminate\Database\Schema\Blueprint
      */
     protected function createBlueprint($table, Closure $callback = null)
@@ -20,5 +22,4 @@ class MySqlBuilder extends \Illuminate\Database\Schema\MySqlBuilder
 
         return new Blueprint($table, $callback);
     }
-
 }

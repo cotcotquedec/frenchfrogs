@@ -1,25 +1,25 @@
-<?php namespace FrenchFrogs\Table\Column;
+<?php
 
+namespace FrenchFrogs\Table\Column;
 
 class Boolean extends Text
 {
-
     /**
-     * Constructror
+     * Constructror.
      *
      * @param $name
      * @param string $label
-     * @param array $attr
+     * @param array  $attr
      */
-    public function __construct($name, $label = '', $attr = [] )
+    public function __construct($name, $label = '', $attr = [])
     {
         parent::__construct($name, $label, $attr);
         $this->center();
     }
 
     /**
-     * 
      * @param $row
+     *
      * @return bool
      */
     public function getValue($row)
@@ -27,10 +27,7 @@ class Boolean extends Text
         return isset($row[$this->getName()]) && !empty($row[$this->getName()]);
     }
 
-
     /**
-     *
-     *
      * @return string
      */
     public function render(array $row)
@@ -38,7 +35,7 @@ class Boolean extends Text
         $render = '';
         try {
             $render = $this->getRenderer()->render('boolean', $this, $row);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

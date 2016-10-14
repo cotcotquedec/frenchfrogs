@@ -1,4 +1,6 @@
-<?php namespace FrenchFrogs\App\Console;
+<?php
+
+namespace FrenchFrogs\App\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
@@ -9,11 +11,11 @@ abstract class CodeCommand extends Command
     const CHOICE_NO_MORE = '> Fini';
     const CHOISE_NULL = 'null';
 
-
     /**
-     * Creation d'un repertoire s'il n'existe pas
+     * Creation d'un repertoire s'il n'existe pas.
      *
      * @param $dir
+     *
      * @return $this
      */
     public function makeDirectory($dir)
