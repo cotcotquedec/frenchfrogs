@@ -150,10 +150,7 @@ class AuthMiddleware
                     return $this->login();
                 }
 
-
                 return response('Unauthorized.', 401);
-                // comportement normale
-//                return redirect()->guest('login');
             }
         }
 

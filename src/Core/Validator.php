@@ -50,6 +50,18 @@ trait Validator
         return isset($this->validator);
     }
 
+    /**
+     * Ajout un validator laravel
+     *
+     * @param $validator
+     * @param string $index
+     * @return $this
+     */
+    public function addLaravelValidator($validator, $index = 'laravel')
+    {
+        return $this->addValidator($index, 'laravel', $validator);
+    }
+
 
     /**
      * Add a single validator with message to the validator container
@@ -60,8 +72,10 @@ trait Validator
      * @param null $message
      * @return $this
      */
-    public function addValidator($index, $method = null, array $params = [], $message = null)
+    public function addValidator($index, $method = null, $params = [], $message = null)
     {
+        $params = (array) $params;
+
         // set up params
         array_unshift($params, $method);
         array_unshift($params, $index);

@@ -354,4 +354,36 @@ class Javascript extends Container
 
         return $result;
     }
+
+
+    /**
+     * Envoie un event analytics
+     *
+     * @link https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+     *
+     * @param $category
+     * @param $action
+     * @param $label
+     * @return $this
+     */
+    public function gaEvent($category, $action, $label)
+    {
+        return $this->append([static::TYPE_INLINE, sprintf("ga('send', 'event', '%s', '%s', '%s');", $category, $action, $label)]);
+    }
+
+
+    /**
+     * Envoie un event analytics
+     *
+     * @link https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+     *
+     * @param $category
+     * @param $action
+     * @param $label
+     * @return $this
+     */
+    public function gaView($page = false)
+    {
+        return $this->append([static::TYPE_INLINE, $page ? sprintf("ga('send', 'pageview', '%s');", $page) : "ga('send', 'pageview')"]);
+    }
 }

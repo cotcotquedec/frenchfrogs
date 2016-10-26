@@ -107,6 +107,12 @@ class Bootstrap extends Renderer\Renderer {
         if ($element->getForm()->hasLabel()) {
             $label = '<label for="' . $element->getName() . '">' . $element->getLabel() . ($element->hasRule('required') ? ' *' : '') . '</label>';
         }
+
+        // REQUIRED
+        if ($element->hasRule('required')) {
+            $element->addAttribute('required', 'required');
+        }
+
         $html = $label . html('input', $element->getAttributes());
 
         $class =  Style::FORM_GROUP_CLASS;

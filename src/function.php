@@ -223,7 +223,7 @@ function css($namespace  = null) {
  * @param $name
  * @param $value
  * @param null $conditional
- * @return $this
+ * @return \FrenchFrogs\Container\Head
  */
 function h($name = null, $value = null, $conditional = null) {
     /** @var $container FrenchFrogs\Container\Head */
