@@ -57,9 +57,9 @@ trait Validator
      * @param string $index
      * @return $this
      */
-    public function addLaravelValidator($validator, $index = 'laravel')
+    public function addLaravelValidator($validator, $index = 'laravel', $message = null )
     {
-        return $this->addValidator($index, 'laravel', $validator);
+        return $this->addValidator($index, 'laravel', $validator, $message);
     }
 
 

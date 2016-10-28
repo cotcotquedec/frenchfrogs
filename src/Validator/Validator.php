@@ -525,6 +525,7 @@ class Validator
 
         // error message management
         if ($validator->fails() && !$this->hasMessage('laravel')) {
+
             $message = '';
             foreach ( $validator->errors()->get('laravel') as $m) {
                 $message .= $m . ' ';

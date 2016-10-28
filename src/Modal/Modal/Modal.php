@@ -539,11 +539,12 @@ class Modal
      */
     static function renderRemoteEmptyModal($remoteId = null)
     {
-        $modal = modal();
+        $modal = \modal()->enableCloseButton();
 
         if (!is_null($remoteId)) {
             $modal->setRemoteId($remoteId);
         }
+
         return $modal->getRenderer()->render('modal_remote', $modal);
     }
 }

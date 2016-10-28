@@ -10,6 +10,7 @@ class Modal extends Bootstrap
     function form(Form\Form\Form $form)
     {
 
+
         $html = '';
         $form->addAttribute('role', 'form');
 
@@ -17,6 +18,9 @@ class Modal extends Bootstrap
         if ($form->hasCsrfToken()) {
             $html .= csrf_field();
         }
+
+        // Close button
+        $html .= html('button', ['type' => 'button', 'class' => 'close', 'data-dismiss' => 'modal'], '<span aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i></span>');
 
         if ($form->hasLegend()) {
             $html .= html('h4', ['class' => Style::MODAL_HEADER_TITLE_CLASS], $form->getLegend());
