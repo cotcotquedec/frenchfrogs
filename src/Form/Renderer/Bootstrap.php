@@ -120,6 +120,11 @@ class Bootstrap extends Renderer\Renderer {
             $class .= ' ' .Style::FORM_GROUP_ERROR;
         }
 
+        // DESCRIPTION
+        if ($element->hasDescription()) {
+            $html .= html('span', ['class' => 'help-block'], $element->getDescription());
+        }
+
         $html = html('div', compact('class'), $html);
 
         return $html;
