@@ -165,10 +165,10 @@ class Css extends Container
 
                             if (preg_match_all('#url\(["\']?(?<url>[^\)]+)["\']?\)#', $ct, $matches)) {
                                 foreach ($matches['url'] as $url) {
-                                    if (preg_match('#^(data:|http)#', $url)) {
-                                        continue;
+                                    // si pa sune url distant, une data ou un chemin absolu
+                                    if (!preg_match('#^(data:|http|/)#', $url)) {
+                                        $ct = str_replace($url, dirname($c) . DIRECTORY_SEPARATOR . $url, $ct);
                                     }
-                                    $ct = str_replace($url, dirname($c) . DIRECTORY_SEPARATOR . $url, $ct);
                                 }
                             }
                         }
@@ -178,6 +178,7 @@ class Css extends Container
 
                     // minify
                     $minifier->minify($target);
+
 //                }
 
                 // set $file
