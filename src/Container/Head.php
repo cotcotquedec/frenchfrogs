@@ -40,10 +40,15 @@ class Head extends Container
      * @param $description
      * @return $this
      */
-    public function identity($title, $description)
+    public function identity($title, $description, $keywords = '')
     {
         $this->title($title);
         $this->meta('description', $description);
+
+        if (!empty($keywords)) {
+            $this->meta('keywords', $keywords);
+        }
+
         return $this;
     }
 
@@ -92,10 +97,14 @@ class Head extends Container
      * @param null $type
      * @param null $app
      */
-    public function fb($title = null, $site = null, $url = null, $description = null, $type = null, $app = null)
+    public function fb($title = null, $image = null, $site = null, $url = null, $description = null, $type = null, $app = null)
     {
         if (!is_null($title)) {
             $this->property('og:title', $title);
+        }
+
+        if (!is_null($image)) {
+            $this->property('og:image', $image);
         }
 
         if (!is_null($site)) {
