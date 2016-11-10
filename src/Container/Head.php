@@ -88,6 +88,17 @@ class Head extends Container
     }
 
     /**
+     * Desactive l'indexation de la page
+     *
+     * @return Head
+     */
+    public function noindex()
+    {
+        return $this->meta('robots', 'noindex,nofollow');
+    }
+
+
+    /**
      * Usefool facebook open graph
      *
      * @param null $title
@@ -126,6 +137,8 @@ class Head extends Container
         if (!is_null($app)) {
             $this->property('fb:app_id', $app);
         }
+
+        return $this;
     }
 
     /**
