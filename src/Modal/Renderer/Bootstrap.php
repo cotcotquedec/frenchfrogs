@@ -37,7 +37,7 @@ class Bootstrap extends Renderer
 
         // header
         if ($modal->hasCloseButton()) {
-            $html .= html('button', ['type' => 'button', 'class' => 'close', 'data-dismiss' => 'modal', 'aria-label' => $modal->getCloseButtonLabel()], '<span aria-hidden="true">&times;</span>');
+            $html .= html('button', ['type' => 'button', 'class' => 'close', 'data-dismiss' => 'modal', 'aria-label' => $modal->getCloseButtonLabel()], '<span aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i></span>');
         }
 
         if ($modal->hasTitle()) {

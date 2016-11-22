@@ -65,7 +65,6 @@ $.fn.extend({
             jQuery(this).click(function (e) {
                 e.preventDefault();
 
-
                 var target = jQuery(this).data('target');
                 var size  = jQuery(this).data('size');
                 $url = jQuery(this).attr('href');
@@ -82,6 +81,9 @@ $.fn.extend({
                         jQuery(this).initialize();
                         jQuery(this).parent().removeClass('modal-lg modal-sm').addClass(size);
                         jQuery(target).modal('show');
+                        jQuery(target).on('hidden.bs.modal', function() {
+                            jQuery(this).find('.modal-content').html('');
+                        });
                     });
                 e.stopImmediatePropagation();
             });

@@ -116,7 +116,7 @@ class Javascript extends Container
     public function prependJs($selector, $function, ...$params)
     {
         array_unshift($params, $selector, $function);
-        $this->append([static::TYPE_INLINE, call_user_func_array([$this, 'build'], $params)]);
+        $this->prepend([static::TYPE_INLINE, call_user_func_array([$this, 'build'], $params)]);
         return $this;
     }
 
