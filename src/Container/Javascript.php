@@ -386,4 +386,15 @@ class Javascript extends Container
     {
         return $this->append([static::TYPE_INLINE, $page ? sprintf("ga('send', 'pageview', '%s');", $page) : "ga('send', 'pageview')"]);
     }
+
+
+    /**
+     *  Set un utilisateurt analytics
+     * @param $user
+     * @return $this
+     */
+    public function gaSetUser($user)
+    {
+        return $this->append([static::TYPE_INLINE, sprintf("ga('set', 'userId', '%s');", $user)]);
+    }
 }
