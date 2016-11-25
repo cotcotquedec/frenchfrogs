@@ -52,6 +52,27 @@ class Mail extends Business
     }
 
     /**
+     * Ajout de data pour l"'email
+     *
+     */
+    public function data(array $data)
+    {
+        $model = $this->getModel()->update(['data' => $data]);
+        return $this;
+    }
+
+    /**
+     * getter for $data
+     *
+     * @return array
+     */
+    public function getData()
+    {
+        return $this->getModel()->data;
+    }
+
+
+    /**
      * Envoie un email depuis la base
      *
      * @return $this

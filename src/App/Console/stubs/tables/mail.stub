@@ -26,6 +26,7 @@ class CreateMailTable extends Migration
             $table->string('class');
             $table->text('params')->nullable();
             $table->text('message')->nullable();
+            $table->json('data')->nullable();
             $table->timestamp('processing_at')->nullable();
             $table->timestamp('sent_at')->nullable();
             $table->timestamp('opened_at')->nullable();
