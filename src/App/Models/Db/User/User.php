@@ -24,6 +24,18 @@ class User extends Model  implements \Illuminate\Contracts\Auth\Authenticatable 
         return $this->hasMany(PermissionUser::class,'user_id',  'user_id');
     }
 
+
+    /**
+     * Return TRUE has the permission
+     *
+     * @param $ability
+     * @return bool
+     */
+    public function can($ability)
+    {
+        return $this->permissions->where('user_permission_id', $ability)->count() > 0;
+    }
+
     /**
      * Groupe lié à l'utilisateur
      *

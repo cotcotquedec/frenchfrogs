@@ -42,5 +42,4 @@ class Log extends Model {
         $this->finished_at = Carbon::now();
         return $this;
     }
-
 }
