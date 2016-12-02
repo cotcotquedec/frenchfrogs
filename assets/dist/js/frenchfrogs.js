@@ -57,8 +57,6 @@ $.fn.extend({
 
     // INITAILISATION
     initialize : function() {
-        console.log('initialize GO : ' + this.selector);
-
         // MODAL
         jQuery(this).find('.modal-remote').each(function() {
 
