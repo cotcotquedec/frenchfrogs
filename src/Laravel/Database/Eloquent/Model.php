@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static $this firstOrNew() firstOrNew(array $array)
  * @method static Builder orderBy() orderBy(string $column, string $direction = 'asc')
  * @method static Builder where() where($column, $operator = null, $value = null, $boolean = 'and')
+ * @method static Builder whereIn() whereIn($column, $values, $boolean = 'and', $not = false)
  *
  * @package FrenchFrogs\Laravel\Database\Eloquent
  */

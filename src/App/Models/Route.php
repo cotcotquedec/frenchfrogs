@@ -6,7 +6,8 @@ use BetterReflection\Reflection\ReflectionClass;
  * Class Route
  * @package FrenchFrogs\App\Models
  */
-class Route {
+class Route
+{
 
     /**
      * Controller de l'application reflect
@@ -31,7 +32,8 @@ class Route {
      * Chargement des route a partir des controller
      *
      */
-    static function load(array $controllers = []) {
+    static function load(array $controllers = [])
+    {
         $class = new static($controllers);
 
         foreach ($class->getControllers() as $prefix => $controller) {
@@ -76,7 +78,6 @@ class Route {
             // Recuperation de la syntaxe de la router controller
             if (preg_match('#(?<action>get|post|delete|any)(?<title>.+)#', $name, $match)) {
 
-
                 //recuperation des informations
                 $action = $match['action'];
                 $title = str_slug($match['title']);
@@ -86,7 +87,15 @@ class Route {
 
                 // Gestion des paramètres
                 foreach ($method->getParameters() as $parameter) {
-                    $uri .= sprintf('/{%s%s}',  $parameter->getName(), $parameter->isDefaultValueAvailable() ? '?' : '' );
+
+                    // si le parètre a un type,
+                    // c'est qu'il ne peux pas etre passé via l'url,
+                    // on le retire donc de la gestion
+                    if ($parameter->getType()) {
+                        continue;
+                    }
+
+                    $uri .= sprintf('/{%s%s}', $parameter->getName(), $parameter->isDefaultValueAvailable() ? '?' : '');
                 }
 
                 // création de la rout  e

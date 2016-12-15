@@ -1,6 +1,31 @@
 $.fn.extend({
 
+
+
     /**
+     * "prepend event" functionality as a jQuery plugin
+     * @link http://stackoverflow.com/questions/10169685/prepend-an-onclick-action-on-a-button-with-jquery
+     *
+     * @param event
+     * @param handler
+     * @returns {*}
+     */
+    prependEvent : function (event, handler) {
+        return this.each(function () {
+            var events = $(this).data("events"),
+                currentHandler;
+
+            if (events && events[event].length > 0) {
+                currentHandler = events[event][0].handler;
+                events[event][0].handler = function () {
+                    handler.apply(this, arguments);
+                    currentHandler.apply(this, arguments);
+                }
+            }
+        });
+    },
+
+/**
      *
      * Datatable default configuration
      *
