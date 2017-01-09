@@ -93,7 +93,7 @@ class CodeMailCommand extends CodeCommand
             $filesystem->put($textFile, '@todo');
 
             // ajout de la propriété
-            $class->addProperty('textView', $text)->enableProtected();
+            $class->addProperty('textView', $text)->enablePublic();
         }
 
 
@@ -109,13 +109,13 @@ class CodeMailCommand extends CodeCommand
             $filesystem->put($textFile, '@todo');
 
             // ajout de la propriété
-            $class->addProperty('view', $text)->enableProtected();
+            $class->addProperty('view', $text)->enablePublic();
         }
 
         // SUJET
         $subject = $this->ask('Ajouter un sujet?', static::CHOICE_NO_MORE);
         if ($subject != static::CHOICE_NO_MORE) {
-            $class->addProperty('subject', $subject)->enableProtected();
+            $class->addProperty('subject', $subject)->enablePublic();
         }
 
         // ecriture de la classe
