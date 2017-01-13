@@ -74,6 +74,11 @@ class Php extends Renderer
             $content .= str_repeat(PHP_EOL,2);
         }
 
+        // TRAITS
+        foreach($maker->getTraits() as $trait) {
+            $content .= sprintf('use %s;', $maker->findAliasName($trait)) . PHP_EOL;
+        }
+
         // PROPERTIES
         foreach($maker->getProperties() as $property) {
             $content .= $this->render('property', $property) . str_repeat(PHP_EOL,2);
@@ -133,8 +138,18 @@ class Php extends Renderer
             $content .= ' extends ' . $maker->findAliasName($parent);
         }
 
-        // @todo Gestion des interfaces
-//        $interface = $reflection->getImmediateInterfaces();
+        // INTERFACES
+
+        if ($interfaces = $maker->getInterfaces()) {
+            if (!empty($interfaces)) {
+                $aliases = [];
+                foreach ($interfaces as $interface) {
+                    $aliases[] =  $maker->findAliasName($interface);
+                }
+
+                $content .= ' implements ' . implode(', ', $aliases);
+            }
+        }
 
         $content .= PHP_EOL;
         $content .= '{' . PHP_EOL . "\t" . str_replace(PHP_EOL, PHP_EOL . "\t", trim($body)) . PHP_EOL . '}';

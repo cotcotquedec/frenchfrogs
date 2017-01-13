@@ -34,6 +34,23 @@ class Maker
      */
     protected $methods = [];
 
+
+    /**
+     * Traits
+     *
+     * @var array
+     */
+    protected $traits = [];
+
+
+    /**
+     * Interfaces
+     *
+     * @var array
+     */
+    protected $interfaces = [];
+
+
     /**
      * Class principale
      *
@@ -132,6 +149,151 @@ class Maker
     {
         return isset($this->constants[$name]);
     }
+
+    /**
+     * Getter for $traits
+     *
+     * @return array
+     */
+    public function getTraits()
+    {
+        return $this->traits;
+    }
+
+    /**
+     * Setter for $costants
+     *
+     * @param array $traits
+     */
+    public function setTraits(array $traits)
+    {
+        $this->traits = $traits;
+    }
+
+    /**
+     * add trait to $trait
+     *
+     * @param $name
+     * @param $value
+     * @return $this
+     */
+    public function addTrait($value)
+    {
+        $this->hasTrait($value) || $this->traits[] = $value;
+        return $this;
+    }
+
+    /**
+     * Clear $traits
+     *
+     * @return $this
+     */
+    public function clearTraits()
+    {
+        $this->traits = [];
+        return $this;
+    }
+
+    /**
+     * Unset a trait
+     *
+     * @param $name
+     * @return $this
+     */
+    public function removeTrait($name)
+    {
+        $index = array_search($name, $this->traits);
+
+        if ($index !== false) {
+            unset($this->traits[$index]);
+        }
+        return $this;
+    }
+
+    /**
+     * Return TRUE if $name trait is set
+     *
+     * @param $name
+     * @return bool
+     */
+    public function hasTrait($name)
+    {
+        return array_search($name, $this->traits) !== false;
+    }
+
+
+
+    /**
+     * Getter for $interfaces
+     *
+     * @return array
+     */
+    public function getInterfaces()
+    {
+        return $this->interfaces;
+    }
+
+    /**
+     * Setter for $costants
+     *
+     * @param array $interfaces
+     */
+    public function setInterfaces(array $interfaces)
+    {
+        $this->interfaces = $interfaces;
+    }
+
+    /**
+     * add interface to $interface
+     *
+     * @param $name
+     * @param $value
+     * @return $this
+     */
+    public function addInterface($value)
+    {
+        $this->interfaces[] = $value;
+        return $this;
+    }
+
+    /**
+     * Clear $interfaces
+     *
+     * @return $this
+     */
+    public function clearInterfaces()
+    {
+        $this->interfaces = [];
+        return $this;
+    }
+
+    /**
+     * Unset a interface
+     *
+     * @param $name
+     * @return $this
+     */
+    public function removeInterface($name)
+    {
+        $index = array_search($name, $this->interfaces);
+
+        if ($index !== false) {
+            unset($this->interfaces[$index]);
+        }
+        return $this;
+    }
+
+    /**
+     * Return TRUE if $name interface is set
+     *
+     * @param $name
+     * @return bool
+     */
+    public function hasInterface($name)
+    {
+        return array_search($name, $this->interfaces) !== false;
+    }
+
 
     /**
      * Getter for $methods
@@ -399,6 +561,14 @@ class Maker
         // METHODS
         foreach ($reflection->getImmediateMethods() as $method) {
             $this->addMethod(Method::fromReflection($method));
+        }
+
+
+        // @todo Gestion des interfaces
+//        $interface = $reflection->getImmediateInterfaces();
+        // traits
+        foreach ($reflection->getTraitNames() as $traitName) {
+            $this->addTrait($traitName);
         }
 
         return $this;

@@ -2,6 +2,8 @@
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 use FrenchFrogs\Maker\Maker;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
 
@@ -72,7 +74,7 @@ class CodeModelCommand extends CodeCommand
         // TIMESTAMP
         $created = false;
         $updated = false;
-        $delete = false;
+        $deleted = false;
 
         foreach ($columns as $row) {
 
@@ -119,9 +121,17 @@ class CodeModelCommand extends CodeCommand
             $maker->addTagProperty('$' . $row['Field'], $type);
         }
 
+        // timemstamps
+        !$created || !$updated && $maker->addProperty('timestamps')->enablePublic()->setDefault(false);
 
-        empty($casts) ?: $maker->addProperty('casts', $casts)->enableProtected();
-        empty($dates) ?: $maker->addProperty('dates', $dates)->enableProtected();
+        // cas du soft deleted
+        if ($deleted) {
+            $maker->addAlias('SoftDeletes', SoftDeletes::class);
+            $maker->addTrait(SoftDeletes::class);
+        }
+
+        count($casts) && $maker->addProperty('casts', $casts)->enableProtected();
+        count($dates) && $maker->addProperty('dates', $dates)->enableProtected();
 
         // ecriture de la classe
         $maker->write();
