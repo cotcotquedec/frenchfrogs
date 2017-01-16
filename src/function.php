@@ -641,3 +641,32 @@ function ref($collection, $force_refresh = false) {
 
     return $reference;
 }
+
+
+/**
+ *
+ *
+ * @param $content
+ * @param null $container
+ * @param null $lang
+ * @return string
+ */
+function c($content, $container = null, $lang = null) {
+
+    if (!is_null($container)) {
+        $container = (array) $container;
+    }
+
+    // cas d'une nouvelle entrée
+    if ($content{0} != ':') {
+
+        try {
+            throw new Exception('Get call function');
+        } catch(\Exception $e) {
+            dd($e->getTrace());
+        }
+        dd($content);
+    }
+
+    return $content;
+}
