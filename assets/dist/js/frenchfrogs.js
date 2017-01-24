@@ -1,7 +1,6 @@
 $.fn.extend({
 
 
-
     /**
      * "prepend event" functionality as a jQuery plugin
      * @link http://stackoverflow.com/questions/10169685/prepend-an-onclick-action-on-a-button-with-jquery
@@ -10,7 +9,7 @@ $.fn.extend({
      * @param handler
      * @returns {*}
      */
-    prependEvent : function (event, handler) {
+    prependEvent: function (event, handler) {
         return this.each(function () {
             var events = $(this).data("events"),
                 currentHandler;
@@ -25,19 +24,19 @@ $.fn.extend({
         });
     },
 
-/**
+    /**
      *
      * Datatable default configuration
      *
      * @param o
      * @returns {*|{serverSide, ajax}|jQuery}
      */
-    dtt : function(o) {
+    dtt: function (o) {
 
         options = {
             pageLength: 25, // default records per page
             lengthChange: false,
-            deferRender : false,
+            deferRender: false,
             language: {
                 processing: "Traitement en cours...",
                 search: "Rechercher :",
@@ -63,48 +62,50 @@ $.fn.extend({
                 }
             },
 
-            buttons : [],
+            buttons: [],
 
             orderCellsTop: true,
-            order : [],
-            searching : false,
+            order: [],
+            searching: false,
             ordering: true,
-            retrieve : true,
+            retrieve: true,
             pagingType: "full_numbers", // pagination type(bootstrap, bootstrap_full_number or bootstrap_extended)
             autoWidth: false, // disable fixed width and enable fluid table
             processing: false, // enable/disable display message box on record load
             serverSide: false, // enable/disable server side ajax loading
         };
 
-        return $(this).on('draw.dt', function(e) {$(this).initialize();}).dataTable($.extend(options, o)).fnFilterOnReturn().fnFilterColumns();
+        return $(this).on('draw.dt', function (e) {
+            $(this).initialize();
+        }).dataTable($.extend(options, o)).fnFilterOnReturn().fnFilterColumns();
     },
 
 
     // INITAILISATION
-    initialize : function() {
+    initialize: function () {
         // MODAL
-        jQuery(this).find('.modal-remote').each(function() {
+        jQuery(this).find('.modal-remote').each(function () {
 
             jQuery(this).click(function (e) {
                 e.preventDefault();
 
                 var target = jQuery(this).data('target');
-                var size  = jQuery(this).data('size');
+                var size = jQuery(this).data('size');
                 $url = jQuery(this).attr('href');
 
                 $data = {};
-                if ( jQuery(this).data('method')) {
+                if (jQuery(this).data('method')) {
                     $data = {_method: jQuery(this).data('method')}
                 }
 
                 jQuery(target)
                     .find('.modal-content')
                     .empty()
-                    .load($url, $data, function(){
+                    .load($url, $data, function () {
                         jQuery(this).initialize();
                         jQuery(this).parent().removeClass('modal-lg modal-sm').addClass(size);
                         jQuery(target).modal('show');
-                        jQuery(target).on('hidden.bs.modal', function() {
+                        jQuery(target).on('hidden.bs.modal', function () {
                             jQuery(this).find('.modal-content').html('');
                         });
                     });
@@ -119,13 +120,13 @@ $.fn.extend({
             // FORM REMOTE
             jQuery(this).find('.form-remote').ajaxForm({
 
-                beforeSubmit: function (a,f) {
+                beforeSubmit: function (a, f) {
                     jQuery(f).find("input[type='submit']")
                         .attr("disabled", "disabled")
                         .attr("value", "En cours ...");
                 },
 
-                success : function(html) {
+                success: function (html) {
                     jQuery('.modal-content')
                         .empty()
                         .html(html)
@@ -136,7 +137,7 @@ $.fn.extend({
             // FORM CALLBACK
             jQuery(this).find('.form-callback').ajaxForm({
 
-                beforeSubmit: function (a,f) {
+                beforeSubmit: function (a, f) {
                     jQuery(f).find("input[type='submit']")
                         .attr("disabled", "disabled")
                         .attr("value", "En cours ...");
@@ -152,17 +153,19 @@ $.fn.extend({
         jQuery(this).find('.callback-remote').each(function () {
             jQuery(this).click(function (e) {
 
-                if ( jQuery(this).data('method')) {
+                if (jQuery(this).data('method')) {
 
                     $data = {};
-                    if ( jQuery(this).data('method')) {
+                    if (jQuery(this).data('method')) {
                         $data = {_method: jQuery(this).data('method')}
                     }
 
                     jQuery.post(
                         jQuery(this).attr('href'),
                         $data,
-                        function(a) {eval(a);}
+                        function (a) {
+                            eval(a);
+                        }
                     );
                 } else {
                     jQuery.getScript(jQuery(this).attr('href'));
@@ -177,11 +180,13 @@ $.fn.extend({
         jQuery(this).find('.input-callback').each(function () {
             jQuery(this).change(function (e) {
 
-                if ( jQuery(this).data('method')) {
+                if (jQuery(this).data('method')) {
                     jQuery.post(
                         jQuery(this).data('action'),
-                        {_method: jQuery(this).data('method'), value : jQuery(this).val()},
-                        function(a) {eval(a);}
+                        {_method: jQuery(this).data('method'), value: jQuery(this).val()},
+                        function (a) {
+                            eval(a);
+                        }
                     );
                 } else {
                     jQuery.getScript(jQuery(this).attr('href'));
@@ -237,18 +242,20 @@ $.fn.extend({
 
 
         // LIAISON SELECT
-        jQuery('.select-remote').each(function(){
+        jQuery('.select-remote').each(function () {
             var $that = $(this);
             selector = jQuery(this).data('parent-selector');
             jQuery(selector).change(function (e) {
                 url = $that.data('parent-url') + '?value=' + jQuery(this).val();
-                jQuery.getJSON(url, function(a) {
+                jQuery.getJSON(url, function (a) {
                     populate = $that.data('populate');
                     $that.empty();
-                    jQuery.each(a, function(i, v) {
+                    jQuery.each(a, function (i, v) {
                         selected = '';
-                        if(populate == i){selected = 'selected'}
-                        $that.append(jQuery("<option "+selected+"/>").val(i).text(v));
+                        if (populate == i) {
+                            selected = 'selected'
+                        }
+                        $that.append(jQuery("<option " + selected + "/>").val(i).text(v));
                     });
                 });
             }).change();
@@ -295,18 +302,20 @@ $.fn.extend({
         }
 
         // SWITCH
-        if(jQuery.fn.bootstrapSwitch !== undefined){
+        if (jQuery.fn.bootstrapSwitch !== undefined) {
 
             /**
              * Table Remote Boolean
              */
             jQuery(this).find('input[type=checkbox].ff-remote-boolean').bootstrapSwitch({
-                onSwitchChange: function(event, state) {
+                onSwitchChange: function (event, state) {
                     event.preventDefault();
                     jQuery.post(jQuery(this).closest('.datatable-remote').DataTable().ajax.url(), {
-                        id : jQuery(this).data('id'),
-                        column : jQuery(this).data('column')
-                    }, function(e,f) {eval(e)});
+                        id: jQuery(this).data('id'),
+                        column: jQuery(this).data('column')
+                    }, function (e, f) {
+                        eval(e)
+                    });
                 }
             });
 
@@ -318,10 +327,10 @@ $.fn.extend({
          * Table remote text
          */
         jQuery(this).find('div.ff-remote-text')
-            .dblclick(function(e) {
+            .dblclick(function (e) {
 
                 // if element is active, we disable action
-                if (jQuery(this).hasClass('ff-remote-active')){
+                if (jQuery(this).hasClass('ff-remote-active')) {
                     return jQuery(this);
                 }
 
@@ -333,7 +342,7 @@ $.fn.extend({
 
                 // input setting
                 jQuery(this).find('input')
-                    .on('ff.remote.text', function() {
+                    .on('ff.remote.text', function () {
                         // disable input
                         jQuery(this)
                             .off('focusout')
@@ -342,16 +351,18 @@ $.fn.extend({
                         jQuery(this).hide().prev('span').show();
                         jQuery(this).parent('.ff-remote-active').removeClass('ff-remote-active');
                     })
-                    .on('ff.remote.process', function() {
+                    .on('ff.remote.process', function () {
                         // process modifiction
                         e.preventDefault();
                         if (_that.html() != jQuery(this).val()) {
                             _that.html(jQuery(this).val());
                             jQuery.post(jQuery(this).closest('.datatable-remote').DataTable().ajax.url(), {
-                                id : jQuery(this).data('id'),
-                                column : jQuery(this).data('column'),
-                                value : jQuery(this).val()
-                            }, function(e,f) {eval(e)});
+                                id: jQuery(this).data('id'),
+                                column: jQuery(this).data('column'),
+                                value: jQuery(this).val()
+                            }, function (e, f) {
+                                eval(e)
+                            });
                         }
                         jQuery(this).trigger('ff.remote.text');
                         return false;
@@ -359,25 +370,25 @@ $.fn.extend({
                     .val(_that.html()) // set value
                     .show()
                     .focus()
-                    .focusout(function() {
+                    .focusout(function () {
                         jQuery(this).trigger('ff.remote.text');
-                    }).keypress(function(e) {
-                        // enable process on enter key
-                        if(e.which == 13) {
-                            jQuery(this).trigger('ff.remote.process');
-                        }
-                    });
-        });
+                    }).keypress(function (e) {
+                    // enable process on enter key
+                    if (e.which == 13) {
+                        jQuery(this).trigger('ff.remote.process');
+                    }
+                });
+            });
 
         // TABLE REMOTE SELECT
         jQuery(this).find('select.ff-remote-select').change(
-            function(e) {
+            function (e) {
 
                 e.preventDefault();
                 e.stopImmediatePropagation();
 
                 // if element is active, we disable action
-                if (jQuery(this).hasClass('ff-remote-active')){
+                if (jQuery(this).hasClass('ff-remote-active')) {
                     return jQuery(this);
                 }
 
@@ -385,25 +396,52 @@ $.fn.extend({
                 jQuery(this).addClass('ff-remote-active');
 
                 jQuery.post(jQuery(this).closest('.datatable-remote').DataTable().ajax.url(), {
-                    id : jQuery(this).data('id'),
-                    column : jQuery(this).data('column'),
-                    value : jQuery(this).val()
-                }, function(e,f) {eval(e)});
+                    id: jQuery(this).data('id'),
+                    column: jQuery(this).data('column'),
+                    value: jQuery(this).val()
+                }, function (e, f) {
+                    eval(e)
+                });
             }
         );
 
         //DATATABLE DECORATION
-       jQuery(this).find('table.table > thead > tr:last-child').children().css('border-bottom', '1px solid #ddd');
+        jQuery(this).find('table.table > thead > tr:last-child').children().css('border-bottom', '1px solid #ddd');
+
+
+        jQuery('.ff-edit[data-edit-id]').contextmenu(function () {
+
+            // reécupération des informations
+            var $target = jQuery(this).data('target');
+            var $url = jQuery(this).data('url');
+
+            $data = {_method: 'get', 'id': jQuery(this).data('edit-id')};
+
+            jQuery($target)
+                .find('.modal-content')
+                .empty()
+                .load($url, $data, function(){
+                    jQuery(this).initialize();
+                    jQuery($target).modal('show');
+                    jQuery($target).on('hidden.bs.modal', function() {
+                        jQuery(this).find('.modal-content').html('');
+                    });
+                });
+
+            return false;
+        });
+
+
     },
 
     /** Populate a form in javascript */
-    populate : function(data) {
+    populate: function (data) {
 
         // get the form
         var $form = $(this);
 
         // for each index we assigen value
-        $.each(data, function(i, v) {
+        $.each(data, function (i, v) {
             e = $form.find('#' + i);
 
             // if only one item
@@ -419,17 +457,33 @@ $.fn.extend({
     },
 
     // add disabled class to elements
-    disable: function(state) {
-        return this.each(function() {
+    disable: function (state) {
+        return this.each(function () {
             $(this).addClass('disabled');
         });
     },
 
     // remove class disabled to element
-    enable: function(state) {
-        return this.each(function() {
+    enable: function (state) {
+        return this.each(function () {
             $(this).removeClass('disabled');
         });
     }
 
 });
+
+
+/**
+ * Publication des contenus
+ *
+ * @param e
+ */
+function ffContentPublish(e) {
+    var $editid = '';
+    jQuery('.ff-edit[data-edit-id]').each(function() {$editid += jQuery(this).data('edit-id') + ',';});
+
+    // on envoie la demande de publication
+    jQuery.post(jQuery(e).attr('href'), {id:$editid}, function(r) {
+        eval(r)
+    });
+}

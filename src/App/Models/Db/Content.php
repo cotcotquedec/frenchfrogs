@@ -34,6 +34,9 @@ class Content extends \FrenchFrogs\Laravel\Database\Eloquent\Model
 	 *
 	 */
 	protected $primaryKey = 'uuid';
+
+
+    public $primaryUuid = true;
 	
 	
 	/**

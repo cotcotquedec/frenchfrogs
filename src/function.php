@@ -21,7 +21,7 @@ if (!function_exists('html')) {
 
         // TAG
         $string = $tag;
-        if (!preg_match('#^(?<tag>[^\.^\#]+)(?<string>.*)#',$string, $match)) {
+        if (!preg_match('#^(?<tag>[^\.^\#]+)(?<string>.*)#', $string, $match)) {
             exc('Impossible d\'isoler le tag dans : ' . $string);
         }
 
@@ -35,7 +35,7 @@ if (!function_exists('html')) {
         }
 
         // CLASS
-        if ( preg_match_all('#[\.](?<class>[^\.]+)#', $string, $match)) {
+        if (preg_match_all('#[\.](?<class>[^\.]+)#', $string, $match)) {
             empty($attributes['class']) ? $attributes['class'] = '' : $attributes['class'] .= '';
             $attributes['class'] .= implode(' ', $match['class']);
         }
@@ -62,14 +62,16 @@ if (!function_exists('dd')) {
 
     function dd()
     {
-        array_map(function($x) { !d($x); }, func_get_args());
-        d(microtime(),'Stats execution');
+        array_map(function ($x) {
+            !d($x);
+        }, func_get_args());
+        d(microtime(), 'Stats execution');
         die;
     }
 }
 
 
-if (! function_exists('d')) {
+if (!function_exists('d')) {
     /**
      * Dump the passed variables and end the script.
      *
@@ -91,7 +93,8 @@ if (! function_exists('d')) {
  * @param unknown_type $round
  * @throws Exception
  */
-function human_size($size, $round = 1) {
+function human_size($size, $round = 1)
+{
 
     $unit = array('Ko', 'Mo', 'Go', 'To');
 
@@ -99,11 +102,14 @@ function human_size($size, $round = 1) {
     $result = $size . 'o';
 
     // calcul
-    foreach ($unit as $u) {if (($size /= 1024) > 1) {$result = round($size, $round) . $u;}}
+    foreach ($unit as $u) {
+        if (($size /= 1024) > 1) {
+            $result = round($size, $round) . $u;
+        }
+    }
 
     return $result;
 }
-
 
 
 /**
@@ -191,14 +197,15 @@ function modal(...$args)
  * @param ...$params
  * @return \FrenchFrogs\Container\Javascript
  */
-function js($namespace = null, $selector = null, $function = null, ...$params){
+function js($namespace = null, $selector = null, $function = null, ...$params)
+{
     /** @var $container FrenchFrogs\Container\Javascript */
     $container = FrenchFrogs\Container\Javascript::getInstance($namespace);
 
-    if (!is_null($function)){
+    if (!is_null($function)) {
         array_unshift($params, $selector, $function);
         call_user_func_array([$container, 'appendJs'], $params);
-    } elseif(!is_null($selector)) {
+    } elseif (!is_null($selector)) {
         $container->append($selector);
     }
 
@@ -212,7 +219,8 @@ function js($namespace = null, $selector = null, $function = null, ...$params){
  * @param null $href
  * @return \FrenchFrogs\Container\Css
  */
-function css($namespace  = null) {
+function css($namespace = null)
+{
     return FrenchFrogs\Container\Css::getInstance($namespace);
 }
 
@@ -225,7 +233,8 @@ function css($namespace  = null) {
  * @param null $conditional
  * @return \FrenchFrogs\Container\Head
  */
-function h($name = null, $value = null, $conditional = null) {
+function h($name = null, $value = null, $conditional = null)
+{
     /** @var $container FrenchFrogs\Container\Head */
     $container = FrenchFrogs\Container\Head::getInstance();
 
@@ -275,7 +284,8 @@ function ruler($namespace = null)
  * @param array ...$params
  * @return \Illuminate\Database\Query\Expression
  */
-function raw(...$params) {
+function raw(...$params)
+{
     return DB::raw(...$params);
 }
 
@@ -305,7 +315,8 @@ function transaction($callable, $connection = null)
  * @param array $columns
  * @return Illuminate\Database\Query\Builder
  */
-function query($table, $columns = null, $connection = null) {
+function query($table, $columns = null, $connection = null)
+{
 
     $query = DB::connection($connection)->table($table);
 
@@ -324,10 +335,11 @@ function query($table, $columns = null, $connection = null) {
  * @return NULL|number|string
  * @throws \Exception
  */
-function uuid($format = 'bytes', $uuid = null) {
-    if(is_null($uuid)){
+function uuid($format = 'bytes', $uuid = null)
+{
+    if (is_null($uuid)) {
         $uuid = Uuid::generate(4)->$format;
-    }else{
+    } else {
         $uuid = Uuid::import($uuid)->$format;
     }
     return $uuid;
@@ -340,7 +352,8 @@ function uuid($format = 'bytes', $uuid = null) {
  * @param $value
  * @param $filters
  */
-function f($value, $filters) {
+function f($value, $filters)
+{
     $filter = new \FrenchFrogs\Filterer\Filterer();
     $filter->setFilters($filters);
     return $filter->filter($value);
@@ -353,7 +366,8 @@ function f($value, $filters) {
  * @param $validators
  * @return bool
  */
-function v($value, $validators) {
+function v($value, $validators)
+{
     $validator = Validator::make(['v' => $value], ['v' => $validators]);
     return !$validator->fails();
 }
@@ -366,7 +380,8 @@ function v($value, $validators) {
  * @param null $validators
  * @return mixed|null
  */
-function fv($value, $filters = null, $validators = null) {
+function fv($value, $filters = null, $validators = null)
+{
 
     if (!is_null($filters)) {
         $value = f($value, $filters);
@@ -388,7 +403,8 @@ function fv($value, $filters = null, $validators = null) {
  *
  * @return mixed
  */
-function is_debug() {
+function is_debug()
+{
     return config('app.debug');
 }
 
@@ -397,10 +413,10 @@ function is_debug() {
  *
  * @return bool
  */
-function production(){
+function production()
+{
     return app()->environment() == 'production';
 }
-
 
 
 /**
@@ -484,7 +500,8 @@ function ld($message, $context = [])
  * @param int $decimal
  * @return string
  */
-function number_french($i, $decimal = 0) {
+function number_french($i, $decimal = 0)
+{
     return number_format($i, $decimal, '.', ' ');
 }
 
@@ -590,7 +607,8 @@ if (!function_exists('extract_meta_url')) {
  * @throws \Exception
  */
 if (!function_exists('exc')) {
-    function exc($message, $quiet = false) {
+    function exc($message, $quiet = false)
+    {
 
         $e = new \Exception($message);
         le($e->getMessage());
@@ -609,7 +627,8 @@ if (!function_exists('exc')) {
  *
  * @return mixed
  */
-function user($info = null) {
+function user($info = null)
+{
 
     // if $info is not null we send the wanted info
     if (!is_null($info)) {
@@ -622,14 +641,14 @@ function user($info = null) {
 }
 
 
-
 /**
  * Return Reference for the collection
  *
  * @package Reference
  * @return \FrenchFrogs\App\Models\Reference
  */
-function ref($collection, $force_refresh = false) {
+function ref($collection, $force_refresh = false)
+{
 
     // recuperation de la collection
     $reference = \FrenchFrogs\App\Models\Reference::getInstance($collection);
@@ -646,27 +665,80 @@ function ref($collection, $force_refresh = false) {
 /**
  *
  *
- * @param $content
+ * @param $index
  * @param null $container
  * @param null $lang
  * @return string
  */
-function c($content, $container = null, $lang = null) {
+function c($index, $lang = null, $bind = [])
+{
 
-    if (!is_null($container)) {
-        $container = (array) $container;
-    }
+    // definition de la langue
+    $lang = is_null($lang) ? Ref::LANG_FR : $lang;
 
-    // cas d'une nouvelle entrée
-    if ($content{0} != ':') {
+    // construction du contenu
+    if (\Session::get('ff-edit')) {
 
-        try {
-            throw new Exception('Get call function');
-        } catch(\Exception $e) {
-            dd($e->getTrace());
-        }
-        dd($content);
+        // charge tout les contenu 1 par 1
+        $content = \FrenchFrogs\App\Models\Db\Content::where('content_index', $index)->where('lang_sid', $lang)->orderBy('created_at', 'desc')->first();
+
+        // cas de l'edition
+        $content = html('ffedit', ['class' => 'ff-edit', 'data-target' => '#modal-remote', 'data-url' => route('content-edit', [$index]), 'data-edit-id' => $index], $content->content);
+    } else {
+        $content = trans( $lang. '.' . $index, $bind);
     }
 
     return $content;
+}
+
+/**
+ * Les liste les fichier qui match recursivement le pattern
+ *
+ * @param $pattern
+ * @param int $flags
+ * @return array
+ */
+function glob_recursive($pattern, $flags = 0)
+{
+    $files = glob($pattern, $flags);
+
+    foreach (glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT) as $dir) {
+        $files = array_merge($files, glob_recursive($dir . '/' . basename($pattern), $flags));
+    }
+
+    return $files;
+}
+
+
+/**
+ * TYraitement de la mise place d'un function d'affichage de contenu
+ *
+ * @param $content
+ * @param null $lang
+ * @param array $bind
+ * @param null $count
+ * @return array
+ */
+function _ff_c($content, $lang = null, $bind = [], $count = null)
+{
+    // recupertation des arguments
+    $index = str_random(4);
+
+    $data = [
+        'content_index' => $index,
+        'lang_sid' => $lang ?: Ref::LANG_FR,
+        'content' => $content,
+        'is_published' => true,
+        'published_at' => Carbon\Carbon::now()
+    ];
+
+    // génération du code
+    $export = '\FrenchFrogs\App\Models\Db\Content::create(' . var_export($data, true) . ');' . str_repeat(PHP_EOL, 3);
+    eval($export);
+
+    // inscription de l'informatyion dans un fichier temporaire
+    file_put_contents(storage_path('/framework/dev/content.php'), $export, FILE_APPEND);
+
+    // on retourne les information
+    return [$content, $index];
 }

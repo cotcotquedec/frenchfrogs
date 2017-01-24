@@ -9,4 +9,9 @@ class Reference extends Model
     protected $primaryKey = 'reference_id';
     public $incrementing = false;
     protected $table = 'reference';
+
+
+    protected $casts = [
+        'data' => 'json',
+    ];
 }
