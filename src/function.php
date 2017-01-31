@@ -752,5 +752,5 @@ function  a(&$object) {
         $object = $object->toArray();
     }
 
-    $object = json_decode(json_encode($object), true);
+    $object = (array) json_decode(json_encode($object), true);
 }
