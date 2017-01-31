@@ -753,4 +753,8 @@ function  a(&$object) {
     }
 
     $object = (array) json_decode(json_encode($object), true);
+
+    if (!is_array($object)) {
+        $object = [];
+    }
 }
