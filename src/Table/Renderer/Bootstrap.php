@@ -97,6 +97,9 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
 
         foreach($table->getRows() as $row) {
 
+            // on force le cast des lignes
+            $row = (array) $row;
+
             $line = '';
             foreach($table->getColumns() as $name => $column) {
 

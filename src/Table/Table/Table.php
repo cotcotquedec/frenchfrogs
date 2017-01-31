@@ -215,14 +215,13 @@ class Table
             /** @var $source \Illuminate\Database\Query\Builder */
 
             $count = query(raw("({$source->toSql()}) as a"), [raw('COUNT(*) as _num_rows')], $source->getConnection()->getName())->mergeBindings($source)->first();
-            $this->itemsTotal = isset($count['_num_rows']) ?  $count['_num_rows'] : null;
+            a($count); // cast
 
+            $this->itemsTotal = isset($count['_num_rows']) ?  $count['_num_rows'] : null;
             $source = $source->skip($this->getItemsOffset())->take($this->getItemsPerPage())->get();
 
             // Compatibilité avec laravel  5.3
-            if ($source instanceof Collection) {
-                $source = $source->toArray();
-            }
+            a($source); // cast
 
             $source = new \ArrayIterator($source);
 

@@ -426,7 +426,7 @@ trait Datatable
         }
 
         // on enregistre la session
-        Session::set($this->getToken(), json_encode(['constructor' => $this->getConstructor(), 'query' => $query]));
+        Session::put($this->getToken(), json_encode(['constructor' => $this->getConstructor(), 'query' => $query]));
         return $this;
     }
 

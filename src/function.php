@@ -742,3 +742,15 @@ function _ff_c($content, $lang = null, $bind = [], $count = null)
     // on retourne les information
     return [$content, $index];
 }
+
+/**
+ * @param $object
+ */
+function  a(&$object) {
+
+    if ($object instanceof \Illuminate\Support\Collection) {
+        $object = $object->toArray();
+    }
+
+    $object = json_decode(json_encode($object), true);
+}
