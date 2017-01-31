@@ -338,9 +338,9 @@ function query($table, $columns = null, $connection = null)
 function uuid($format = 'bytes', $uuid = null)
 {
     if (is_null($uuid)) {
-        $uuid = Uuid::generate(4)->$format;
+        $uuid =  \Webpatser\Uuid\Uuid::generate(4)->$format;
     } else {
-        $uuid = Uuid::import($uuid)->$format;
+        $uuid = \Webpatser\Uuid\Uuid::import($uuid)->$format;
     }
     return $uuid;
 }
