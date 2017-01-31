@@ -757,4 +757,6 @@ function  a(&$object) {
     if (!is_array($object)) {
         $object = [];
     }
+
+    return $object;
 }
