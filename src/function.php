@@ -621,27 +621,6 @@ if (!function_exists('exc')) {
 }
 
 /**
- * Return auth user information
- *
- * @package ACL
- *
- * @return mixed
- */
-function user($info = null)
-{
-
-    // if $info is not null we send the wanted info
-    if (!is_null($info)) {
-        $user = \auth()->user()->$info;
-    } else {
-        $user = \configurator()->build('user.business.class', \FrenchFrogs\App\Models\Business\User::class, [\auth()->user()->user_id]);
-    }
-
-    return $user;
-}
-
-
-/**
  * Return Reference for the collection
  *
  * @package Reference

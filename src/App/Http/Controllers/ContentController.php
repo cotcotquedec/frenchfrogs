@@ -78,33 +78,6 @@ class ContentController extends Controller
     {
 
         $this->validate($this->request(), ['id' => 'exists:content,uuid']);
-//
-//
-//        // MODEL
-//        $voucher = new VoucherCode();
-//
-//        // FORM
-//        $form = \form()->enableRemote();
-//        $form->setLegend('Campagne : ' . $voucher->value);
-
-//        $form->addSelect('mission_sequence_sid', 'Parcours', $sequence);
-//        $form->addSubmit('Enregistrer');
-//
-//         TRAITEMENT
-//        if (request()->has('Enregistrer')) {
-//            $form->valid(request()->all());
-//            if ($form->isValid()) {
-//                $data = $form->getFilteredValues();
-//                try {
-//                    $voucher->value = $data['value'];
-//                    $voucher->partner_id = \user()->getPartnerId();
-//                    $voucher->save();
-//                    \js()->success()->closeRemoteModal()->reloadDataTable();
-//                } catch (\Exception $e) {
-//                    \js()->error($e->getMessage());
-//                }
-//            }
-//        }
 
         return response()->modal($form);
     }

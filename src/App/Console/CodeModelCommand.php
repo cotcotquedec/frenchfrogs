@@ -47,6 +47,7 @@ class CodeModelCommand extends CodeCommand
                 foreach (\DB::select('SHOW TABLES') as $row) {
                     $tables[] = current($row);
                 }
+
                 $name = $this->askWithCompletion('Quel est le nom de la table?', $tables);
             }
         } while (empty($name));
@@ -81,10 +82,10 @@ class CodeModelCommand extends CodeCommand
             $type = null;
 
             //PRIMARY KEY
-            if ($row['Key'] == 'PRI') {
-                $maker->addProperty('primaryKey', $row['Field'])->enableProtected();
+            if ($row->Key == 'PRI') {
+                $maker->addProperty('primaryKey', $row->Field)->enableProtected();
 
-                if (preg_match('#^int\(\d+\)$#', $row['Type']) && $row['Extra'] != 'auto_increment') {
+                if (preg_match('#^int\(\d+\)$#', $row->Type) && $row->Extra != 'auto_increment') {
                     $maker->addProperty('incrementing', false)->enablePublic();
                 }
 
@@ -93,32 +94,32 @@ class CodeModelCommand extends CodeCommand
             }
 
             // JSON
-            if (preg_match('#^json$#', $row['Type'])) {
-                $casts[] = [$row['Field'] => 'json'];
+            if (preg_match('#^json$#', $row->Type)) {
+                $casts[] = [$row->Field => 'json'];
                 $type = 'array';
             }
 
             // TIMESTAMP
-            if (preg_match('#_at$#', $row['Field'])) {
+            if (preg_match('#_at$#', $row->Field)) {
                 $maker->addAlias('Carbon', '\\Carbon\\Carbon');
                 $type = 'Carbon';
 
-                $dates[] = $row['Field'];
+                $dates[] = $row->Field;
 
-                if ($row['Field'] == 'created_at') {
+                if ($row->Field == 'created_at') {
                     $created = true;
                 }
 
-                if ($row['Field'] == 'updated_at') {
+                if ($row->Field == 'updated_at') {
                     $updated = true;
                 }
 
-                if ($row['Field'] == 'deleted_at') {
+                if ($row->Field == 'deleted_at') {
                     $deleted = true;
                 }
             }
 
-            $maker->addTagProperty('$' . $row['Field'], $type);
+            $maker->addTagProperty('$' . $row->Field, $type);
         }
 
         // timemstamps
