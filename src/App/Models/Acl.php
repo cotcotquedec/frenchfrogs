@@ -47,7 +47,7 @@ class Acl extends Ruler
             $permissions = \query('user_permission_user AS upu', ['upu.user_permission_id'])
                 ->join('user_permission AS p', 'p.user_permission_id', '=', 'upu.user_permission_id')
                 ->where('p.user_interface_id', $interface)
-                ->where('user_id', user('user_id'))
+                ->where('user_id',Auth::user()->user_id)
                 ->pluck('user_permission_id');
 
             if ($permissions instanceof Collection) {
