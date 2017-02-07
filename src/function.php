@@ -723,6 +723,8 @@ function _ff_c($content, $lang = null, $bind = [], $count = null)
 }
 
 /**
+ * Force la cast d'une variable en array
+ *
  * @param $object
  */
 function  a(&$object) {
@@ -738,4 +740,26 @@ function  a(&$object) {
     }
 
     return $object;
+}
+
+
+
+/**
+ * Raccourcie vers l'trulistauer authentidfié
+ *
+ * @param null $name
+ * @return \Illuminate\Contracts\Auth\Authenticatable|null
+ */
+function user($name = null) {
+
+    // recuperation de l'objet qui gere les user
+    $user = \auth()->user();
+
+    // gestion de la recherche de propriete
+    if (!is_null($user) && !is_null($name) ) {
+        $user = property_exists($user, $name) ? $user->$name : null;
+    }
+
+    // gestion de la propriété demandé
+    return $user;
 }
