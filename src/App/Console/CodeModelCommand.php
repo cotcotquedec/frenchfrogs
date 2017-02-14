@@ -95,7 +95,7 @@ class CodeModelCommand extends CodeCommand
 
             // JSON
             if (preg_match('#^json$#', $row->Type)) {
-                $casts[] = [$row->Field => 'json'];
+                $casts[$row->Field] = 'json';
                 $type = 'array';
             }
 

@@ -182,7 +182,7 @@ class Reference
             'reference_id' => $id,
             'name' => $name,
             'collection' => $collection,
-            'data' => json_encode($data)
+            'data' => is_null($data) ? null : json_encode($data)
         ]);
     }
 

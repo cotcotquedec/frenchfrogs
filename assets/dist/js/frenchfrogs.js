@@ -199,7 +199,13 @@ $.fn.extend({
 
         // SELECT 2
         if (jQuery.fn.select2 != undefined) {
+
+            jQuery(this).find('select.select2').each(function () {
+                    jQuery(this).select2();
+            });
+
             jQuery(this).find('.select2-remote').each(function () {
+
                 jQuery(this).select2({
                     minimumInputLength: jQuery(this).data('length'),
                     ajax: {
