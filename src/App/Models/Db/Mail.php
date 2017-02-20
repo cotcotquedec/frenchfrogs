@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Mail extends Model
 {
     protected $primaryKey = 'mail_uuid';
-    public $primaryUuid = true;
+    public $keyType = Model::BINARY16_UUID;
     protected $table = 'mail';
 
     protected $casts = [

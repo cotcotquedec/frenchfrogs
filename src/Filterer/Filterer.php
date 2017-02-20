@@ -332,7 +332,7 @@ class Filterer
      */
     public function uuid($value, $format = 'bytes')
     {
-        return is_null($value) ? null : uuid($format, $value);
+        return is_null($value) ? null : uuid($value)->$format;
     }
 
     /**

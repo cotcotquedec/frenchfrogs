@@ -7,7 +7,7 @@ class Media extends Model
 
     protected $table = 'media';
     protected $primaryKey = 'uuid';
-    public $primaryUuid = true;
+    public $keyType = Model::BINARY16_UUID;
 
     public function attachment()
     {

@@ -8,5 +8,5 @@ class Attachment extends Model
     protected $table = 'media_attachment';
     protected $primaryKey = 'uuid';
     public $incrementing = false;
-    public $primaryUuid = true;
+    public $keyType = Model::BINARY16_UUID;
 }

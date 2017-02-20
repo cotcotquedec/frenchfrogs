@@ -9,7 +9,7 @@ class Group extends Model
 
     protected $primaryKey = 'user_group_id';
     public $timestamps = false;
-    public $primaryUuid = true;
+    public $keyType = Model::BINARY16_UUID;
     protected $table = 'user_group';
 
 

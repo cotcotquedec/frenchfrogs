@@ -332,16 +332,17 @@ function query($table, $columns = null, $connection = null)
  *
  * @param string $format
  * @param null $uuid
- * @return NULL|number|string
+ * @return \Webpatser\Uuid\Uuid
  * @throws \Exception
  */
-function uuid($format = 'bytes', $uuid = null)
+function uuid($uuid = null)
 {
     if (is_null($uuid)) {
-        $uuid =  \Webpatser\Uuid\Uuid::generate(4)->$format;
+        $uuid =  \Webpatser\Uuid\Uuid::generate(4);
     } else {
-        $uuid = \Webpatser\Uuid\Uuid::import($uuid)->$format;
+        $uuid = \Webpatser\Uuid\Uuid::import($uuid);
     }
+
     return $uuid;
 }
 

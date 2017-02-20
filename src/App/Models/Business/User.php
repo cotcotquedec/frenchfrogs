@@ -3,6 +3,7 @@
 use FrenchFrogs\App\Models\Acl;
 use FrenchFrogs\App\Models\Db;
 use FrenchFrogs\Business\Business;
+use Webpatser\Uuid\Uuid;
 
 
 /**
@@ -109,7 +110,7 @@ class User extends Business
         $insert = [];
         foreach(array_diff($groups, $current) as $g) {
             if (empty($g)) {continue;}
-            $insert[] = ['user_group_user_id' => \uuid(), 'user_id' => $this->getId(), 'user_group_id' => $g];
+            $insert[] = ['user_group_user_id' => \uuid()->bytes, 'user_id' => $this->getId(), 'user_group_id' => $g];
         }
 
         $this->getModel()->groups()->insert($insert);
@@ -145,7 +146,7 @@ class User extends Business
         $insert = [];
         foreach(array_diff($permissions, $current) as $p) {
             if (empty($p)) {continue;}
-            $insert[] = ['user_permission_user_id' => \uuid(), 'user_id' => $this->getId(), 'user_permission_id' => $p];
+            $insert[] = ['user_permission_user_id' => \uuid()->bytes, 'user_id' => $this->getId(), 'user_permission_id' => $p];
         }
 
         $this->getModel()->permissions()->insert($insert);
@@ -171,7 +172,6 @@ class User extends Business
         if (array_search($permission, $current) === false) {
             $this->getModel()->permissions()->insert(
                 [
-                    'user_permission_user_id' => uuid(),
                     'user_id' => $this->getId(),
                     'user_permission_id' => $permission
                 ]

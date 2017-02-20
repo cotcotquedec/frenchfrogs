@@ -47,7 +47,7 @@ abstract class Business
      */
     public function __construct($id)
     {
-        $this->id = static::isUuid() ? uuid('bytes', $id) : $id;
+        $this->id = static::isUuid() ? uuid($id)->bytes : $id;
     }
 
 
@@ -69,7 +69,7 @@ abstract class Business
      */
     public function getId($format = 'bytes')
     {
-        return static::isUuid() && $format != false ? uuid($format, $this->id) : $this->id;
+        return static::isUuid() && $format != false ? uuid($this->id)->$format : $this->id;
     }
 
     /**
@@ -153,7 +153,7 @@ abstract class Business
     {
         try {
             $class = static::$modelClass;
-            $class::findOrFail(static::isUuid() ? uuid('bytes', $id) : $id);
+            $class::findOrFail(static::isUuid() ? uuid($id)->bytes : $id);
             return true;
         } catch(\Exception $e) {
             return false;

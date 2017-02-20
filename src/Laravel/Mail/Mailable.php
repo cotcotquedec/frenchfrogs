@@ -31,7 +31,7 @@ class Mailable extends \Illuminate\Mail\Mailable implements \FrenchFrogs\Laravel
      */
     public function setUuid($uuid)
     {
-        $this->uuid = \uuid('hex', $uuid);
+        $this->uuid = \uuid($uuid)->hex;
         return $this;
     }
 

@@ -15,7 +15,7 @@ class Log extends Model {
 
     protected $primaryKey = 'schedule_log_id';
     protected $table = 'schedule_log';
-    public $primaryUuid = true;
+    public $keyType = Model::BINARY16_UUID;
 
 
     /**

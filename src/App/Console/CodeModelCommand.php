@@ -67,6 +67,7 @@ class CodeModelCommand extends CodeCommand
         $maker = file_exists($file) ? Maker::load($class) : Maker::init($class, $file);
         $maker->setParent(Model::class);
         $maker->addProperty('table', $name)->enableProtected();
+        $maker->addAlias('Model', Model::class);
 
         // CAST
         $casts = [];
@@ -83,14 +84,31 @@ class CodeModelCommand extends CodeCommand
 
             //PRIMARY KEY
             if ($row->Key == 'PRI') {
-                $maker->addProperty('primaryKey', $row->Field)->enableProtected();
 
+                // si la clé primaiure est autre que "id" on l'inscrit
+                if ($row->Field != 'id') {
+                    $maker->addProperty('primaryKey', $row->Field)->enableProtected();
+                }
+
+                // cas d'une primary int mais pas incrémenté
                 if (preg_match('#^int\(\d+\)$#', $row->Type) && $row->Extra != 'auto_increment') {
                     $maker->addProperty('incrementing', false)->enablePublic();
                 }
 
-                // @todo binary 16
-                // @todo string ID
+                // cas d'un uuid
+                if ($row->Type == 'binary(16)' && $row->Extra != 'auto_increment') {
+                    $maker->addProperty('keyType', Model::BINARY16_UUID)->enablePublic();
+                }
+
+                // cas d'un id string
+                if (preg_match('#^varchar\(\d+\)$#', $row->Type) && $row->Extra != 'auto_increment') {
+                    $maker->addProperty('incrementing', false)->enablePublic();
+                }
+            }
+
+            // UUID
+            if ($row->Type == 'binary(16)') {
+                $casts[$row->Field] = Model::BINARY16_UUID;
             }
 
             // JSON

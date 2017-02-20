@@ -8,7 +8,7 @@ class User extends Model  implements \Illuminate\Contracts\Auth\Authenticatable 
     use Authenticatable;
     use SoftDeletes;
 
-    public $primaryUuid = true;
+    public $keyType = Model::BINARY16_UUID;
     protected $primaryKey  = 'user_id';
     protected $table = 'user';
     protected $hidden = ['password', 'remember_token'];
@@ -21,7 +21,7 @@ class User extends Model  implements \Illuminate\Contracts\Auth\Authenticatable 
      */
     public function permissions()
     {
-        return $this->hasMany(PermissionUser::class,'user_id',  'user_id');
+        return $this->hasMany(PermissionUser::class, 'user_id',  'user_id');
     }
 
 

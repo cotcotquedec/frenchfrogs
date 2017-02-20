@@ -123,7 +123,7 @@ class CodePermissionCommand extends CodeCommand
         // Creation de la migration
         $this->info('Creation de la migration');
 
-        $filename = 'create_permission_' . $name . '_' . \uuid('hex');
+        $filename = 'create_permission_' . $name . '_' . \uuid()->hex;
         $path = $this->laravel->databasePath() . '/migrations';
         $filepath = $this->laravel['migration.creator']->create($filename, $path);
 
