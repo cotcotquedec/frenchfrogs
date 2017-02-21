@@ -3,7 +3,7 @@
 
 use \Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use FrenchFrogs\Laravel\Database\Eloquent\Model;
 
 /**
  * 
@@ -18,27 +18,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class Content extends \FrenchFrogs\Laravel\Database\Eloquent\Model
+class Content extends Model
 {
 	use SoftDeletes;
 
-	/**
-	 * 
-	 *
-	 */
 	protected $table = 'content';
-	
-	
-	/**
-	 * 
-	 *
-	 */
 	protected $primaryKey = 'uuid';
-
-
     public $keyType = Model::BINARY16_UUID;
-	
-	
+
 	/**
 	 * 
 	 *
