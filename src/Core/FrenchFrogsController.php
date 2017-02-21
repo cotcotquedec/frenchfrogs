@@ -1,6 +1,8 @@
 <?php namespace FrenchFrogs\Core;
 
 
+use Illuminate\Http\Request;
+
 trait FrenchFrogsController
 {
 
@@ -22,6 +24,16 @@ trait FrenchFrogsController
         if (!$this->request) {
             $request = \request();
             $request->merge(\Route::current()->parameters());
+
+            // formatage
+            $format = [];
+            foreach ($request->all() as $k => $v) {
+                if (preg_match('#[0-9A-Z]{32}#', $v)) {
+                    $format['__' . $k] = uuid($v)->bytes;
+                }
+            }
+            $request->merge($format);
+
             $this->request = $request;
         }
 

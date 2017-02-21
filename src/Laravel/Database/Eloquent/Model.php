@@ -143,23 +143,6 @@ class Model extends \Illuminate\Database\Eloquent\Model
     }
 
     /**
-     * Surcharge de find pour incluse la gestion du binarray
-     *
-     * @param $id
-     * @param array ...$args
-     * @return mixed
-     */
-//    public function find($id, ...$args)
-//    {
-//        if ($this->getKeyType() == static::BINARY16_UUID) {
-//            $id = $this->castAsBinaryBytes($id);
-//        }
-//
-//        return parent::find($id, ...$args);
-//    }
-
-
-    /**
      * Handle dynamic method calls into the model.
      *
      * @param  string  $method
