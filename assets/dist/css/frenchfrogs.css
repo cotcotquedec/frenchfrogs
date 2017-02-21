@@ -10,6 +10,9 @@ table.dataTable {
     border-bottom:1px solid #ddd
 }
 
+textarea {
+    resize:none;
+}
 
 div.dataTables_wrapper {
     margin: 0px 15px;

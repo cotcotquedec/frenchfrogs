@@ -181,7 +181,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
         if ($this->getKeyType() == static::BINARY16_UUID) {
 
             $id = \Webpatser\Uuid\Uuid::generate(4);
-            $attributes[$keyName] = $id;
+            $attributes[$keyName] = $id->bytes;
             $query->insert($attributes);
 
         // auto increment

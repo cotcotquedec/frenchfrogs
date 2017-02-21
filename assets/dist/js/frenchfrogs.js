@@ -149,6 +149,26 @@ $.fn.extend({
             });
         }
 
+
+
+        // ajout du compteur sur le text area
+        $('textarea[maxlength]').each(function () {
+            var _this = $(this);
+            var _parent = _this.parent();
+
+            // ajout du compteur
+            $('<div class="pull-right"><span class="txt-current"></span><span class="txt-max"></span></div>')
+                .insertAfter(_this);
+
+            _parent.find('span.txt-max').html(" / " + _this.prop('maxlength'));
+
+            _this.on("click mousedown mouseup focus blur keydown change", function () {
+                _parent.find('span.txt-current').text($(this).val().length);
+            });
+
+            _this.change();
+        });
+
         // CALLBACK
         jQuery(this).find('.callback-remote').each(function () {
             jQuery(this).click(function (e) {
