@@ -2,7 +2,6 @@
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 use FrenchFrogs\Maker\Maker;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
@@ -28,6 +27,27 @@ class CodeModelCommand extends CodeCommand
      */
     protected $description = 'Génération d\'un model';
 
+
+    /**
+     * @todo
+     */
+   /* public function constraints()
+    {
+
+        // COnstrainte
+        $constraints = \DB::select("SELECT
+                                  column_name,
+                                  referenced_table_name,
+                                  referenced_column_name
+                                FROM
+                                  information_schema.key_column_usage
+                                WHERE
+                                  table_schema = ? AND
+                                  table_name = ?
+                                  AND referenced_table_name IS NOT NULL", ['jobmaker' , $name]);
+        dd($constraints);
+    }*/
+
     /**
      * Execute the console command.
      *
@@ -51,7 +71,6 @@ class CodeModelCommand extends CodeCommand
                 $name = $this->askWithCompletion('Quel est le nom de la table?', $tables);
             }
         } while (empty($name));
-
 
         // nom de la class
         $class = $this->namespace . ucfirst(camel_case($name));

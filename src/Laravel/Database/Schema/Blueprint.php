@@ -30,6 +30,18 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
 
 
     /**
+     * Ajoute une reference
+     *
+     * @param $columns
+     * @return \Illuminate\Support\Fluent
+     */
+    public function reference($columns)
+    {
+        $this->foreign($columns)->references('reference_id')->on('reference');
+        return $this->string($columns, 64);
+    }
+
+    /**
      * Ajoute une colonne id de type string
      *
      * @param string $column

@@ -84,6 +84,28 @@ abstract class Element
         return isset($this->alias);
     }
 
+    /**
+     * Enable read only on element
+     *
+     * @return $this
+     */
+    public function enableReadOnly()
+    {
+        $this->addAttribute('disabled', 'disabled');
+        return $this;
+    }
+
+    /**
+     * Disabled Read Only
+     *
+     * @return $this
+     */
+    public function disableReadOnly()
+    {
+        $this->removeAttribute('disabled');
+        return $this;
+    }
+
 
     /**
      * unset $belongTo attribute
