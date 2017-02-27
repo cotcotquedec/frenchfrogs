@@ -82,7 +82,7 @@ $.fn.extend({
 
 
     // INITAILISATION
-    initialize: function () {
+    initialize: function (callback) {
         // MODAL
         jQuery(this).find('.modal-remote').each(function () {
 
@@ -148,8 +148,6 @@ $.fn.extend({
                 }
             });
         }
-
-
 
         // ajout du compteur sur le text area
         $('textarea[maxlength]').each(function () {
@@ -435,6 +433,7 @@ $.fn.extend({
         jQuery(this).find('table.table > thead > tr:last-child').children().css('border-bottom', '1px solid #ddd');
 
 
+        // Edition des datatatable
         jQuery('.ff-edit[data-edit-id]').contextmenu(function () {
 
             // reécupération des informations
@@ -457,6 +456,11 @@ $.fn.extend({
             return false;
         });
 
+
+        // CALLBACK
+        if (typeof callback === 'function') {
+            callback(jQuery(this));
+        }
 
     },
 
