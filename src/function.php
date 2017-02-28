@@ -758,7 +758,7 @@ function user($name = null) {
 
     // gestion de la recherche de propriete
     if (!is_null($user) && !is_null($name) ) {
-        $user = property_exists($user, $name) ? $user->$name : null;
+        $user = $user->$name;
     }
 
     // gestion de la propriété demandé

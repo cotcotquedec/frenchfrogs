@@ -15,6 +15,15 @@ class User extends Model  implements \Illuminate\Contracts\Auth\Authenticatable 
 
 
     /**
+     *
+     *
+     */
+    protected $casts = [
+        "user_id" => Model::BINARY16_UUID,
+        'media_id' => Model::BINARY16_UUID
+    ];
+
+    /**
      * Permission liée a l'utilisateur
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
