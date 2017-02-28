@@ -171,6 +171,10 @@ class Inline extends Renderer\Renderer {
         // INPUT
         $element->addClass(Style::FORM_ELEMENT_CONTROL);
         $element->addAttribute('id', $element->getName());
+        if ($element->hasAttribute('maxlength')) {
+            $element->addClass('ff-text-count');
+        }
+
         $html = html('textarea', $element->getAttributes(), $element->getValue());
 
         // DESCRIPTION

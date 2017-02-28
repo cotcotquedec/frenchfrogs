@@ -150,7 +150,8 @@ $.fn.extend({
         }
 
         // ajout du compteur sur le text area
-        $('textarea[maxlength]').each(function () {
+        $('textarea.ff-text-count[maxlength]').each(function () {
+
             var _this = $(this);
             var _parent = _this.parent();
 
