@@ -72,18 +72,37 @@ class CodeModelCommand extends CodeCommand
             }
         } while (empty($name));
 
-        // nom de la class
-        $class = $this->namespace . ucfirst(camel_case($name));
-        $class = $this->ask('Quelle est le nom de la classe?', $class);
 
-        $file = ($this->directory) . ucfirst(camel_case($name)) . '.php';
+        // choix des nom de classe
+        $choices = [];
+
+        // cas du des underscore
+        if (strpos($name, '_')) {
+
+            // oin seprae les underscore et on ajoute des majuscule
+            $break = [];
+            foreach (explode('_', $name) as $item) {
+                $break[] = ucfirst($item);
+            }
+
+            // reconstruction du  nom de la class
+            $break = implode('\\', $break);
+            $choices[] =  $this->namespace . ucfirst(camel_case($break));
+        }
+
+        // ajout du choix par default
+        $choices[] = $this->namespace . ucfirst(camel_case($name));
+        $class = $this->choice('Quelle est le nom de la classe?', $choices, 0);
+
+
+        $file = 'app/' . str_replace('\\', '/', $class) . '.php';
+        $file = str_replace('//', '/', $file);
         $file = $this->ask('Quelle est le nom du fichier?', $file);
-
-        // recuperation des colonnes
-        $columns = \DB::select('SHOW COLUMNS FROM ' . $name);
 
         // Creation de la classe
         $maker = file_exists($file) ? Maker::load($class) : Maker::init($class, $file);
+
+        dd('OK');
         $maker->setParent(Model::class);
         $maker->addProperty('table', $name)->enableProtected();
         $maker->addAlias('Model', Model::class);
@@ -96,6 +115,9 @@ class CodeModelCommand extends CodeCommand
         $created = false;
         $updated = false;
         $deleted = false;
+
+        // recuperation des colonnes
+        $columns = \DB::select('SHOW COLUMNS FROM ' . $name);
 
         foreach ($columns as $row) {
 
@@ -124,6 +146,8 @@ class CodeModelCommand extends CodeCommand
                     $maker->addProperty('incrementing', false)->enablePublic();
                 }
             }
+
+            $this->info($row->Type);
 
             // UUID
             if ($row->Type == 'binary(16)') {

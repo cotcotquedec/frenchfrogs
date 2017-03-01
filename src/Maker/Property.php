@@ -58,8 +58,12 @@ class Property
 
         // cas de la valeur null
         $value = $reflection->getDefaultValue();
+
+        dd($value);
+
         if (is_null($value)) {
             $value = Maker::NO_VALUE;
+
             $class = $reflection->getDeclaringClass();
             foreach ($class->getAst()->stmts as $stmt) {
 

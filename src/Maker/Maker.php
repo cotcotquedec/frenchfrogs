@@ -563,7 +563,6 @@ class Maker
             $this->addMethod(Method::fromReflection($method));
         }
 
-
         // @todo Gestion des interfaces
 //        $interface = $reflection->getImmediateInterfaces();
         // traits
@@ -690,6 +689,8 @@ class Maker
 
         // recuperation du realpath du fichier
         $file = app_path('../' . $file);
+
+
 
         if (file_exists($file)) {
             exc('Impossible de créer la classe "'.$class.'", Le fichier existe deja : ' . $file );
