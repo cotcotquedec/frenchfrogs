@@ -2,6 +2,7 @@
 
 use BetterReflection\Reflection\ReflectionClass;
 use FrenchFrogs\Core\Renderer;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\Filesystem;
 
 class Maker
@@ -10,6 +11,7 @@ class Maker
     use Docblock;
 
     const NAMESPACE_CONTROLLER = 'App\\Http\\Controllers\\';
+    const NAMESPACE_DB = 'Models\\Db\\';
 
     const NO_VALUE = '__null__';
 
@@ -396,10 +398,9 @@ class Maker
 
         // cas des alias
         foreach ($this->getAliases() as $alias => $c) {
-            $a = preg_replace('#^'.str_replace('\\', '\\\\', $c).'#', $alias, $name);
+            $a = preg_replace('#^'.str_replace('\\', '\\\\', $c).'#', $alias, $class);
             $name = strlen($a) < strlen($name) ? $a : $name;
         }
-
         return $name == $class ?  '\\' . $class : $name;
     }
 
@@ -566,6 +567,7 @@ class Maker
         // @todo Gestion des interfaces
 //        $interface = $reflection->getImmediateInterfaces();
         // traits
+
         foreach ($reflection->getTraitNames() as $traitName) {
             $this->addTrait($traitName);
         }
@@ -852,6 +854,49 @@ class Maker
 
         return $controllers;
     }
+
+
+    /**
+     * Recuperation des controllers de l'application
+     *
+     * @return array
+     */
+    static function findDb()
+    {
+        $dbs = [];
+
+        // recuperation des classes
+        $classes = static::findClasses(app_path('Models/Db'));
+
+        foreach ($classes as $class) {
+            $reflection = ReflectionClass::createFromName($class);
+
+            if (!$reflection->hasProperty('table')) {
+                continue;
+            }
+
+            if ($class{0} == '\\') {
+                $class = substr($class, 1);
+            }
+
+            $dbs[$class] = $reflection->getProperty('table')->getDefaultValue();
+        }
+
+        return $dbs;
+    }
+
+
+    /**
+     * Find model for a specifidc tablre
+     *
+     * @param $table
+     * @return mixed
+     */
+    static function findTable($table)
+    {
+        return collect(static::findDb())->search($table);
+    }
+
 
 
     /**
