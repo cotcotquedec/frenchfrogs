@@ -28,7 +28,7 @@ trait FrenchFrogsController
             // formatage
             $format = [];
             foreach ($request->all() as $k => $v) {
-                if (preg_match('#[0-9a-zA-Z]{32}#', $v)) {
+                if (is_string($v) && preg_match('#[0-9a-zA-Z]{32}#', $v)) {
                     $format['__' . $k] = uuid($v)->bytes;
                 }
             }
