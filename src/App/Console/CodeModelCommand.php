@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
 use Illuminate\Support\Pluralizer;
+use Models\Db\User;
 
 class CodeModelCommand extends CodeCommand
 {
@@ -230,16 +231,32 @@ class CodeModelCommand extends CodeCommand
 
         foreach ($constraints as $constraint) {
 
+            $type = $class = null;
+
             // ON valide que l'on veux bien mettre en place la constrainte
-            if (!$this->confirm(sprintf('Faire une liaison pour le champ "%s" vers "%s.%s"', $constraint->column_name, $constraint->referenced_table_name , $constraint->referenced_column_name), true)) {
+            if (!$this->confirm(sprintf('Faire une liaison pour le champ "%s" vers "%s.%s"', $constraint->column_name, $constraint->referenced_table_name, $constraint->referenced_column_name), true)) {
                 continue;
+            }
+
+            // Cas spécifique d'un utilisateur
+            if (preg_match('#.+_by#', $constraint->column_name)) {
+                if ($this->confirm('Est ce un lien vers la table "user"?', true)) {
+                    $type = 'OneToOne';
+                    $class = User::class;
+                    $maker->addAlias('User', $class);
+                    $maker->addTagProperty(camel_case( $constraint->column_name), 'User');
+                    $maker->addMethod(camel_case( $constraint->column_name))
+                        ->addTag('return', 'HasOne')
+                        ->setBody('return $this->hasOne(User::class, "' . $constraint->referenced_column_name . '", "' . $constraint->column_name . '");');
+                    continue;
+                }
             }
 
             //Definir le type de liaison
             $type = $this->choice('Quel type de liaison', ['OneToOne', 'OneToMany', static::CHOICE_NO_MORE], 1);
 
             // Recuperation du nom de la table
-            $class =  Maker::findTable($constraint->referenced_table_name);
+            $class = Maker::findTable($constraint->referenced_table_name);
 
             // si on en trouve pas de model pour la table en question, on continue
             if (empty($class)) {
@@ -256,7 +273,8 @@ class CodeModelCommand extends CodeCommand
                 case 'OneToOne':
 
                     // Nom de la liaision
-                    $name = $this->ask('Comment voulez vous nommer la relation?', camel_case($constraint->referenced_table_name));
+                    $referenced_table_name = Pluralizer::singular($constraint->referenced_table_name);
+                    $name = $this->ask('Comment voulez vous nommer la relation?', camel_case($referenced_table_name));
                     $maker->addTagProperty($name, $class);
                     $maker->addMethod($name)
                         ->addTag('return', 'HasOne')
@@ -269,10 +287,10 @@ class CodeModelCommand extends CodeCommand
                     // Nom de la liaision
                     $name = Pluralizer::plural($constraint->referenced_table_name);
                     $name = $this->ask('Comment voulez vous nommer la relation?', camel_case($name));
-                    $maker->addTagProperty($name, 'Collection');
+                    $maker->addTagProperty($name, 'Collection|' . $class . '[]');
                     $maker->addMethod($name)
                         ->addTag('return', 'HasMany')
-                        ->setBody('return $this->hasMany('.$class.'::class, "' . $constraint->referenced_column_name . '", "' . $constraint->column_name . '");');
+                        ->setBody('return $this->hasMany(' . $class . '::class, "' . $constraint->referenced_column_name . '", "' . $constraint->column_name . '");');
                     break;
 
                 case static::CHOICE_NO_MORE :

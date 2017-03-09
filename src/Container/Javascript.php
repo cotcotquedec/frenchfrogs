@@ -184,7 +184,7 @@ class Javascript extends Container
     public function error($body = '', $title = '')
     {
         $body = empty($body) ?  configurator()->get('toastr.error.default') : $body;
-        $this->append([static::TYPE_INLINE , sprintf('toastr.error("%s", "%s");', $body, $title)]);
+        $this->append([static::TYPE_INLINE , sprintf('toastr.error("%s", "%s");', addslashes($body), $title)]);
         return $this;
     }
 

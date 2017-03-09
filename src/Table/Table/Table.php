@@ -4,6 +4,8 @@
 use FrenchFrogs\Core;
 use FrenchFrogs\Table\Column;
 use FrenchFrogs\Table\Renderer;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
@@ -176,6 +178,13 @@ class Table
      */
     public function setSource($source)
     {
+
+        if (is_object($source)) {
+            while(method_exists($source, 'getQuery')) {
+                $source = $source->getQuery();
+            }
+        }
+
         $this->source = $source;
         return $this;
     }
@@ -234,7 +243,7 @@ class Table
 
         /**@var $source \Iterator */
         if (!($source instanceof \Iterator)) {
-            throw new \InvalidArgumentException("Source must be an array or an Iterator");
+            throw new \InvalidArgumentException("Source must be an array or an Iterator : " . get_class($source));
         }
 
 
@@ -256,7 +265,7 @@ class Table
      */
     public function isSourceQueryBuilder()
     {
-        return is_object($this->getSource()) && get_class($this->getSource()) == \Illuminate\Database\Query\Builder::class;
+        return is_object($this->getSource()) && ($this->getSource() instanceof Builder);
     }
 
 

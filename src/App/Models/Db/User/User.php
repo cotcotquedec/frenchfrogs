@@ -30,7 +30,7 @@ class User extends Model  implements \Illuminate\Contracts\Auth\Authenticatable 
      */
     public function permissions()
     {
-        return $this->hasMany(PermissionUser::class, 'user_id',  'user_id');
+        return $this->belongsToMany(Permission::class, 'user_permission_user', 'user_id', 'user_permission_id');
     }
 
 
