@@ -73,7 +73,6 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
 
         $head = html('tr', ['class' => 'heading'], $head);
 
-
         // Strainer
         if ($hasStrainer) {
 
@@ -145,6 +144,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
 		}
 
 
+
         // Bootstrap class management
         $table->addClass(Style::TABLE_CLASS);
 
@@ -163,6 +163,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         if ($table->hasHover()) {
             $table->addClass(Style::TABLE_CLASS_HOVER);
         }
+
 
 
         $html =  html('table', $table->getAttributes(), html('thead', [], $head) . html('tbody', [], $body) . $footer);
@@ -579,7 +580,8 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         $columns = [];
         $order = [];
         $index = 0;
-        $search = '';
+        $search = [];
+
         foreach($table->getColumns() as $c) {
 
             $data = [];
