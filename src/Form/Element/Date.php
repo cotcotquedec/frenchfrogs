@@ -9,16 +9,29 @@ class Date extends Text
     protected $formatStore;
 
 
+    /**
+     *
+     * Format d'affichage
+     *
+     * @param $format
+     * @return $this
+     */
     public function setFormatDisplay($format)
     {
         $this->formatDisplay = $format;
         return $this;
     }
 
+    /**
+     * Getter pour le format d'affichage
+     *
+     * @return mixed
+     */
     public function getFormatDisplay()
     {
-        return  $this->formatDisplay;
+        return $this->formatDisplay;
     }
+
 
     public function setFormatStore($format)
     {
@@ -62,21 +75,26 @@ class Date extends Text
     public function setValue($value)
     {
         if (!empty($value)) {
-            try {
-                $date = substr($value, 0, strlen(date($this->getFormatDisplay())));
-                $value = \Carbon\Carbon::createFromFormat($this->getFormatDisplay(), $date);
-            } catch (\InvalidArgumentException $e) {
+
+            if (!($value instanceof \Carbon\Carbon)) {
 
                 try {
-                    $date = substr($value, 0, strlen(date($this->getFormatStore())));
-                    $value = \Carbon\Carbon::createFromFormat($this->getFormatStore(), $date);
-                } catch (\InvalidArgumentException $e) {
-                    throw $e;
-                }
 
-            } finally {
-                $value = $value instanceof \Carbon\Carbon ? $value->format($this->getFormatStore()) : '';
+                    $date = substr($value, 0, strlen(date($this->getFormatDisplay())));
+                    $value = \Carbon\Carbon::createFromFormat($this->getFormatDisplay(), $date);
+                } catch (\InvalidArgumentException $e) {
+
+                    try {
+                        $date = substr($value, 0, strlen(date($this->getFormatStore())));
+                        $value = \Carbon\Carbon::createFromFormat($this->getFormatStore(), $date);
+                    } catch (\InvalidArgumentException $e) {
+                        throw $e;
+                    }
+
+                }
             }
+
+//            $value = $value instanceof \Carbon\Carbon ? $value->format($this->getFormatStore()) : '';
         }
 
         return parent::setValue($value);
@@ -94,14 +112,16 @@ class Date extends Text
         $value = parent::getValue();
 
         if (!empty($value)) {
+
             try {
                 $date = substr($value, 0, strlen(date($this->getFormatStore())));
                 $value = \Carbon\Carbon::createFromFormat($this->getFormatStore(), $date);
             } catch (\InvalidArgumentException $e) {
-                throw $e;
-            } finally {
-                $value = $value instanceof \Carbon\Carbon ? $value->format($this->getFormatDisplay()) : '';
+                \Debugbar::addThrowable($e);
+                \Bugsnag::notifyException($e);
             }
+
+            $value = $value instanceof \Carbon\Carbon ? $value->format($this->getFormatDisplay()) : '';
         }
 
         return $value;
@@ -135,7 +155,7 @@ class Date extends Text
             }
         }
 
-       return $value;
+        return $value;
     }
 
 
@@ -148,7 +168,7 @@ class Date extends Text
         $render = '';
         try {
             $render = $this->getRenderer()->render('date', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

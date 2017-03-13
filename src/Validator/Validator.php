@@ -517,17 +517,17 @@ class Validator
      * @param $messages
      * @return array
      */
-    public function laravel($value, $validationString, $messages = [])
+    public function laravel($value, $validator, $messages = [])
     {
         //create validator
-        $validator = \Validator::make(['laravel' => $value], ['laravel' => $validationString]);
+        $validator = \Validator::make([$value], [$validator]);
         $validator->setCustomMessages($this->getMessages());
 
         // error message management
         if ($validator->fails() && !$this->hasMessage('laravel')) {
 
             $message = '';
-            foreach ( $validator->errors()->get('laravel') as $m) {
+            foreach ( $validator->errors()->get(0) as $m) {
                 $message .= $m . ' ';
             }
             $this->addMessage('laravel', $message);

@@ -696,6 +696,7 @@ class Inline extends Renderer\Renderer {
         $element->addAttribute('value', $element->getDisplayValue());
         $html = html('input', $element->getAttributes());
 
+
         // DESCRIPTION
         if ($element->hasDescription()) {
             $html .= html('span', ['class' => 'help-block'], $element->getDescription());
@@ -714,7 +715,6 @@ class Inline extends Renderer\Renderer {
      */
     public function date_range(Form\Element\DateRange $element)
     {
-
 
         // CLASS
         $class =  Style::FORM_GROUP_CLASS;

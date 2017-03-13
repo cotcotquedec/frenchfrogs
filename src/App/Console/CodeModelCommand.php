@@ -107,7 +107,10 @@ class CodeModelCommand extends CodeCommand
         $updated = false;
         $deleted = false;
 
-        $this->constraints($name);
+        // gestion des containtes
+        if($this->confirm('Voulez vous générer relations?', false)) {
+            $this->constraints($name);
+        }
 
         // recuperation des colonnes
         $columns = \DB::select('SHOW COLUMNS FROM ' . $name);

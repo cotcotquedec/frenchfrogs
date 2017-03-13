@@ -489,6 +489,7 @@ class Bootstrap extends Renderer\Renderer {
 
         $element->addClass('date-picker');
 
+
         // rendu principal
         $element->addClass(Style::FORM_ELEMENT_CONTROL);
         $label = '';
