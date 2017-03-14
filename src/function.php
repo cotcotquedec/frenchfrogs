@@ -730,15 +730,21 @@ function _ff_c($content, $lang = null, $bind = [], $count = null)
  */
 function  a(&$object) {
 
+    // Cast
     if ($object instanceof \Illuminate\Support\Collection) {
         $object = $object->toArray();
+    } elseif($object instanceof StdClass) {
+        $object = (array) $object;
     }
 
-    $object = (array) json_decode(json_encode($object), true);
-
-    if (!is_array($object)) {
-        $object = [];
+    // Recursivité
+    foreach($object as &$o) {
+        if (is_object($o)) {
+            a($o);
+        }
     }
+
+    reset ($object);
 
     return $object;
 }

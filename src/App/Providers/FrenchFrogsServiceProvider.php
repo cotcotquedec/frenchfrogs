@@ -1,5 +1,7 @@
 <?php namespace FrenchFrogs\App\Providers;
 
+use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Mail;
 use FrenchFrogs;
@@ -17,6 +19,7 @@ class FrenchFrogsServiceProvider extends ServiceProvider
     {
         $this->bootModal();
         $this->bootValidator();
+        $this->extendQuerybuilder();
     }
 
     /**
@@ -67,4 +70,78 @@ class FrenchFrogsServiceProvider extends ServiceProvider
             return $modal;
         });
     }
+
+    /**
+     * Ajout de macro au constructeur de requete
+     *
+     */
+    public function extendQuerybuilder()
+    {
+        // Ajout du count
+        Builder::macro('addSelectCount', function($expression) {
+
+            $alias = null;
+
+            if (strpos($expression, ' as ')) {
+                list($expression, $alias) = explode(' as ', $expression);
+            }
+
+            $raw = sprintf('COUNT(%s)', $expression);
+
+            if (!is_null($alias)) {
+                $raw .= ' as ' . $this->grammar->wrap($alias);
+            }
+
+            return $this->selectRaw($raw);
+        });
+
+        // Ajout du de la somme
+        Builder::macro('addSelectSum', function($expression) {
+
+            $alias = null;
+
+            if (strpos($expression, ' as ')) {
+                list($expression, $alias) = explode(' as ', $expression);
+            }
+
+            $raw = sprintf('SUM(%s)', $expression);
+
+            if (!is_null($alias)) {
+                $raw .= ' as ' . $this->grammar->wrap($alias);
+            }
+
+            return $this->selectRaw($raw);
+        });
+
+        // Ajout du de la somme
+        Builder::macro('addSelectHex', function($expression) {
+
+            $alias = null;
+
+            if (strpos($expression, ' as ')) {
+                list($expression, $alias) = explode(' as ', $expression);
+            }
+
+            $raw = sprintf('HEX(%s)', $expression);
+            $raw .= ' as ' . $this->grammar->wrap($alias);
+
+            return $this->selectRaw($raw);
+        });
+
+
+        // Ajout du de la somme
+        Builder::macro('leftJoinQuery', function(Builder $sub, $alias, $first, $operator = null, $second = null) {
+            return $this->leftJoin(raw("({$sub->toSql()}) as " . $alias), $first, $operator, $second)->mergeBindings($sub);
+        });
+
+
+        // Ajout du de la somme
+        Builder::macro('dd', function() {
+
+            /**@var $this Builder*/
+            echo \SqlFormatter::format($this->toSql());
+            dd($this->getBindings(), $this);
+        });
+    }
+
 }

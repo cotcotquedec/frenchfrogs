@@ -37,7 +37,8 @@
     "league/csv": "^8.0",
     "almasaeed2010/adminlte": "^2.3",
     "webpatser/laravel-uuid": "2.*",
-    "roave/better-reflection": "^1.2"
+    "roave/better-reflection": "^1.2",
+    "jdorn/sql-formatter": "^1.2"
   },
   "autoload": {
     "files": [

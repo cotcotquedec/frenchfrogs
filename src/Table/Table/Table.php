@@ -259,6 +259,16 @@ class Table
     }
 
     /**
+     * Debug first row
+     *
+     * @return mixed
+     */
+    public function dd()
+    {
+        dd($this->extractRows()->getRows()->current());
+    }
+
+    /**
      * Return true if the source is an instance of \Illuminate\Database\Query\Builder
      *
      * @return bool
@@ -323,7 +333,7 @@ class Table
             $this->extractRows();
             $render = $this->getRenderer()->render('table', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());//@todo find a good way to warn the developper
+            \Debugbar::addThrowable($e);
         }
 
         return $render;
