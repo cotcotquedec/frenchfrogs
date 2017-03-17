@@ -76,7 +76,7 @@ class Bootstrap extends Renderer
 
         $label = '';
         if ($action->hasIcon()) {
-            $label .= html('i', ['class' => $action->getIcon()]);
+            $label .= html('i', ['class' => $action->getIcon()]) . PHP_EOL;
         }
 
         $name = $action->getLabel();

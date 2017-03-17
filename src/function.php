@@ -738,13 +738,15 @@ function  a(&$object) {
     }
 
     // Recursivité
-    foreach($object as &$o) {
-        if (is_object($o)) {
-            a($o);
+    if (is_array($object)) {
+        foreach ($object as &$o) {
+            if (is_object($o)) {
+                a($o);
+            }
         }
+        reset ($object);
     }
 
-    reset ($object);
 
     return $object;
 }

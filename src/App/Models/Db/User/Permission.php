@@ -20,6 +20,6 @@ class Permission extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_permission_user', 'user_permission_id', 'user_id');
+        return $this->hasManyThrough(User::class, 'user_permission_user', 'permission_uuid', 'user_uuid');
     }
 }

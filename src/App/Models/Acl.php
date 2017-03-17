@@ -43,18 +43,17 @@ class Acl extends Ruler
         $interface = static::getInterface();
 
         // Permission
-        if (Auth::user()) {
-            $permissions = \query('user_permission_user AS upu', ['upu.user_permission_id'])
-                ->join('user_permission AS p', 'p.user_permission_id', '=', 'upu.user_permission_id')
-                ->where('p.user_interface_id', $interface)
-                ->where('user_id',Auth::user()->user_id)
-                ->pluck('user_permission_id');
+        if ($user = Auth::user()) {
 
-            if ($permissions instanceof Collection) {
-                $permissions = $permissions->toArray();
+            if (method_exists($user, 'permissions')) {
+                $permissions = Auth::user()->permissions()->pluck('user_permission_id');
+
+                if ($permissions instanceof Collection) {
+                    $permissions = $permissions->toArray();
+                }
+
+                $this->setPermissions($permissions);
             }
-
-            $this->setPermissions($permissions);
         } else {
             // default permission ?
         }
