@@ -3,6 +3,7 @@
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 use FrenchFrogs\Maker\Maker;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,6 +38,22 @@ class CodeModelCommand extends CodeCommand
      * @var string
      */
     protected $description = 'Génération d\'un model';
+
+
+    /**
+     * Return a determined path for the file
+     *
+     * @param $class
+     * @return mixed|string
+     */
+    protected function determineFileFromClass($class)
+    {
+
+        $file = 'app/' . str_replace('\\', '/', $class) . '.php';
+        $file = str_replace('//', '/', $file);
+
+        return $file;
+    }
 
 
     /**
@@ -83,11 +100,16 @@ class CodeModelCommand extends CodeCommand
 
         // ajout du choix par default
         $choices[] = $this->namespace . ucfirst(camel_case($name));
-        $class = $this->choice('Quelle est le nom de la classe?', $choices, 0);
 
-        $file = 'app/' . str_replace('\\', '/', $class) . '.php';
-        $file = str_replace('//', '/', $file);
-        $file = $this->ask('Quelle est le nom du fichier?', $file);
+        // chois par default
+        $class = $choices[0];
+        $file = $this->determineFileFromClass($class);
+
+        // choix par defaut
+        if (!$this->confirm(sprintf('Créer le modèle "%s" dans le ficher "%s"?', $class, $file), true)) {
+            $class = $this->choice('Quelle est le nom de la classe?', $choices, 0);
+            $file = $this->ask('Quelle est le nom du fichier?', $this->determineFileFromClass($class));
+        }
 
         // Creation de la classe
         $maker = file_exists($file) ? Maker::load($class) : Maker::init($class, $file);
@@ -98,6 +120,34 @@ class CodeModelCommand extends CodeCommand
         $maker->addProperty('table', $name)->enableProtected();
         $maker->addAlias('Model', Model::class);
 
+        // gestion des containtes
+        if ($this->confirm('Voulez vous générer relations?', true)) {
+            $this->constraints($name);
+        }
+
+        if ($this->confirm('Voulez vous gerer les colonnes?', true)) {
+            $this->columns($name);
+        }
+
+        // ecriture de la classe
+        if ($this->confirm('Validez les changement?', true)) {
+            $maker->write();
+        }
+
+        $this->info('Have fun!!');
+    }
+
+
+    /**
+     * GEstion des colonnes
+     *
+     * @param $name
+     */
+    public function columns($name)
+    {
+        // recuperation du maker
+        $maker = $this->maker;
+
         // CAST
         $casts = [];
         $dates = [];
@@ -106,11 +156,6 @@ class CodeModelCommand extends CodeCommand
         $created = false;
         $updated = false;
         $deleted = false;
-
-        // gestion des containtes
-        if($this->confirm('Voulez vous générer relations?', false)) {
-            $this->constraints($name);
-        }
 
         // recuperation des colonnes
         $columns = \DB::select('SHOW COLUMNS FROM ' . $name);
@@ -150,12 +195,10 @@ class CodeModelCommand extends CodeCommand
 
             // boolean
             if ($row->Type == 'tinyint(1)' && preg_match('#(is|can|has)_.+#', $row->Field)) {
-                if (!$maker->hasMethod(camel_case($row->Field))) {
-                    $maker->addMethod(camel_case($row->Field))
-                        ->setBody('return (bool) $this->' . $row->Field . ';')
-                        ->addTag('return', 'bool')
-                        ->addAnnotation('Getter for ' . $row->Field);
-                }
+                $maker->addMethod(camel_case($row->Field))
+                    ->setBody('return (bool) $this->' . $row->Field . ';')
+                    ->addTag('return', 'bool')
+                    ->addAnnotation('Getter for ' . $row->Field);
             }
 
             // JSON
@@ -199,10 +242,6 @@ class CodeModelCommand extends CodeCommand
         count($casts) && $maker->addProperty('casts', $casts)->enableProtected();
         count($dates) && $maker->addProperty('dates', $dates)->enableProtected();
 
-
-        // ecriture de la classe
-        $maker->write();
-        $this->info('Have fun!!');
     }
 
 
@@ -216,6 +255,7 @@ class CodeModelCommand extends CodeCommand
 
         // Constrainte
         $constraints = \DB::select("SELECT
+                                  table_name,
                                    column_name,
                                    referenced_table_name,
                                    referenced_column_name
@@ -223,14 +263,88 @@ class CodeModelCommand extends CodeCommand
                                    information_schema.key_column_usage
                                  WHERE
                                    table_schema = ? AND
-                                   table_name = ?
-                                   AND referenced_table_name IS NOT NULL", ['jobmaker', $table]);
-
+                                   (table_name = ? OR referenced_table_name = ?)
+                                   AND referenced_table_name IS NOT NULL", [\DB::getConfig('database'), $table, $table]);
 
         // on ajoute les alias généraux
         $maker->addAlias('Collection', Collection::class);
         $maker->addAlias('HasMany', HasMany::class);
         $maker->addAlias('HasOne', HasOne::class);
+        $maker->addAlias('BelongsTo', BelongsTo::class);
+
+        $configuration = [];
+
+        // Essaie de definir le resultats
+        foreach (a($constraints) as $constraint) {
+
+            $config = [];
+
+            // cas d'une liaison externe
+            if ($constraint['table_name'] == $table) {
+
+                // Recuperation du nom de la table
+                $config['class'] = Maker::findTable($constraint['referenced_table_name']);
+                $config['type'] = 'belongsTo';
+
+                $name = $constraint['column_name'];
+                $name = collect(explode('_', $name));
+                // on depop l'id
+                $name->pop();
+                // on prend la parti precedente l'id pour definir le nom de la liaison
+                $name = $name->pop();
+
+                $config['name'] = Pluralizer::singular($name);
+                $config['from'] = $constraint['column_name'];
+                $config['to'] = $constraint['referenced_column_name'];
+                $config['exists'] = $maker->hasMethod($config['name']) ? '*' : '';
+            } else {
+                $this->table(['table_name', 'column_name', 'referenced_table_name', 'referenced_column_name'], $constraint);
+                throw new \Exception('Pas encore pris en compte');
+            }
+
+            $configuration[] = $config;
+        }
+
+        // Proposition du resultat
+        $this->table(['Classe', 'Type', 'Name', 'From', 'To', 'Exists'], $configuration);
+
+        // Validation
+        if (!$this->confirm('Voulez vous appliquez les contraintes telle quelle?', true)) {
+            throw new \Exception('Pas encore pris en compte');
+        }
+
+        // Generation des function existantes
+        $exists = $this->confirm('Regénérer les fonctions existantes?', true);
+
+        foreach($configuration as $config) {
+
+            if (!$exists && $config['exists']) {
+                continue;
+            }
+
+            $class = null;
+
+            switch($config['type']) {
+                case 'belongsTo' :
+                    // ajout de l'alias du nom de la classe
+                    $maker->addAlias(substr($config['class'], strrpos($config['class'], '\\') + 1), $config['class']);
+                    $class = $maker->findAliasName($config['class']);
+
+                    // Création
+                    $maker->addTagProperty($config['name'],$class);
+                    $maker->addMethod($config['name'])
+                        ->addTag('return', $maker->findAliasName(BelongsTo::class))
+                        ->setBody('return $this->belongsTo(' . $class . '::class, "' . $config ['from'] . '", "' . $config['to'] . '");');
+                    break;
+                default :
+                    throw new \Exception('Config non connu');
+            }
+        }
+
+
+        return;
+        dd('COUCOUC');
+
 
         foreach ($constraints as $constraint) {
 
@@ -247,8 +361,8 @@ class CodeModelCommand extends CodeCommand
                     $type = 'OneToOne';
                     $class = User::class;
                     $maker->addAlias('User', $class);
-                    $maker->addTagProperty(camel_case( $constraint->column_name), 'User');
-                    $maker->addMethod(camel_case( $constraint->column_name))
+                    $maker->addTagProperty(camel_case($constraint->column_name), 'User');
+                    $maker->addMethod(camel_case($constraint->column_name))
                         ->addTag('return', 'HasOne')
                         ->setBody('return $this->hasOne(User::class, "' . $constraint->referenced_column_name . '", "' . $constraint->column_name . '");');
                     continue;

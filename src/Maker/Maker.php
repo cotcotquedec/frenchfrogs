@@ -865,9 +865,15 @@ class Maker
     {
         $dbs = [];
 
-        // recuperation des classes
-        $classes = static::findClasses(app_path('Models/Db'));
+        // Frenchfrogs classes
+        $classes =  static::findClasses(frenchfrogs_path('App/Models/Db'));
 
+        // recuperation des classes
+        foreach(static::findClasses(app_path('Models/Db')) as $class) {
+            $classes[] = $class;
+        }
+
+        // recvherche de la class
         foreach ($classes as $class) {
             $reflection = ReflectionClass::createFromName($class);
 

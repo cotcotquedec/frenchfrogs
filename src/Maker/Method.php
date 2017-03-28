@@ -111,6 +111,24 @@ class Method
        $method->setSummary($docblock->getShortDescription());
        $method->setDescription($docblock->getLongDescription());
 
+       if ($reflection->getDocBlockReturnTypes()) {
+           foreach ($reflection->getDocBlockReturnTypes() as $type) {
+
+               switch(get_class($type)) {
+                   case 'phpDocumentor\Reflection\Types\Boolean' :
+                       $type = 'bool';
+                       break;
+                   case 'phpDocumentor\Reflection\Types\Object_' :
+                       $type = $type->getFqsen()->getName();
+                       break;
+                   default :
+                       throw new \Exception('Pas encore pris en compte');
+               }
+
+               $method->addTag('return', $type);
+           }
+       }
+
        // gestion des modifiers
        $reflection->isPrivate() ? $method->enablePrivate() : $method->disablePrivate();
        $reflection->isProtected() ? $method->enableProtected() : $method->disabledProtected();

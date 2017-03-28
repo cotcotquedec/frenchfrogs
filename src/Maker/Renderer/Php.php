@@ -79,6 +79,10 @@ class Php extends Renderer
             $content .= sprintf('use %s;', $maker->findAliasName($trait)) . PHP_EOL;
         }
 
+        if (!empty($trait)) {
+            $content .= str_repeat(PHP_EOL,2);
+        }
+
         // PROPERTIES
         foreach($maker->getProperties() as $property) {
             $content .= $this->render('property', $property) . str_repeat(PHP_EOL,2);
@@ -285,24 +289,36 @@ class Php extends Renderer
             exc('la classe "' . get_class($docblock) . '" n\'utilise pas le trait "' . Docblock::class . '"');
         }
 
-        $content = '/**' . PHP_EOL;
-        $content .= '* ' . $docblock->getSummary() . PHP_EOL;
-        $content .= '* ' . PHP_EOL;
-        $content .= '* ' . str_replace(PHP_EOL, PHP_EOL . '* ', $docblock->getDescription()) . PHP_EOL;
-        $content .= '* ' . PHP_EOL;
+        $content = '';
+        $summary = $docblock->getSummary();
+        $description = str_replace(PHP_EOL, PHP_EOL . '* ', $docblock->getDescription());
+
+
+        if (!empty($summary)) {
+            $content .= '* ' . $summary . PHP_EOL;
+            $content .= '* ' . PHP_EOL;
+        }
+
+        if (!empty($description)) {
+            $content .= '* ' . $description . PHP_EOL;
+            $content .= '* ' . PHP_EOL;
+        }
 
         foreach ($docblock->getTags() as $tag) {
             list($name, $value) = $tag;
             $content .= sprintf('* @%s %s', $name, $value) . PHP_EOL;
         }
 
-        $content .= '*/';
 
-        // on fait proprement mais bon!
-        // @todo passer sur la version 3 de phpdocumentor
-        $factory = new \phpDocumentor\Reflection\DocBlock($content);
-        $serializer =  new Serializer();
-        $content = $serializer->getDocComment($factory) . PHP_EOL;
+        if (!empty($content)) {
+            $content = '/**' . PHP_EOL . $content . '*/';
+
+            // on fait proprement mais bon!
+            // @todo passer sur la version 3 de phpdocumentor
+            $factory = new \phpDocumentor\Reflection\DocBlock($content);
+            $serializer = new Serializer();
+            $content = $serializer->getDocComment($factory) . PHP_EOL;
+        }
 
         return $content;
     }

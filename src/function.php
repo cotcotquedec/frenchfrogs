@@ -772,3 +772,11 @@ function user($name = null) {
     // gestion de la propriété demandé
     return $user;
 }
+
+/**
+ * @return string
+ */
+function frenchfrogs_path($path = '')
+{
+    return __DIR__ . ($path ? DIRECTORY_SEPARATOR.$path : $path);
+}
