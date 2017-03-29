@@ -19,6 +19,13 @@ class CodeModelCommand extends CodeCommand
     protected $directory = 'app/Models/Db/';
 
 
+    protected $relations = [
+        'BelongsTo' => 'BelongsTo',
+        'HasMany' => 'HasMany',
+        'HasOne' => 'HasOne',
+    ];
+
+
     /**
      * @var Maker
      */
@@ -241,7 +248,6 @@ class CodeModelCommand extends CodeCommand
 
         count($casts) && $maker->addProperty('casts', $casts)->enableProtected();
         count($dates) && $maker->addProperty('dates', $dates)->enableProtected();
-
     }
 
 
@@ -255,7 +261,7 @@ class CodeModelCommand extends CodeCommand
 
         // Constrainte
         $constraints = \DB::select("SELECT
-                                  table_name,
+                                   table_name,
                                    column_name,
                                    referenced_table_name,
                                    referenced_column_name
@@ -272,19 +278,24 @@ class CodeModelCommand extends CodeCommand
         $maker->addAlias('HasOne', HasOne::class);
         $maker->addAlias('BelongsTo', BelongsTo::class);
 
-        $configuration = [];
+        $configuration = collect([]);
+
 
         // Essaie de definir le resultats
         foreach (a($constraints) as $constraint) {
 
             $config = [];
 
+
+
             // cas d'une liaison externe
             if ($constraint['table_name'] == $table) {
 
-                // Recuperation du nom de la table
+                $config['id'] = $constraint['referenced_table_name'] . '.' . $constraint['referenced_column_name'];
+
+                    // Recuperation du nom de la table
                 $config['class'] = Maker::findTable($constraint['referenced_table_name']);
-                $config['type'] = 'belongsTo';
+                $config['type'] = 'BelongsTo';
 
                 $name = $constraint['column_name'];
                 $name = collect(explode('_', $name));
@@ -297,20 +308,63 @@ class CodeModelCommand extends CodeCommand
                 $config['from'] = $constraint['column_name'];
                 $config['to'] = $constraint['referenced_column_name'];
                 $config['exists'] = $maker->hasMethod($config['name']) ? '*' : '';
+
             } else {
-                $this->table(['table_name', 'column_name', 'referenced_table_name', 'referenced_column_name'], $constraint);
-                throw new \Exception('Pas encore pris en compte');
+
+
+                $config['id'] = $constraint['table_name'] . '.' . $constraint['column_name'];
+
+                // Recuperation du nom de la table
+                $config['class'] = Maker::findTable($constraint['table_name']);
+
+                if (empty($config['class'])) {
+                    $this->table(['table_name', 'column_name', 'referenced_table_name', 'referenced_column_name'], [$constraint]);
+                    throw new \Exception('Pas encore pris en compte');
+                }
+
+                $config['type'] = 'HasMany';
+
+                $name = $constraint['table_name'];
+                $name = collect(explode('_', $name));
+
+                // on prend la parti precedente l'id pour definir le nom de la liaison
+                $name = $name->pop();
+
+                $config['name'] = Pluralizer::plural($name);
+                $config['from'] = $constraint['column_name'];
+                $config['to'] = $constraint['referenced_column_name'];
+                $config['exists'] = $maker->hasMethod($config['name']) ? '*' : '';
+
+//                $this->table(['table_name', 'column_name', 'referenced_table_name', 'referenced_column_name'], [$constraint]);
+//                throw new \Exception('Pas encore pris en compte');
             }
 
-            $configuration[] = $config;
+            $configuration->put($config['id'], $config);
         }
 
         // Proposition du resultat
-        $this->table(['Classe', 'Type', 'Name', 'From', 'To', 'Exists'], $configuration);
+        $this->table(['ID', 'Classe', 'Type', 'Name', 'From', 'To', 'Exists'], $configuration->toArray());
+
 
         // Validation
-        if (!$this->confirm('Voulez vous appliquez les contraintes telle quelle?', true)) {
-            throw new \Exception('Pas encore pris en compte');
+        while (!$this->confirm('Voulez vous appliquez les contraintes telle quelle?', false)) {
+
+            $choice = $this->choice('Laquel souhaitez vous modifier', $configuration->pluck('name', 'id')->toArray());
+
+            if (!$configuration->has($choice)) {
+                $this->warn('L\'entrée ' . $choice . ' n\'existe pas!');
+            }
+
+            // recuperation de l'entrée
+            $config = $configuration->get($choice);
+
+            // réécriture
+            $config['type'] = $this->choice('Quel est le type de la relation?', $this->relations , $config['type']);
+            $config['name'] = $this->ask('Quel est le nom de la relation', $config['name']);
+            $configuration->put($choice, $config);
+
+            // Proposition du resultat
+            $this->table(['ID', 'Classe', 'Type', 'Name', 'From', 'To', 'Exists'], $configuration->toArray());
         }
 
         // Generation des function existantes
@@ -325,7 +379,7 @@ class CodeModelCommand extends CodeCommand
             $class = null;
 
             switch($config['type']) {
-                case 'belongsTo' :
+                case 'BelongsTo' :
                     // ajout de l'alias du nom de la classe
                     $maker->addAlias(substr($config['class'], strrpos($config['class'], '\\') + 1), $config['class']);
                     $class = $maker->findAliasName($config['class']);
@@ -336,6 +390,20 @@ class CodeModelCommand extends CodeCommand
                         ->addTag('return', $maker->findAliasName(BelongsTo::class))
                         ->setBody('return $this->belongsTo(' . $class . '::class, "' . $config ['from'] . '", "' . $config['to'] . '");');
                     break;
+                case 'HasMany' :
+
+                    // ajout de l'alias du nom de la classe
+                    $maker->addAlias(substr($config['class'], strrpos($config['class'], '\\') + 1), $config['class']);
+                    $class = $maker->findAliasName($config['class']);
+
+                    // Nom de la liaision
+                    $name = Pluralizer::plural($config['name']);
+                    $maker->addTagProperty($name, 'Collection|' . $class . '[]');
+                    $maker->addMethod($name)
+                        ->addTag('return', 'HasMany')
+                        ->setBody('return $this->hasMany(' . $class . '::class, "' . $config['from'] . '", "' . $config['to']  . '");');
+                    break;
+
                 default :
                     throw new \Exception('Config non connu');
             }
