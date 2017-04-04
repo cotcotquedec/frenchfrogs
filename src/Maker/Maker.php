@@ -613,6 +613,23 @@ class Maker
         return $this->methods[$method->getName()] = $method;
     }
 
+
+    /**
+     * Suppression d'une methode
+     *
+     * @param $name
+     * @return $this
+     */
+    public function removeMethod($name)
+    {
+        // Si la methode existe, on l'enleve du referenceiel
+        if ($this->hasMethod($name)) {
+            unset($this->methods[$name]);
+        }
+
+        return $this;
+    }
+
     /**
      * Getter for $properties
      *

@@ -20,6 +20,20 @@ class FrenchFrogsServiceProvider extends ServiceProvider
         $this->bootModal();
         $this->bootValidator();
         $this->extendQuerybuilder();
+        $this->extendUrlGenerator();
+    }
+
+    /**
+     * Extend url generator
+     */
+    public function extendUrlGenerator()
+    {
+        \App::bind('url', function() {
+            return new FrenchFrogs\Laravel\Routing\UrlGenerator(
+                \App::make('router')->getRoutes(),
+                \App::make('request')
+            );
+        });
     }
 
     /**

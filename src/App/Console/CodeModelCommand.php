@@ -91,29 +91,38 @@ class CodeModelCommand extends CodeCommand
         // choix des nom de classe
         $choices = [];
 
-        // cas du des underscore
-        if (strpos($name, '_')) {
 
-            // oin seprae les underscore et on ajoute des majuscule
-            $break = [];
-            foreach (explode('_', $name) as $item) {
-                $break[] = ucfirst($item);
+        // determination du nom de la classe et du fichier de sortie
+        $class = $file = null;
+
+        // le cas où le fichier existe déja
+        if ($class = Maker::findTable($name))  {
+            $file = $this->determineFileFromClass($class);
+        } else {
+            // cas du des underscore
+            if (strpos($name, '_')) {
+
+                // oin seprae les underscore et on ajoute des majuscule
+                $break = [];
+                foreach (explode('_', $name) as $item) {
+                    $break[] = ucfirst($item);
+                }
+
+                // reconstruction du  nom de la class
+                $break = implode('\\', $break);
+                $choices[] = $this->namespace . ucfirst(camel_case($break));
             }
 
-            // reconstruction du  nom de la class
-            $break = implode('\\', $break);
-            $choices[] = $this->namespace . ucfirst(camel_case($break));
+            // ajout du choix par default
+            $choices[] = $this->namespace . ucfirst(camel_case($name));
+
+            // chois par default
+            $class = $choices[0];
+            $file = $this->determineFileFromClass($class);
         }
 
-        // ajout du choix par default
-        $choices[] = $this->namespace . ucfirst(camel_case($name));
-
-        // chois par default
-        $class = $choices[0];
-        $file = $this->determineFileFromClass($class);
-
         // choix par defaut
-        if (!$this->confirm(sprintf('Créer le modèle "%s" dans le ficher "%s"?', $class, $file), true)) {
+        if (is_null($class) || is_null($file) || !$this->confirm(sprintf('Créer le modèle "%s" dans le ficher "%s"?', $class, $file), true)) {
             $class = $this->choice('Quelle est le nom de la classe?', $choices, 0);
             $file = $this->ask('Quelle est le nom du fichier?', $this->determineFileFromClass($class));
         }

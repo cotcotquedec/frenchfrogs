@@ -1,4 +1,5 @@
 <?php namespace FrenchFrogs\Maker;
+
 use BetterReflection\Reflection\ReflectionMethod;
 
 /**
@@ -50,7 +51,7 @@ class Method
      */
     public function addParameter($name, $default = Maker::NO_VALUE, $type = null)
     {
-        $parameter = $name instanceof Parameter ?  $name : new Parameter($name, $default, $type);
+        $parameter = $name instanceof Parameter ? $name : new Parameter($name, $default, $type);
         $this->parameters[$parameter->getName()] = $parameter;
         return $this;
     }
@@ -97,52 +98,64 @@ class Method
      * @param ReflectionMethod $reflection
      * @return Method
      */
-   static public function fromReflection(ReflectionMethod $reflection)
-   {
-       // gestion du type
+    static public function fromReflection(ReflectionMethod $reflection)
+    {
+        // gestion du type
 //       $type = implode('|', $reflection->getDocBlockTypeStrings());
 //
 
-       // construction
-       $method = new static($reflection->getName(), [], $reflection->getBodyCode());
+        // construction
+        $method = new static($reflection->getName(), [], $reflection->getBodyCode());
 
-       // docblock
-       $docblock = new \phpDocumentor\Reflection\DocBlock($reflection->getDocComment());
-       $method->setSummary($docblock->getShortDescription());
-       $method->setDescription($docblock->getLongDescription());
+        // docblock
+        $docblock = new \phpDocumentor\Reflection\DocBlock($reflection->getDocComment());
+        $method->setSummary($docblock->getShortDescription());
+        $method->setDescription($docblock->getLongDescription());
 
-       if ($reflection->getDocBlockReturnTypes()) {
-           foreach ($reflection->getDocBlockReturnTypes() as $type) {
+        if ($reflection->getDocBlockReturnTypes()) {
+            foreach ($reflection->getDocBlockReturnTypes() as $type) {
 
-               switch(get_class($type)) {
-                   case 'phpDocumentor\Reflection\Types\Boolean' :
-                       $type = 'bool';
-                       break;
-                   case 'phpDocumentor\Reflection\Types\Object_' :
-                       $type = $type->getFqsen()->getName();
-                       break;
-                   default :
-                       throw new \Exception('Pas encore pris en compte');
-               }
+                switch (get_class($type)) {
+                    case 'phpDocumentor\Reflection\Types\Boolean' :
+                        $type = 'bool';
+                        break;
+                    case 'phpDocumentor\Reflection\Types\Object_' :
+                        $type = $type->getFqsen()->getName();
+                        break;
+                    case  'phpDocumentor\Reflection\Types\Mixed' :
+                        $type = 'mixed';
+                        break;
+                    case 'phpDocumentor\Reflection\Types\Void_':
+                        $type = 'void';
+                        break;
+                    case 'phpDocumentor\Reflection\Types\String_':
+                        $type = 'string';
+                        break;
+                    case 'phpDocumentor\Reflection\Types\Static_':
+                        $type = 'static';
+                        break;
+                    default :
+                        throw new \Exception('Type pas encore pris en compte : ' . get_class($type));
+                }
 
-               $method->addTag('return', $type);
-           }
-       }
+                $method->addTag('return', $type);
+            }
+        }
 
-       // gestion des modifiers
-       $reflection->isPrivate() ? $method->enablePrivate() : $method->disablePrivate();
-       $reflection->isProtected() ? $method->enableProtected() : $method->disabledProtected();
-       $reflection->isPublic() ? $method->enablePublic() : $method->disablePublic();
-       $reflection->isStatic() ? $method->enableStatic() : $method->disableStatic();
-       $reflection->isFinal() ? $method->enableFinal() : $method->disableFinal();
+        // gestion des modifiers
+        $reflection->isPrivate() ? $method->enablePrivate() : $method->disablePrivate();
+        $reflection->isProtected() ? $method->enableProtected() : $method->disabledProtected();
+        $reflection->isPublic() ? $method->enablePublic() : $method->disablePublic();
+        $reflection->isStatic() ? $method->enableStatic() : $method->disableStatic();
+        $reflection->isFinal() ? $method->enableFinal() : $method->disableFinal();
 
 
-       foreach ($reflection->getParameters() as $parameter) {
-           $method->addParameter(Parameter::fromReflection($parameter));
-       }
+        foreach ($reflection->getParameters() as $parameter) {
+            $method->addParameter(Parameter::fromReflection($parameter));
+        }
 
-       return $method;
-   }
+        return $method;
+    }
 
     /**
      * Setter for $body
