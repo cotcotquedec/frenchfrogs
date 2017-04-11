@@ -62,11 +62,45 @@ if (!function_exists('dd')) {
 
     function dd()
     {
+
         array_map(function ($x) {
             !d($x);
         }, func_get_args());
         d(microtime(), 'Stats execution');
         die;
+    }
+}
+
+
+/**
+ * Function de debug qui sor une quote au hazard
+ */
+function dq() {
+
+    // citatyion par default
+    $quote = 'I don\'t give a shit - cotcotquedec';
+
+    try {
+        // Tentative de recuperation d'un quote
+        $client = new \GuzzleHttp\Client();
+        $response = $client->get('http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json');
+
+        if ($response->getStatusCode() == 200) {
+            $content =  $response->getBody()->getContents();
+            $content = \json_decode($content);
+
+            if (!empty($content->quoteText)) {
+                $quote = sprintf('%s - %s', $content->quoteText, $content->quoteAuthor);
+            }
+        }
+
+        throw new \Exception('dq is coming');
+
+    } catch (\Exception $e) {
+        // recuperation de la trace
+        $trace = collect($e->getTrace());
+        $line = $trace->first();
+        dd($quote, sprintf('%s [%d]', $line['file'], $line['line']));
     }
 }
 
@@ -338,7 +372,7 @@ function query($table, $columns = null, $connection = null)
 function uuid($uuid = null)
 {
     if (is_null($uuid)) {
-        $uuid =  \Webpatser\Uuid\Uuid::generate(4);
+        $uuid = \Webpatser\Uuid\Uuid::generate(4);
     } else {
         $uuid = \Webpatser\Uuid\Uuid::import($uuid);
     }
@@ -665,7 +699,7 @@ function c($index, $lang = null, $bind = [])
         // cas de l'edition
         $content = html('ffedit', ['class' => 'ff-edit', 'data-target' => '#modal-remote', 'data-url' => route('content-edit', [$index]), 'data-edit-id' => $index], $content->content);
     } else {
-        $content = trans( $lang. '.' . $index, $bind);
+        $content = trans($lang . '.' . $index, $bind);
     }
 
     return $content;
@@ -728,13 +762,14 @@ function _ff_c($content, $lang = null, $bind = [], $count = null)
  *
  * @param $object
  */
-function  a(&$object) {
+function a(&$object)
+{
 
     // Cast
     if ($object instanceof \Illuminate\Support\Collection) {
         $object = $object->toArray();
-    } elseif($object instanceof StdClass) {
-        $object = (array) $object;
+    } elseif ($object instanceof StdClass) {
+        $object = (array)$object;
     }
 
     // Recursivité
@@ -744,13 +779,12 @@ function  a(&$object) {
                 a($o);
             }
         }
-        reset ($object);
+        reset($object);
     }
 
 
     return $object;
 }
-
 
 
 /**
@@ -759,13 +793,14 @@ function  a(&$object) {
  * @param null $name
  * @return \Illuminate\Contracts\Auth\Authenticatable|null
  */
-function user($name = null) {
+function user($name = null)
+{
 
     // recuperation de l'objet qui gere les user
     $user = \auth()->user();
 
     // gestion de la recherche de propriete
-    if (!is_null($user) && !is_null($name) ) {
+    if (!is_null($user) && !is_null($name)) {
         $user = $user->$name;
     }
 
@@ -778,5 +813,5 @@ function user($name = null) {
  */
 function frenchfrogs_path($path = '')
 {
-    return __DIR__ . ($path ? DIRECTORY_SEPARATOR.$path : $path);
+    return __DIR__ . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 }
