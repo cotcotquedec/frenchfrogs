@@ -8,6 +8,8 @@ abstract class CodeCommand extends Command
     const CHOICE_NEW = ' > Nouveau';
     const CHOICE_NO_MORE = '> Fini';
     const CHOISE_NULL = 'null';
+    const CHOICE_LIST = '> Lister';
+    const CHOICE_EMPTY = '> Auncun(e)';
 
 
     /**
