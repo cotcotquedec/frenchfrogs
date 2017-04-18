@@ -24,6 +24,7 @@ class AdminLTE extends Renderer
      */
     public function navigation(Ruler\Ruler\Ruler $rule)
     {
+
         $content = '';
         foreach ($rule->getPages() as $page) {
             if ($page->hasPermission() && !$rule->hasPermission($page->getPermission())){
@@ -67,7 +68,7 @@ class AdminLTE extends Renderer
                     $class = 'class="active"';
                 }
 
-                if ($p->hasPermission() && !\ruler()->hasPermission($p->getPermission())){
+                if ($p->hasPermission() && \user()->permissions->where('user_permission_id', $p->getPermission())->isEmpty()){
                     continue;
                 }
 
