@@ -68,7 +68,7 @@ class AdminLTE extends Renderer
                     $class = 'class="active"';
                 }
 
-                if ($p->hasPermission() && \user()->permissions->where('user_permission_id', $p->getPermission())->isEmpty()){
+                if ($p->hasPermission() && !\user()->can($p->getPermission())){
                     continue;
                 }
 

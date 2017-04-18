@@ -42,7 +42,7 @@ class User extends Model  implements \Illuminate\Contracts\Auth\Authenticatable 
      */
     public function can($ability)
     {
-        return $this->permissions->where('user_permission_id', $ability)->count() > 0;
+        return $this->permissions->where('user_permission_id', $ability)->isNotEmpty();
     }
 
     /**
