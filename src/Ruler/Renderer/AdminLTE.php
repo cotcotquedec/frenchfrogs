@@ -89,8 +89,4 @@ class AdminLTE extends Renderer
 
         return $html;
     }
-
-
-
-
 }

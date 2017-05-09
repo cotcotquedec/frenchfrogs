@@ -199,10 +199,9 @@ class CodeReferenceCommand extends \FrenchFrogs\App\Console\CodeCommand
         $this->composer->dumpAutoloads();
 
         // Lancement de la migration
-        $this->call('migrate');
-
-        // Reconstrcutiond e la base de reference
-        $this->call('ref:build');
+        $this->info('Lancer les commandes suivante pour terminer le process');
+        $this->warn('php artisan migrate');
+        $this->warn('php artisan ref:build');
 
         // End
         $this-> info('Have fun');
