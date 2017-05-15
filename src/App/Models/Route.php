@@ -16,6 +16,11 @@ class Route
      */
     protected $controllers = [];
 
+    /**
+     * @var array
+     */
+    protected $routes = [];
+
 
     /**
      * Constructeur
@@ -28,16 +33,76 @@ class Route
         $this->controllers = $controllers;
     }
 
+
+    /**
+     * GEtter for $routes
+     *
+     * @return array
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
+    }
+
+
+    /**
+     * Setter for $routes
+     *
+     * @param array $routes
+     * @return $this
+     */
+    public function setRoutes(array $routes)
+    {
+        $this->routes = $routes;
+        return $this;
+    }
+
     /**
      * Chargement des route a partir des controller
      *
+     * @return static
+     *
      */
-    static function load(array $controllers = [])
+    static function load(array $controllers = [], $force_reload = false)
     {
         $class = new static($controllers);
 
-        foreach ($class->getControllers() as $prefix => $controller) {
-            $class->loadRouteFromController($prefix, $controller);
+        // generation de la clé de cache
+        $key = 'route.controllers.' . md5(json_encode($controllers));
+
+        // si oùn force la suppression du cache
+        if ($force_reload) {
+            \cache()->forget($key);
+        }
+
+        // recuperation des routes dans le cache
+        $routes = cache($key);
+
+        if (empty($routes)) {
+            foreach ($class->getControllers() as $prefix => $controller) {
+                $class->loadRoutesFromController($prefix, $controller);
+            }
+            cache()->forever($key, $class->getRoutes());
+        } else {
+            $class->setRoutes($routes);
+        }
+
+
+        return $class;
+    }
+
+    public function register()
+    {
+        foreach ($this->routes as $key => $route) {
+
+            //
+            $route = call_user_func_array(
+                [\Route::getFacadeRoot(), $route['action']],
+                [$route['uri'], sprintf('%s@%s', '\\' . $route['controller'], $route['name'])]
+            );
+
+            // nomage de la route
+            $route->name($key);
         }
     }
 
@@ -57,9 +122,8 @@ class Route
      * @param $prefix
      * @param $controller
      */
-    public function loadRouteFromController($prefix, $controller)
+    public function loadRoutesFromController($prefix, $controller)
     {
-
         // on charge le controller
         new \ReflectionClass($controller);
         $reflection = ReflectionClass::createFromName($controller);
@@ -99,10 +163,8 @@ class Route
                 }
 
                 // création de la rout  e
-                $route = call_user_func_array([\Route::getFacadeRoot(), $action], [$uri, sprintf('%s@%s', '\\' . $controller, $name)]);
 
-                // nomage de la route
-                $route->name(sprintf('%s.%s.%s', $prefix, $title, $action));
+                $this->routes[sprintf('%s.%s.%s', $prefix, $title, $action)] = compact('action', 'uri', 'controller', 'name', 'prefix', 'title');
             }
         }
 
