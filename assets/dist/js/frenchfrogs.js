@@ -457,6 +457,10 @@ $.fn.extend({
             return false;
         });
 
+        // KNOB
+        if (jQuery.fn.knob != undefined) {
+            jQuery(this).find('.ff-knob').knob();
+        }
 
         // CALLBACK
         if (typeof callback === 'function') {
