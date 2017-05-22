@@ -40,6 +40,28 @@ trait FrenchFrogsController
         return $this->request;
     }
 
+
+    /**
+     * Surcharge de la validation pour recuperer le request
+     *
+     * @param Request $request
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
+     * @return Request
+     */
+    public function validate(Request $request, array $rules, array $messages = [], array $customAttributes = [])
+    {
+        $validator = $this->getValidationFactory()->make($request->all(), $rules, $messages, $customAttributes);
+
+        if ($validator->fails()) {
+            $this->throwValidationException($request, $validator);
+        }
+
+        return $request;
+    }
+
+
     /**
      * getter for l'utilisateur courant
      *
@@ -48,33 +70,5 @@ trait FrenchFrogsController
     public function user()
     {
         return \auth()->user();
-    }
-
-
-    /**
-     * Filter values and inject them into current request
-     *
-     * @param array $rules
-     * @return $this
-     */
-    public function filter(array $rules)
-    {
-
-        // recupération de la requete
-        $request = $this->request();
-
-        // intitilisation des data a merger
-        $to_merge = [];
-
-        // pour chaque regle on applique un filtre
-        foreach($rules as $key => $rule) {
-            if(!$request->has($key)) { continue;}
-            $to_merge[$key] = f($request->get($key), $rule);
-        }
-
-        // on ajoute les data a la requete courante
-        $request->merge($to_merge);
-
-        return $this;
     }
 }

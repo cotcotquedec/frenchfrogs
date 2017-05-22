@@ -459,6 +459,7 @@ trait Datatable
         $constructor = $config['constructor'];
 
         // construct Table polliwog
+        // CAS duy polliwog dans un controller
         if (preg_match('#(?<class>.+)::(?<method>.+)#', $constructor, $match)) {
 
             $method = $match['method'];
@@ -469,7 +470,10 @@ trait Datatable
                 $params = explode(',', $params['params']);
             }
 
-            $table = call_user_func_array([$match['class'], $method], $params);
+            // creation
+            $instance = new \ReflectionClass($match['class']);
+            $controller = $instance->newInstance();
+            $table = call_user_func_array([$controller, $method], $params);
         } else {
             $instance = new \ReflectionClass($config->constructor);
             $table = $instance->newInstance();

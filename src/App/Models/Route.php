@@ -82,15 +82,19 @@ class Route
             foreach ($class->getControllers() as $prefix => $controller) {
                 $class->loadRoutesFromController($prefix, $controller);
             }
+
             cache()->forever($key, $class->getRoutes());
         } else {
             $class->setRoutes($routes);
         }
 
-
         return $class;
     }
 
+    /**
+     * Register routes
+     *
+     */
     public function register()
     {
         foreach ($this->routes as $key => $route) {
