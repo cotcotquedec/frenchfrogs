@@ -18,7 +18,6 @@ class FrenchFrogsServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->bootModal();
-        $this->bootValidator();
         $this->extendQuerybuilder();
         $this->extendUrlGenerator();
     }
