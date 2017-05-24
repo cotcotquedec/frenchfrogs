@@ -43,22 +43,9 @@ class FrenchFrogsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        foreach (config('frenchfrogs') as $namespace => $config) {
+        foreach ((array) config('frenchfrogs') as $namespace => $config) {
             configurator($namespace)->merge($config);
         }
-    }
-
-    /**
-     * Ajoute de nouveau validateur
-     *
-     */
-    public function bootValidator()
-    {
-        // notExists (database) renvoie true si l'entrée n'existe pas
-        \Validator::extend('not_exists', function ($attribute, $value, $parameters) {
-            $row = \DB::table($parameters[0])->where($parameters[1], '=', $value)->first();
-            return empty($row);
-        });
     }
 
     /**
