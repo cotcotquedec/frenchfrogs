@@ -1,11 +1,9 @@
 <?php namespace FrenchFrogs\App\Providers;
 
-use Illuminate\Database\Query\Builder;
-use Illuminate\Database\Query\Expression;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Mail;
 use FrenchFrogs;
-use Response, Request, Route, Input, Blade, Auth;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\ServiceProvider;
+use Response;
 
 class FrenchFrogsServiceProvider extends ServiceProvider
 {
@@ -23,15 +21,46 @@ class FrenchFrogsServiceProvider extends ServiceProvider
     }
 
     /**
+     * Get the URL generator request rebinder.
+     *
+     * @return \Closure
+     */
+    protected function requestRebinder()
+    {
+        return function ($app, $request) {
+            $app['url']->setRequest($request);
+        };
+    }
+
+
+    /**
      * Extend url generator
      */
     public function extendUrlGenerator()
     {
-        \App::bind('url', function() {
-            return new FrenchFrogs\Laravel\Routing\UrlGenerator(
-                \App::make('router')->getRoutes(),
-                \App::make('request')
+
+        app()->singleton('url', function ($app) {
+
+            $routes = $app['router']->getRoutes();
+
+            $url = new FrenchFrogs\Laravel\Routing\UrlGenerator(
+                $routes, $app->rebinding(
+                'request', $this->requestRebinder()
+            )
             );
+
+            $url->setSessionResolver(function () {
+                return $this->app['session'];
+            });
+
+            // If the route collection is "rebound", for example, when the routes stay
+            // cached for the application, we will need to rebind the routes on the
+            // URL generator instance so it has the latest version of the routes.
+            $app->rebinding('routes', function ($app, $routes) {
+                $app['url']->setRoutes($routes);
+            });
+
+            return $url;
         });
     }
 
@@ -42,7 +71,7 @@ class FrenchFrogsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        foreach ((array) config('frenchfrogs') as $namespace => $config) {
+        foreach ((array)config('frenchfrogs') as $namespace => $config) {
             configurator($namespace)->merge($config);
         }
     }
@@ -78,7 +107,7 @@ class FrenchFrogsServiceProvider extends ServiceProvider
     public function extendQuerybuilder()
     {
         // Ajout du count
-        Builder::macro('addSelectCount', function($expression) {
+        Builder::macro('addSelectCount', function ($expression) {
 
             $alias = null;
 
@@ -96,7 +125,7 @@ class FrenchFrogsServiceProvider extends ServiceProvider
         });
 
         // Ajout du de la somme
-        Builder::macro('addSelectSum', function($expression) {
+        Builder::macro('addSelectSum', function ($expression) {
 
             $alias = null;
 
@@ -114,7 +143,7 @@ class FrenchFrogsServiceProvider extends ServiceProvider
         });
 
         // Ajout du de la somme
-        Builder::macro('addSelectHex', function($expression) {
+        Builder::macro('addSelectHex', function ($expression) {
 
             $alias = null;
 
@@ -130,15 +159,15 @@ class FrenchFrogsServiceProvider extends ServiceProvider
 
 
         // Ajout du de la somme
-        Builder::macro('leftJoinQuery', function(Builder $sub, $alias, $first, $operator = null, $second = null) {
+        Builder::macro('leftJoinQuery', function (Builder $sub, $alias, $first, $operator = null, $second = null) {
             return $this->leftJoin(raw("({$sub->toSql()}) as " . $alias), $first, $operator, $second)->mergeBindings($sub);
         });
 
 
         // Ajout du de la somme
-        Builder::macro('dd', function() {
+        Builder::macro('dd', function () {
 
-            /**@var $this Builder*/
+            /**@var $this Builder */
             echo \SqlFormatter::format($this->toSql());
             dd($this->getBindings(), $this);
         });
