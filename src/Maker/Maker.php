@@ -707,7 +707,7 @@ class Maker
         }
 
         // recuperation du realpath du fichier
-        $file = app_path('../' . $file);
+//        $file = app_path('../' . $file);
 
 
 
@@ -731,7 +731,7 @@ class Maker
 
         //gestion du namespace
         $body = '<?php ';
-        if (preg_match("#\\\\(?<namespace>.+)\\\\(?<class>[^\\\\]+)$#", $class, $match)) {
+        if (preg_match("#(\\\\)?(?<namespace>[^\\\\].+)\\\\(?<class>[^\\\\]+)$#", $class, $match)) {
             $body .= 'namespace ' . $match['namespace'] . ';' . PHP_EOL;
             $body .= 'class ' . $match['class'] . '{}';
         } else {
@@ -880,30 +880,29 @@ class Maker
      */
     static function findDb()
     {
-        $dbs = [];
+        $dbs = collect([]);
 
         // Frenchfrogs classes
-        $classes =  static::findClasses(frenchfrogs_path('App/Models/Db'));
+        $classes = collect([]);
 
         // recuperation des classes
         foreach(static::findClasses(app_path('Models/Db')) as $class) {
-            $classes[] = $class;
+            $classes->push($class);
         }
 
-        // recvherche de la class
-        foreach ($classes as $class) {
+        $classes->each(function($class) use (&$dbs) {
             $reflection = ReflectionClass::createFromName($class);
 
             if (!$reflection->hasProperty('table')) {
-                continue;
+                return;
             }
 
             if ($class{0} == '\\') {
                 $class = substr($class, 1);
             }
 
-            $dbs[$class] = $reflection->getProperty('table')->getDefaultValue();
-        }
+            $dbs->put($class, $reflection->getProperty('table')->getDefaultValue());
+        });
 
         return $dbs;
     }
@@ -917,7 +916,7 @@ class Maker
      */
     static function findTable($table)
     {
-        return collect(static::findDb())->search($table);
+        return static::findDb()->search($table);
     }
 
 

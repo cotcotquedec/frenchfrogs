@@ -51,7 +51,7 @@ class AclTableCommand extends Command
     public function fire()
     {
         $fullPath = $this->createTable();
-        $this->files->put($fullPath, $this->files->get(__DIR__.'/stubs/acl.stub'));
+        $this->files->put($fullPath, $this->files->get(__DIR__.'/stubs/tables/acl.stub'));
         $this->info('Migration created successfully!');
         $this->composer->dumpAutoloads();
     }

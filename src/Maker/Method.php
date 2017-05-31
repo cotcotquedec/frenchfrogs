@@ -87,8 +87,7 @@ class Method
     public function __construct($name, $params = [], $body = '')
     {
         $this->setName($name);
-        //@todo gestion des paramètre
-
+        $this->enablePublic();// par default on set a public
         $this->setBody($body);
     }
 
