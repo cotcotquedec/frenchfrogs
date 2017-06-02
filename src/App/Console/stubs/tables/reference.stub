@@ -13,7 +13,7 @@ class CreateReferenceTable extends Migration
     public function up()
     {
         Schema::create('reference', function(Blueprint $table) {
-            $table->stringId('reference_id', 64);
+            $table->stringId('rid', 64);
             $table->string('name');
             $table->string('collection');
             $table->text('data')->nullable();
