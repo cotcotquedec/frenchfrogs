@@ -919,6 +919,33 @@ class Maker
         return static::findDb()->search($table);
     }
 
+    /**
+     * @param $table
+     * @return \FrenchFrogs\Laravel\Database\Eloquent\Model
+     * @throws \Exception
+     */
+    static function getModelFromTableName($table)
+    {
+        // CLASS
+        $class = Maker::findTable($table);
+
+        // Cas de class inexistante
+        if (empty($class)) {
+            throw new \Exception('Impossible de trouver un model pour la table ' . $table);
+        }
+
+        // CONSTRUCT
+        $class = new \ReflectionClass($class);
+        $class = $class->newInstanceArgs();
+
+        // TEST
+        if (!($class instanceof \FrenchFrogs\Laravel\Database\Eloquent\Model)) {
+            throw new \Exception('Generation impossible du model pour la table : ' . $table);
+        }
+
+        return $class;
+    }
+
 
 
     /**

@@ -172,8 +172,10 @@ class CodeModelCommand extends CodeCommand
         $updated = false;
         $deleted = false;
 
+
         // recuperation des colonnes
-        $columns = \DB::select('SHOW COLUMNS FROM ' . $name);
+        $columns = \DB::select('SHOW COLUMNS FROM `'.$name.'`');
+
 
         foreach ($columns as $row) {
 
