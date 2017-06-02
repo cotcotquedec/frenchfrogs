@@ -299,7 +299,7 @@ class CodeModelCommand extends CodeCommand
             // cas d'une liaison externe
             if ($constraint['table_name'] == $table) {
 
-                $config['id'] = $constraint['referenced_table_name'] . '.' . $constraint['referenced_column_name'];
+                $config['id'] = str_random(3);
 
                     // Recuperation du nom de la table
                 $config['class'] = Maker::findTable($constraint['referenced_table_name']);
@@ -329,7 +329,7 @@ class CodeModelCommand extends CodeCommand
             } else {
 
 
-                $config['id'] = $constraint['table_name'] . '.' . $constraint['column_name'];
+                $config['id'] = str_random(3);
 
                 // Recuperation du nom de la table
                 $config['class'] = Maker::findTable($constraint['table_name']);
