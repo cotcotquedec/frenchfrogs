@@ -1,8 +1,9 @@
 <?php namespace FrenchFrogs\App\Console;
 
-use App\Models\Db\Users\Users;
 use FrenchFrogs\App\Models\Acl;
 use Illuminate\Console\Command;
+use App\Models\Db\Users\Interfaces;
+use App\Models\Db\Users\Users;
 
 class ChangeUserPasswordCommand extends Command
 {
