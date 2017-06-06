@@ -1,5 +1,6 @@
 <?php namespace FrenchFrogs\App\Console;
 
+use App\Models\Db\Users\Users;
 use FrenchFrogs\App\Models\Acl;
 use Illuminate\Console\Command;
 
@@ -50,8 +51,8 @@ class ChangeUserPasswordCommand extends Command
         $interface = $this->hasArgument('interface') ? $this->argument('interface') : Acl::INTERFACE_DEFAULT;
 
         // on valide que l'utilisateur n'existe pas déjà
-        $user = \FrenchFrogs\App\Models\Db\User\User::where('email', $email)
-            ->where('user_interface_id', $interface)
+        $user = Users::where('email', $email)
+            ->where('interface_sid', $interface)
             ->firstOrFail();
 
         // création de l'utilisateur
