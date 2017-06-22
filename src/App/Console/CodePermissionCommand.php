@@ -209,7 +209,7 @@ class CodePermissionCommand extends CodeCommand
             // validation declaration
             $validator = \Validator::make(
                 ['permission' => $permission],
-                ['permission' => 'required|not_exists:user_permission,user_permission_id']
+                ['permission' => 'required|unique:user_permission,user_permission_id']
             );
 
             // check if argument are valid
