@@ -19,8 +19,8 @@ class Select extends Strainer
         $element = new FormSelect($column->getName(), '', $options, $attr);
         $element->setPlaceholder('All');
         $this->setRenderer($column->getTable()->getRenderer());
+        $element->addClass('select2');
         $this->setElement($element);
-
         if (!is_null($callable)) {
             $this->setCallable($callable);
         }
