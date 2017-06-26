@@ -658,6 +658,7 @@ if (!function_exists('exc')) {
 /**
  * Return Reference for the collection
  *
+ * @param string $collection
  * @package Reference
  * @return \FrenchFrogs\App\Models\Reference
  */
@@ -791,7 +792,7 @@ function a(&$object)
  * Raccourcie vers l'trulistauer authentidfié
  *
  * @param null $name
- * @return \Illuminate\Contracts\Auth\Authenticatable|null
+ * @return \Illuminate\Contracts\Auth\Authenticatable|\Illuminate\Database\Eloquent\Model|null
  */
 function user($name = null)
 {
