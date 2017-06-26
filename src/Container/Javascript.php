@@ -240,6 +240,18 @@ class Javascript extends Container
         return $this;
     }
 
+
+    /**
+     * Clear the $container attribute
+     *
+     * @return $this
+     */
+    public function clear()
+    {
+        $this->files = [];
+        return parent::clear();
+    }
+
     /**
      *
      *
