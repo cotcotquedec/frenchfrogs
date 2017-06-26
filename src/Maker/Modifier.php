@@ -203,4 +203,14 @@ trait Modifier
     {
         return $this->is_protected;
     }
+
+    /**
+     * Retourne TRUE si la method a un modifierde setté (hors static)
+     *
+     * @return bool
+     */
+    public function hasModifier()
+    {
+        return $this->isPublic() || $this->isPrivate() || $this->isProtected() || $this->isFinal();
+    }
 }

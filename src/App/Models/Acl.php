@@ -3,7 +3,6 @@
 
 use FrenchFrogs\Ruler\Page\Page;
 use FrenchFrogs\Ruler\Ruler\Ruler;
-use FrenchFrogs\App\Models\Business;
 use FrenchFrogs\App\Models\Db;
 use Auth;
 use Illuminate\Support\Collection;
@@ -70,7 +69,10 @@ class Acl extends Ruler
     public function getNavigations()
     {
 
+
+        dd('sljhd1');
         $interface = static::getInterface();
+
 
         // Navigation
         /**@var \Illuminate\Database\Eloquent\Collection $navigation */
@@ -91,6 +93,7 @@ class Acl extends Ruler
      */
     public function __construct()
     {
+        dd('sljhd1');
 
         // ojn charge les permissions
         $this->loadPermissions();
@@ -189,114 +192,4 @@ class Acl extends Ruler
 
         return static::$interface;
     }
-
-    /**
-     * Create a new Navigation
-     *
-     * @param $index
-     * @param $interface
-     * @param $name
-     * @param $link
-     * @param $permission
-     * @param $parent
-     */
-    static function createDatatabaseNavigation($index, $interface, $name, $link, $permission, $parent = null)
-    {
-        Db\User\Navigation::create([
-            'user_navigation_id' => $index,
-            'user_interface_id' => $interface,
-            'name' => $name,
-            'link' => $link,
-            'user_permission_id' => $permission,
-            'parent_id' => $parent,
-        ]);
-    }
-
-
-    /**
-     * Remove navigation from database
-     *
-     * @param $index
-     */
-    static function removeDatatabaseNavigation($index)
-    {
-        Db\User\Navigation::find($index)->delete();
-    }
-
-    /**
-     * Insert a new permission in database
-     *
-     * @param $index
-     * @param $interface
-     * @param $name
-     */
-    static function createDatabasePermission($index, $group, $interface, $name)
-    {
-        Db\User\Permission::create([
-            'user_permission_id' => $index,
-            'user_permission_group_id' => $group,
-            'user_interface_id' => $interface,
-            'name' => $name,
-        ]);
-    }
-
-    /**
-     * Remove a permission from the database
-     *
-     * @param $index
-     */
-    static function removeDatabasePermission($index)
-    {
-        Db\User\Permission::find($index)->delete();
-    }
-
-    /**
-     * Insert a interface into the database
-     *
-     * @param $index
-     * @param $name
-     */
-    static function createDatabaseInterface($index, $name)
-    {
-        Db\User\UserInterface::create([
-            'user_interface_id' => $index,
-            'name' => $name,
-        ]);
-    }
-
-    /**
-     * Remove interface from database
-     *
-     * @param $index
-     */
-    static function removeDatabaseInterface($index)
-    {
-        Db\User\UserInterface::find($index)->delete();
-    }
-
-    /**
-     * Insert a new permissiongroup into datatabse
-     *
-     * @param $index
-     * @param $name
-     */
-    static function createDatabasePermissionGroup($index, $name)
-    {
-
-        Db\User\PermissionGroup::create([
-            'user_permission_group_id' => $index,
-            'name' => $name,
-        ]);
-    }
-
-    /**
-     *Remove a permission group from the database
-     *
-     * @param $index
-     */
-    static function removeDatabasePermissionGroup($index)
-    {
-        Db\User\PermissionGroup::find($index)->delete();
-    }
-
 }
