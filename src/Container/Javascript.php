@@ -16,8 +16,12 @@ class Javascript extends Container
 
     use Minify;
 
-    const TYPE_FILE = 'file';
-    const TYPE_INLINE = 'inline';
+//    const TYPE_FILE = 'file';
+//    const TYPE_INLINE = 'inline';
+
+
+    protected $files = [];
+
 
     /**
      * Add link
@@ -29,7 +33,9 @@ class Javascript extends Container
      */
     public function file($href)
     {
-        return $this->append([static::TYPE_FILE, $href]);
+        $this->files[] = $href;
+        return $this;
+//        return $this->append( $href);
     }
 
     /**
@@ -101,7 +107,7 @@ class Javascript extends Container
     public function appendJs($selector, $function, ...$params)
     {
         array_unshift($params, $selector, $function);
-        $this->append([static::TYPE_INLINE, call_user_func_array([$this, 'build'], $params)]);
+        $this->append( call_user_func_array([$this, 'build'], $params));
         return $this;
     }
 
@@ -116,7 +122,7 @@ class Javascript extends Container
     public function prependJs($selector, $function, ...$params)
     {
         array_unshift($params, $selector, $function);
-        $this->prepend([static::TYPE_INLINE, call_user_func_array([$this, 'build'], $params)]);
+        $this->prepend( call_user_func_array([$this, 'build'], $params));
         return $this;
     }
 
@@ -128,7 +134,7 @@ class Javascript extends Container
      */
     public function alert($message)
     {
-        $this->append([static::TYPE_INLINE, sprintf('alert("%s");', $message)]);
+        $this->append( sprintf('alert("%s");', $message));
         return $this;
     }
 
@@ -140,7 +146,7 @@ class Javascript extends Container
      */
     public function log($message)
     {
-        $this->append([static::TYPE_INLINE, sprintf('console.log("%s");', $message)]);
+        $this->append( sprintf('console.log("%s");', $message));
         return $this;
     }
 
@@ -155,7 +161,7 @@ class Javascript extends Container
     public function warning($body = '', $title = '')
     {
         $body = empty($body) ?  configurator()->get('toastr.warning.default') : $body;
-        $this->append([static::TYPE_INLINE, sprintf('toastr.warning("%s", "%s");', $body, $title)]);
+        $this->append( sprintf('toastr.warning("%s", "%s");', $body, $title));
         return $this;
     }
 
@@ -169,7 +175,7 @@ class Javascript extends Container
     public function success($body = '', $title = '')
     {
         $body = empty($body) ?  configurator()->get('toastr.success.default') : $body;
-        $this->append([static::TYPE_INLINE, sprintf('toastr.success("%s", "%s");', $body, $title)]);
+        $this->append( sprintf('toastr.success("%s", "%s");', $body, $title));
         return $this;
     }
 
@@ -206,7 +212,7 @@ class Javascript extends Container
      */
     public function reload()
     {
-        $this->append([static::TYPE_INLINE, 'window.location.reload()']);
+        $this->append( 'window.location.reload()');
         return $this;
     }
 
@@ -218,7 +224,7 @@ class Javascript extends Container
      */
     public function redirect($url)
     {
-        $this->append([static::TYPE_INLINE, 'window.location.href = "'.$url.'"']);
+        $this->append( 'window.location.href = "'.$url.'"');
         return $this;
     }
 
@@ -230,7 +236,7 @@ class Javascript extends Container
      */
     public function reloadDataTable($resetPaging = false)
     {
-        $this->append([static::TYPE_INLINE, 'jQuery(".datatable-remote").DataTable().ajax.reload(null, '. ($resetPaging ?  'true' : 'false') .');']);
+        $this->append( 'jQuery(".datatable-remote").DataTable().ajax.reload(null, '. ($resetPaging ?  'true' : 'false') .');');
         return $this;
     }
 
@@ -250,34 +256,31 @@ class Javascript extends Container
                 $hash = '';
                 $contents = [];
 
+                // TRaitement des fichiers
+                foreach ($this->files as $c) {
+                    // scheme case
+                    if (preg_match('#^//.+$#', $c)) {
+                        $c = 'http:' . $c;
+                        $contents[] = ['remote', $c];
+                        $hash .= md5($c);
+
+                        // url case
+                    } elseif (preg_match('#^https?://.+$#', $c)) {
+                        $contents[] = ['remote', $c];
+                        $hash .= md5($c);
+
+                        // local file
+                    } else {
+                        $c = public_path($c);
+                        $hash .= md5_file($c);
+                        $contents[] = ['local', $c];
+                    }
+                }
+
                 // manage remote or local file
                 foreach ($this->container as $content) {
-
-                    list($t, $c) = $content;
-
-                    if ($t == static::TYPE_FILE) {
-
-                        // scheme case
-                        if (preg_match('#^//.+$#', $c)) {
-                            $c = 'http:' . $c;
-                            $contents[] = ['remote', $c];
-                            $hash .= md5($c);
-
-                            // url case
-                        } elseif (preg_match('#^https?://.+$#', $c)) {
-                            $contents[] = ['remote', $c];
-                            $hash .= md5($c);
-
-                            // local file
-                        } else {
-                            $c = public_path($c);
-                            $hash .= md5_file($c);
-                            $contents[] = ['local', $c];
-                        }
-                    } elseif($t == static::TYPE_INLINE) {
-                        $hash .= md5($c);
-                        $contents[] = ['inline', $c];
-                    }
+                    $hash .= md5($c);
+                    $contents[] = ['inline', $c];
                 }
 
                 // destination file
@@ -319,33 +322,28 @@ class Javascript extends Container
 
             } else {
 
+
+                foreach ($this->files as $c) {
+                    $result .= html('script',
+                            [
+                                'src' => $c,
+                                'type' => 'text/javascript',
+                            ]
+                        ) . PHP_EOL;
+                }
+
+
                 foreach ($this->container as $content) {
-
-                    list($t, $c) = $content;
-
-                    // render file
-                    if ($t == static::TYPE_FILE) {
-
-                        $result .= html('script',
-                                [
-                                    'src' => $c,
-                                    'type' => 'text/javascript',
-                                ]
-                            ) . PHP_EOL;
-
-                        // render style
-                    } elseif($t == static::TYPE_INLINE) {
-                        $result .= $c . $this->getGlue();
-                    }
+                    $result .= $content . $this->getGlue();
                 }
             }
 
         } catch(\Exception $e) {
 
-            $result = '<!--' . PHP_EOL . 'Error on css generation' . PHP_EOL;
+            $result = '<!--' . PHP_EOL . 'Error on js generation' . PHP_EOL;
 
             // stack trace if in debug mode
-            if (!is_debug()) {
+            if (is_debug()) {
                 $result .= $e->getMessage() . ' : ' . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
             }
 
@@ -368,7 +366,7 @@ class Javascript extends Container
      */
     public function gaEvent($category, $action, $label)
     {
-        return $this->append([static::TYPE_INLINE, sprintf("ga('send', 'event', '%s', '%s', '%s');", $category, $action, $label)]);
+        return $this->append( sprintf("ga('send', 'event', '%s', '%s', '%s');", $category, $action, $label));
     }
 
 
@@ -384,7 +382,7 @@ class Javascript extends Container
      */
     public function gaView($page = false)
     {
-        return $this->append([static::TYPE_INLINE, $page ? sprintf("ga('send', 'pageview', '%s');", $page) : "ga('send', 'pageview')"]);
+        return $this->append( $page ? sprintf("ga('send', 'pageview', '%s');", $page) : "ga('send', 'pageview')");
     }
 
 
@@ -395,6 +393,6 @@ class Javascript extends Container
      */
     public function gaSetUser($user)
     {
-        return $this->append([static::TYPE_INLINE, sprintf("ga('set', 'userId', '%s');", $user)]);
+        return $this->append( sprintf("ga('set', 'userId', '%s');", $user));
     }
 }
