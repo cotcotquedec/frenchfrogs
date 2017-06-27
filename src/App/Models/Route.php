@@ -98,7 +98,6 @@ class Route
     public function register()
     {
         foreach ($this->routes as $key => $route) {
-
             //
             $route = call_user_func_array(
                 [\Route::getFacadeRoot(), $route['action']],

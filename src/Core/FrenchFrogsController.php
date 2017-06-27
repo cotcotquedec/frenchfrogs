@@ -5,8 +5,6 @@ use Illuminate\Http\Request;
 
 trait FrenchFrogsController
 {
-
-
     /**
      * @var Request
      */
