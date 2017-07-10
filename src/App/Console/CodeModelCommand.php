@@ -128,7 +128,7 @@ class CodeModelCommand extends CodeCommand
         }
 
         // Creation de la classe
-        $maker = file_exists($file) ? Maker::load($class) : Maker::init($class, $file);
+        $maker = file_exists(app_path('/../' . $file)) ? Maker::load($class) : Maker::init($class, $file);
 
         // Attributiuon du maker a la commande
         $this->maker = $maker;

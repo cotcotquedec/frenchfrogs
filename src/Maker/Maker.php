@@ -783,7 +783,6 @@ class Maker
      */
     static function findClass($file)
     {
-
         // recuperation contenu du fichier
         $content = file_get_contents($file);
 
@@ -796,7 +795,7 @@ class Maker
         }
 
         // identification de la classe
-        if (preg_match('#class\s+(?<class>[^\s^\{]+)#', $content, $match)) {
+        if (preg_match('#\nclass\s+(?<class>[^\s]+)\s#', $content, $match)) {
             $class .= $match['class'];
         }
 
@@ -889,6 +888,7 @@ class Maker
         foreach(static::findClasses(app_path('Models/Db')) as $class) {
             $classes[] = $class;
         }
+
 
         // recvherche de la class
         foreach ($classes as $class) {
