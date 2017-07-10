@@ -305,7 +305,7 @@ function action_url($controller, $action = 'getIndex', $params = [], $query = []
 function ruler($namespace = null)
 {
     if (is_null($namespace)) {
-        $namespace = \auth()->user()->user_interface_id;
+        $namespace = \auth()->user()->interface_sid;
     }
 
     // retrieve the good class
