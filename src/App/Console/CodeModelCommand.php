@@ -95,6 +95,7 @@ class CodeModelCommand extends CodeCommand
         // determination du nom de la classe et du fichier de sortie
         $class = $file = null;
 
+
         // le cas où le fichier existe déja
         if ($class = Maker::findTable($name))  {
             $file = $this->determineFileFromClass($class);
@@ -289,13 +290,10 @@ class CodeModelCommand extends CodeCommand
 
         $configuration = collect([]);
 
-
         // Essaie de definir le resultats
         foreach (a($constraints) as $constraint) {
 
             $config = [];
-
-
 
             // cas d'une liaison externe
             if ($constraint['table_name'] == $table) {
