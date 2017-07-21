@@ -13,7 +13,7 @@ class ReferenceTableCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'reference:table';
+    protected $signature = 'ref:table';
 
     /**
      * The console command description.
@@ -53,7 +53,7 @@ class ReferenceTableCommand extends Command
     public function fire()
     {
         $fullPath = $this->createTable();
-        $this->files->put($fullPath, $this->files->get(__DIR__.'/stubs/database.stub'));
+        $this->files->put($fullPath, $this->files->get(__DIR__.'/stubs/tables/reference.stub'));
         $this->info('Migration created successfully!');
         $this->composer->dumpAutoloads();
     }

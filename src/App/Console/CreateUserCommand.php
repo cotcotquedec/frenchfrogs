@@ -1,9 +1,10 @@
 <?php namespace FrenchFrogs\App\Console;
 
+use App\Models\Db\Users\Interfaces;
+use App\Models\Db\Users\Users;
 use FrenchFrogs\App\Models\Acl;
-use Illuminate\Console\Command;
 
-class CreateUserCommand extends Command
+class CreateUserCommand extends CodeCommand
 {
 
     /**
@@ -12,11 +13,10 @@ class CreateUserCommand extends Command
      * @var string
      */
     protected $signature = 'user:create 
-                                {email : Email de l\'utilisateur} 
+                                {email? : Email de l\'utilisateur} 
                                 {--pass= : Mot de passe}
                                 {--name= : Nom complet de l\'utilisateur}
-                                {--interface= : Interface de l\'utilisateur}
-                                {--admin}';
+                                {--interface= : Interface de l\'utilisateur}';
 
     /**
      * The console command description.
@@ -43,30 +43,29 @@ class CreateUserCommand extends Command
     public function handle()
     {
 
-        // email
-        $email = $this->argument('email');
+        $email = $this->argument('email') ?: static::CHOISE_NULL;
+        $email = $this->askUntilValid('Quel est l\'email de l\'utilisateur?', null, 'required|min:6|email|unique:users,email', $email);
+
 
         // génération automatique de l'email
-        $password = $this->option('pass');
-        if (empty($password)) {
-            $password = \Models\Business\User::generateRandomPassword();
-            $password = $this->ask('Mot de passe', $password);
-        }
+        $password = $this->option('pass') ?: str_random(12);
+        $password = $this->askUntilValid('Mot de passe?', null, 'required|min:6', $password);
 
         // nom complet
         $name = $this->option('name');
-        if (empty($name)) {
-            $name = $this->ask('Nom complet');
-        }
+        $name = $this->askUntilValid('Nom complet?', null, 'required|min:3', $name);
 
         // interface
-        $interface =  $this->option('interface');
-        if (empty($interface)) {
-            $interface = $this->ask('Interface',  Acl::INTERFACE_DEFAULT);
-        }
+        $interface =  $this->option('interface')?: Interfaces::DEFAULT;
+        $interface = $this->askUntilValid('Interface?', Interfaces::DEFAULT, 'required|min:3', $interface);
 
-        // generation de l'utilisateur
-        \Models\Business\User::init($email, $password, $interface, $name, $this->option('admin'));
+        // Creation de l'utilisateur
+        $user = Users::create([
+            'email' => $email,
+            'name' => $name,
+            'password' => bcrypt($password),
+            'interface_sid' => $interface,
+        ]);
 
         // affichage du mot de passe
         $this->info(sprintf('Le mot de passe de l\'utilisateur "%s" [%s] est : %s', $name, $email, $password));
