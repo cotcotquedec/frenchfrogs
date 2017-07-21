@@ -724,40 +724,6 @@ function glob_recursive($pattern, $flags = 0)
     return $files;
 }
 
-
-/**
- * TYraitement de la mise place d'un function d'affichage de contenu
- *
- * @param $content
- * @param null $lang
- * @param array $bind
- * @param null $count
- * @return array
- */
-function _ff_c($content, $lang = null, $bind = [], $count = null)
-{
-    // recupertation des arguments
-    $index = str_random(4);
-
-    $data = [
-        'content_index' => $index,
-        'lang_sid' => $lang ?: Ref::LANG_FR,
-        'content' => $content,
-        'is_published' => true,
-        'published_at' => Carbon\Carbon::now()
-    ];
-
-    // génération du code
-    $export = '\FrenchFrogs\App\Models\Db\Content::create(' . var_export($data, true) . ');' . str_repeat(PHP_EOL, 3);
-    eval($export);
-
-    // inscription de l'informatyion dans un fichier temporaire
-    file_put_contents(storage_path('/framework/dev/content.php'), $export, FILE_APPEND);
-
-    // on retourne les information
-    return [$content, $index];
-}
-
 /**
  * Force la cast d'une variable en array
  *
