@@ -795,8 +795,10 @@ class Maker
         }
 
         // identification de la classe
-        if (preg_match('#\nclass\s+(?<class>[^\s]+)\s#', $content, $match)) {
+        if (preg_match('#\nclass\s+(?<class>[^\s\{]+)(\s|\{)?#', $content, $match)) {
             $class .= $match['class'];
+        } else {
+            $class = null;
         }
 
         return $class;
@@ -834,7 +836,7 @@ class Maker
                     $classes[] = $class;
                 }
             } else {
-                $classes[] = static::findClass($path);
+                ($class = static::findClass($path)) && ($classes[] = $class);
             }
         }
 
@@ -888,7 +890,6 @@ class Maker
         foreach(static::findClasses(app_path('Models/Db')) as $class) {
             $classes[] = $class;
         }
-
 
         // recvherche de la class
         foreach ($classes as $class) {

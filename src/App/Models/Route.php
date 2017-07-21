@@ -72,7 +72,7 @@ class Route
 
         // si oùn force la suppression du cache
         if ($force_reload) {
-            \cache()->forget($key);
+            cache()->forget($key);
         }
 
         // recuperation des routes dans le cache
@@ -143,10 +143,11 @@ class Route
             }
 
             // Recuperation de la syntaxe de la router controller
-            if (preg_match('#(?<action>get|post|delete|any)(?<title>.+)#', $name, $match)) {
+            if (preg_match('#(?<action>put|get|post|delete|any)(?<title>.+)#', $name, $match)) {
 
                 //recuperation des informations
                 $action = $match['action'];
+
                 $title = str_slug($match['title']);
 
                 // construction de l'url
