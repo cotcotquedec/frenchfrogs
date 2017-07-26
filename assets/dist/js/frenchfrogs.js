@@ -457,6 +457,13 @@ $.fn.extend({
             return false;
         });
 
+
+        if (SimpleMDE != undefined) {
+            jQuery('textarea.ff-markdown').each(function() {
+                new SimpleMDE({ element: document.getElementById($(this).attr('id'))});
+            });
+        }
+
         // KNOB
         if (jQuery.fn.knob != undefined) {
             jQuery(this).find('.ff-knob').knob();
