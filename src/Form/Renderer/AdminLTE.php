@@ -42,7 +42,8 @@ class AdminLTE extends Inline
         'boolean',
         'select2',
         'time',
-        'pre'
+        'pre',
+        'markdown'
     ];
 
 
