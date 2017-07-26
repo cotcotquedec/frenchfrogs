@@ -460,7 +460,7 @@ $.fn.extend({
 
         if (SimpleMDE != undefined) {
             jQuery('textarea.ff-markdown').each(function() {
-                new SimpleMDE({ element: document.getElementById($(this).attr('id'))});
+                mde = new SimpleMDE({ element: document.getElementById($(this).attr('id')), forceSync: true});
             });
         }
 
