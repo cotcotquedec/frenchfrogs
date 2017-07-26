@@ -188,55 +188,6 @@ class Inline extends Renderer\Renderer {
     }
 
 
-
-    /**
-     * Textarea render
-     *
-     * @param \FrenchFrogs\Form\Element\Textarea $element
-     * @return string
-     */
-    public function markdown(Form\Element\Markdown $element)
-    {
-        // CLASS
-        $class =  Style::FORM_GROUP_CLASS . ' row';
-
-        /// ERROR
-        if($hasError = !$element->getValidator()->isValid()){
-            $element->addClass('form-error');
-            if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
-            $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
-                $message .= $error . ' ';
-            }
-            $element->addAttribute('data-original-title',$message);
-            $class .= ' ' .Style::FORM_GROUP_ERROR;
-        }
-
-        // LABEL
-        $label = '';
-        if ($element->getForm()->hasLabel()) {
-            $label = '<label for="' . $element->getName() . '" class="col-md-3 control-label">' . $element->getLabel() . ($element->hasRule('required') ? ' *' : '') . '</label>';
-        }
-
-
-        // INPUT
-        $element->addClass(Style::FORM_ELEMENT_CONTROL);
-        $element->addAttribute('id', $element->getName());
-
-        $html = html('textarea', $element->getAttributes(), $element->getValue());
-
-        // DESCRIPTION
-        if ($element->hasDescription()) {
-            $html .= html('span', ['class' => 'help-block'], $element->getDescription());
-        }
-
-        // FINAL CONTAINER
-        $html = html('div', ['class' => 'col-md-9'], $html);
-        return html('div', compact('class'), $label . $html);
-    }
-
-
-
     /**
      * Submit button render
      *
