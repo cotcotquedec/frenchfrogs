@@ -337,6 +337,30 @@ trait Element
         return $e;
     }
 
+
+
+    /**
+     * Add textarea element
+     *
+     * @param $name
+     * @param string $label
+     * @param array $attr
+     * @return \FrenchFrogs\Form\Element\Textarea
+     */
+    public function addMarkdown($name, $label = '', $is_mandatory = true )
+    {
+        $e = new \FrenchFrogs\Form\Element\Markdown($name, $label);
+        $this->addElement($e);
+
+        if ($is_mandatory) {
+            $e->addRule('required');
+        } else {
+            $e->addFilter('nullable');
+        }
+
+        return $e;
+    }
+
     /**
      * Add action button
      *
