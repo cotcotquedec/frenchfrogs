@@ -1,6 +1,6 @@
 <?php namespace FrenchFrogs\App\Console;
 
-use FrenchFrogs\App\Models\Db\Reference;
+use FrenchFrogs\Laravel\Database\Eloquent\Model;
 use FrenchFrogs\Maker\Maker;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Collection;
@@ -39,6 +39,13 @@ class CodeReferenceCommand extends \FrenchFrogs\App\Console\CodeCommand
 
 
     /**
+     *
+     * @var Model
+     */
+    protected $table;
+
+
+    /**
      * @var string
      */
     protected $id;
@@ -70,9 +77,6 @@ class CodeReferenceCommand extends \FrenchFrogs\App\Console\CodeCommand
         $this->filesystem = $filesystem;
         $this->composer= $composer;
 
-        // load collection
-        $this->collections = Reference::distinct('collection')->pluck('collection');
-
         parent::__construct();
     }
 
@@ -84,8 +88,6 @@ class CodeReferenceCommand extends \FrenchFrogs\App\Console\CodeCommand
      */
     public function searchCollection($search = null)
     {
-
-
         do {
             $collection = null;
 
@@ -141,13 +143,18 @@ class CodeReferenceCommand extends \FrenchFrogs\App\Console\CodeCommand
      */
     public function handle()
     {
+        // MODEL
+        $this->table = Maker::getModelFromTableName('references');
 
-        // recuperaztion de la collection
+        //COLLECTIONS
+        $this->collections = $this->table->distinct('collection')->pluck('collection');
+
+        // COLLECTION
         $this->collection = $this->searchCollection($this->argument('search'));
 
 
         // recuperationet liste des reference existantes
-        $references = Reference::where('collection', $this->collection)->get(['reference_id', 'name']);
+        $references = $this->table->where('collection', $this->collection)->get(['rid', 'name']);
 
 
         if ($references->isNotEmpty()) {
@@ -187,7 +194,7 @@ class CodeReferenceCommand extends \FrenchFrogs\App\Console\CodeCommand
 
         // Recapitulatif
         $this->table(['Champs', 'Valeur '], [
-            ['reference_id', $id],
+            ['rid', $id],
             ['name', $name],
             ['collection', $this->collection],
         ]);
@@ -232,14 +239,18 @@ class CodeReferenceCommand extends \FrenchFrogs\App\Console\CodeCommand
         // Cratiuon de la migration
         $migration = Maker::load($class);
         $migration->addAlias('Migration', Migration::class);
-        $migration->addAlias('Reference', \FrenchFrogs\App\Models\Reference::class);
+        $migration->addAlias('References', get_class($this->table));
         $migration->setParent(Migration::class);
         $migration->setSummary('Migration pour l\'ajout de la reference "' . $this->id .  '"');
 
         // METHOD
         $method = $migration->addMethod('up');
         $method->setBody(<<<EOL
-        Reference::createDatabaseReference('{$this->id}', '{$this->name}', '{$this->collection}');
+        References::create([
+           "rid" => '{$this->id}', 
+           "name" => '{$this->name}', 
+            "collection" => '{$this->collection}'
+        ]);
 EOL
 );
         $migration->write();

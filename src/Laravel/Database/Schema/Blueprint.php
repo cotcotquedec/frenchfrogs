@@ -37,7 +37,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
      */
     public function reference($columns)
     {
-        $this->foreign($columns)->references('reference_id')->on('reference');
+        $this->foreign($columns)->references('rid')->on('references');
         return $this->string($columns, 64);
     }
 
