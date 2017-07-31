@@ -21,7 +21,6 @@ class Select extends Strainer
         $this->setRenderer($column->getTable()->getRenderer());
         $element->addClass('select2');
         $this->setElement($element);
-
         if (!is_null($callable)) {
             $this->setCallable($callable);
         }
