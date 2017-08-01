@@ -8,6 +8,17 @@ class UrlGenerator extends \Illuminate\Routing\UrlGenerator
 
 
     /**
+     * Clone URL
+     *
+     * @return bool
+     */
+    public function clone()
+    {
+        return clone $this;
+    }
+
+
+    /**
      * Setter for $query
      *
      * @param array $query
