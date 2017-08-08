@@ -458,9 +458,17 @@ $.fn.extend({
         });
 
 
+        // SimpleMDE
         if (window.SimpleMDE != undefined) {
             jQuery('textarea.ff-markdown').each(function() {
                 new SimpleMDE({ element: document.getElementById($(this).attr('id')), forceSync: true});
+            });
+        }
+
+        // HIGHLIGHT.JS
+        if (window.hljs != undefined) {
+            jQuery('code.ff-highlight').each(function(i, block) {
+                hljs.highlightBlock(block);
             });
         }
 

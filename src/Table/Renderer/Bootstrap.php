@@ -507,7 +507,8 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
      */
     public function code(Column\Code $column, array $row)
     {
-        $html = html('code', [],$column->getValue($row));
+        $html = html('code', $column->getAttributes() ,$column->getValue($row));
+        $html = html('pre', [], $html);
         return $this->post($html, $column, $row);
     }
 
