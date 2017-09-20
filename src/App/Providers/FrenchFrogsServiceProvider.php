@@ -38,7 +38,6 @@ class FrenchFrogsServiceProvider extends ServiceProvider
      */
     public function extendUrlGenerator()
     {
-
         app()->singleton('url', function ($app) {
 
             $routes = $app['router']->getRoutes();

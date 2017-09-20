@@ -54,7 +54,7 @@ abstract class CodeCommand extends Command
      */
     public function reformat($filepath)
     {
-        $this->process('php-cs-fixer fix ' .  escapeshellarg($filepath));
+        $this->process('php-cs-fixer fix  --cache-file="/tmp/cs-fixer.cache" ' .  escapeshellarg($filepath));
         return $this;
     }
 

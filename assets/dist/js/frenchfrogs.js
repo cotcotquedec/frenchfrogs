@@ -457,7 +457,6 @@ $.fn.extend({
             return false;
         });
 
-
         // SimpleMDE
         if (window.SimpleMDE != undefined) {
             jQuery('textarea.ff-markdown').each(function() {

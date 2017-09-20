@@ -26,7 +26,8 @@ Route::get('/ff/datatable/{token}', function ($token) {
         }
 
         // on sauvegarde la recherche
-        $table->save(compact('columns', 'order', 'search'));
+        $table->getNenuphar()->setExtras(compact('columns', 'order', 'search'));
+        $table->save();
 
         return response()->json(['data' => $data, 'draw' => $request->get('draw'), 'recordsFiltered' => $table->getItemsTotal(), 'recordsTotal' => $table->getItemsTotal()]);
 
@@ -34,7 +35,6 @@ Route::get('/ff/datatable/{token}', function ($token) {
         //Si on catch une erreur on renvoi une reponse json avec le code 500
         return response()->json(['error' => $e->getMessage()], 500);
     }
-
 })->name('datatable');
 
 
