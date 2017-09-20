@@ -1,5 +1,6 @@
 <?php namespace FrenchFrogs\Table\Table;
 
+use FrenchFrogs\Core\Nenuphar;
 use InvalidArgumentException;
 use Session;
 
@@ -30,20 +31,9 @@ trait Datatable
 
 
     /**
-     * If a single token if set, it mean that this class can only have a single instance
-     *
-     * @var
+     * @var Nenuphar
      */
-    static protected $singleToken;
-
-
-    /**
-     * String for remote constructor
-     *
-     * @var string
-     */
-    protected $constructor;
-
+    protected $nenuphar;
 
     /**
      * Search function
@@ -98,8 +88,7 @@ trait Datatable
      */
     public function addDatatableButtonExport($text = 'Export CSV')
     {
-        $this->hasToken() ?: $this->generateToken();
-        $this->addDatatableButtonLink($text, route('datatable-export', ['token' => $this->getToken()]));
+        $this->addDatatableButtonLink($text, route('datatable-export', ['token' => $this->getNenuphar()->getToken()]));
         return $this;
     }
 
@@ -349,84 +338,49 @@ trait Datatable
         return $this;
     }
 
+
     /**
-     * Getter for $constructor attribute
      *
-     * @return string
+     * @param Nenuphar $nenuphar
+     * @return $this
      */
-    public function getConstructor()
+    public function setNenuphar(Nenuphar $nenuphar)
     {
-        return $this->constructor;
+        $this->nenuphar = $nenuphar;
+        return $this;
+    }
+
+    /**
+     *
+     * @return Nenuphar
+     */
+    public function getNenuphar()
+    {
+        return $this->nenuphar;
     }
 
     /**
      * Setter for $constructor attribute
      *
+     * @deprecated
      * @param $constructor
      * @param null $method
      * @param null $params
      * @return $this
      */
-    public function setConstructor($constructor, $method = null, $params = null)
+    public function setConstructor($constructor, $method = null, $params = [])
     {
-
-        if (!is_null($method)){
-            $constructor .= '::' . $method;
-        }
-
-        if (!is_null($params)) {
-            $constructor .= ':' . $params;
-        }
-
-        $this->constructor = $constructor;
+        $this->setNenuphar(new Nenuphar($constructor, $method, $params, 'controller'));
         return $this;
-    }
-
-    /**
-     * Unset $constructor attribute
-     *
-     * @return $this
-     */
-    public function removeConstructor()
-    {
-        unset($this->constructor);
-        return $this;
-    }
-
-
-    /**
-     * Return TRUE if $constructor attribute is set
-     *
-     * @return bool
-     */
-    public function hasConstructor()
-    {
-        return isset($this->constructor);
     }
 
     /**
      * Save the Table configuration in Session
      *
      */
-    public function save($query = null)
+    public function save()
     {
-
-        // si pas de token
-        if(!$this->hasToken()) {
-            if (static::hasSingleToken()) {
-                $this->setToken(static::getSingleToken());
-            } else {
-                $this->generateToken();
-            }
-        }
-
-        // Si le constructeur n'est pas setter
-        if (!$this->hasConstructor()) {
-            $this->setConstructor(static::class);
-        }
-
-        // on enregistre la session
-        Session::put($this->getToken(), json_encode(['constructor' => $this->getConstructor(), 'query' => $query]));
+        $this->getNenuphar()->register();
         return $this;
     }
 
@@ -439,58 +393,22 @@ trait Datatable
      */
     static public function load($token = null, $processQuery = false)
     {
-        // if single token is set, we keep it
-        if (is_null($token) && static::hasSingleToken()) {
-            $token = static::getSingleToken();
-        }
+        // Recuperation de la table
+        $nenuphar = Nenuphar::fromToken($token);
 
-        // if no session are set, we set a new one only is class has a singleToken
-        if (!Session::has($token)){
-            if (static::hasSingleToken()) {
-                Session::push($token, json_encode(['constructor' => static::class]));
-            } else {
-                throw new \InvalidArgumentException('Token "' . $token . '" is not valid');
-            }
-        }
-
-        // load configuration
-        $config = Session::get($token);
-        $config = \json_decode($config, true);
-        $constructor = $config['constructor'];
-
-        // construct Table polliwog
-        // CAS duy polliwog dans un controller
-        if (preg_match('#(?<class>.+)::(?<method>.+)#', $constructor, $match)) {
-
-            $method = $match['method'];
-            // extract parameters
-            $params = [];
-            if (preg_match('#(?<method>[^:]+):(?<params>.+)#', $method, $params)) {
-                $method = $params['method'];
-                $params = explode(',', $params['params']);
-            }
-
-            // creation
-            $instance = new \ReflectionClass($match['class']);
-            $controller = $instance->newInstance();
-            $table = call_user_func_array([$controller, $method], $params);
-        } else {
-            $instance = new \ReflectionClass($config->constructor);
-            $table = $instance->newInstance();
+        $table = $nenuphar->execute();
+        if (!($table instanceof static)) {
+            throw new \Exception('Le token "' . $token .'" ne renvoit pas un objet valide');
         }
 
         // attribution du token
-        $table->setToken($token);
+        $table->setNenuphar($nenuphar);
 
-        // validate that instance is viable
-        if (!($table instanceof static)) {
-            throw new \Exception('Loaded instance is not viable');
-        }
+        // Recuperation de sinformation de requete
+        $query = $nenuphar->getExtras();
 
         // process query
-        if ($processQuery && !empty($config['query'])) {
-            $query = $config['query'];
-
+        if ($processQuery && !empty($query)) {
             $columns = $query['columns'];
             $search = empty($query['search']) ? null : $query['search'];
             $order = empty($query['order']) ? null : $query['order'];

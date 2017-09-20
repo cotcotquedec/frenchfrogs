@@ -543,7 +543,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
             $table->addClass('datatable-remote');
             $table->save();
             $options += [
-                'ajax' => ['url' => route('datatable', ['token' => $table->getToken()],false)],
+                'ajax' => ['url' => route('datatable', ['token' => $table->getNenuphar()->getToken()],false)],
                 'processing' => true,
                 'serverSide' => true,
                 'pageLength' => $table->getItemsPerPage(),
