@@ -170,6 +170,36 @@ trait Docblock
         return $this;
     }
 
+    /**
+     * Add a tag type param
+     *
+     * @param $name
+     * @param null $type
+     * @param $description
+     * @return $this
+     */
+    public function addTagPropertyRead($name, $type = null, $description = null)
+    {
+        // construction du tag
+        $tag  = '';
+
+        if (!is_null($type)) {
+            $tag .=  $type . ' ';
+        }
+
+        $tag .= $name;
+
+        if (!is_null($description)) {
+            $tag .= ' ' . $description;
+        }
+
+        $this->addTag('property-read', $tag);
+
+        return $this;
+    }
+
+
+
 
     /**
      * Getter for tags

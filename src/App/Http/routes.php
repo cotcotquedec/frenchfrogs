@@ -10,8 +10,8 @@ Route::get('/ff/datatable/{token}', function ($token) {
         $table = FrenchFrogs\Table\Table\Table::load($token);
 
         // configuration de la navigation
-        $table->setItemsPerPage(Input::get('length'));
-        $table->setPageFromItemsOffset(Input::get('start'));
+        $table->setItemsPerPage($request->get('length'));
+        $table->setPageFromItemsOffset($request->get('start'));
         $table->setRenderer(new FrenchFrogs\Table\Renderer\Remote());
 
         $columns = $request->get('columns');
@@ -29,7 +29,7 @@ Route::get('/ff/datatable/{token}', function ($token) {
         $table->getNenuphar()->setExtras(compact('columns', 'order', 'search'));
         $table->save();
 
-        return response()->json(['data' => $data, 'draw' => Input::get('draw'), 'recordsFiltered' => $table->getItemsTotal(), 'recordsTotal' => $table->getItemsTotal()]);
+        return response()->json(['data' => $data, 'draw' => $request->get('draw'), 'recordsFiltered' => $table->getItemsTotal(), 'recordsTotal' => $table->getItemsTotal()]);
 
     } catch (\Exception $e) {
         //Si on catch une erreur on renvoi une reponse json avec le code 500

@@ -1,9 +1,8 @@
 <?php namespace FrenchFrogs\App\Models;
 
 use Cache;
+use FrenchFrogs\Laravel\Database\Eloquent\Model;
 use FrenchFrogs\Maker\Maker;
-use gossi\codegen\model\PhpClass;
-use gossi\codegen\generator\CodeFileGenerator;
 
 /**
  * Classe de gestion des références
@@ -43,6 +42,12 @@ class Reference
 
 
     /**
+     * @var Model
+     */
+    protected $db;
+
+
+    /**
      * Instances
      *
      * @var array
@@ -60,6 +65,8 @@ class Reference
     {
         $this->collection = $collection;
 
+        $this->db = Maker::getModelFromTableName('references');
+
         // generation des données
         $this->getData();
     }
@@ -70,7 +77,8 @@ class Reference
      *
      * @return static
      */
-    static function getInstance($collection) {
+    static function getInstance($collection)
+    {
 
         if (!array_key_exists($collection, static::$instances)) {
             self::$instances[$collection] = new static($collection);
@@ -97,7 +105,7 @@ class Reference
     public function clear()
     {
         // unset data
-        if($this->hasData()){
+        if ($this->hasData()) {
             unset($this->data);
         }
 
@@ -133,8 +141,7 @@ class Reference
 
             // si pas les données en cache, on les génère
             if (!Cache::has($cache)) {
-                $data = \query('reference')
-                    ->whereNull('deleted_at')
+                $data = $this->db
                     ->where('collection', $this->collection)
                     ->orderBy('name')
                     ->get();
@@ -165,38 +172,6 @@ class Reference
         return $pairs;
     }
 
-
-
-    /**
-     * Création d'une référence en base de donnée
-     *
-     * @param $id
-     * @param $name
-     * @param $collection
-     * @param null $data
-     * @return static
-     */
-    static public function createDatabaseReference($id, $name, $collection, $data = null )
-    {
-        return Db\Reference::create([
-            'reference_id' => $id,
-            'name' => $name,
-            'collection' => $collection,
-            'data' => is_null($data) ? null : json_encode($data)
-        ]);
-    }
-
-    /**
-     * Soft delete a reference
-     *
-     * @param $id
-     * @throws \Exception
-     */
-    static public function removeDatabaseReference($id)
-    {
-        Db\Reference::find($id)->delete();
-    }
-
     /**
      * Construction du fichier d'helper pour l'ide afin d'avoir l'autocompletion
      *
@@ -206,7 +181,7 @@ class Reference
         $file = storage_path('/../bootstrap/') . static::CLASS_NAME . '.php';
 
         // recuperation des données
-        $constant = \FrenchFrogs\App\Models\Db\Reference::pluck('reference_id', 'reference_id')->toArray();
+        $constant = Maker::getModelFromTableName('references')->pluck('rid', 'rid')->toArray();
 
         // generate class
         $maker = Maker::load(static::CLASS_NAME);
