@@ -77,20 +77,26 @@ class CodeMigrationCommand extends CodeCommand
         $table = $this->argument('table') ?: static::CHOISE_NULL;
         $table = $this->askUntilValid('Quel table voulez vous gerer?', static::CHOICE_EMPTY, null, $table);
 
-        if (Schema::hasTable($table)) {
-            $this->warn(sprintf('la table "%s" existe déjà... modification activé!!', $table));
 
-            $body = <<<EOL
+        $body = '';
+        if (!empty($table) && $table != static::CHOICE_EMPTY) {
+            if (Schema::hasTable($table)) {
+                $this->warn(sprintf('la table "%s" existe déjà... modification activé!!', $table));
+
+                $body = <<<EOL
             Schema::table("$table", function(Blueprint \$table) {
                  //HERE IS YOUR CODE    
             });
 EOL;
-        } else {
-            $body = <<<EOL
+            } else {
+                $body = <<<EOL
             Schema::create("$table", function(Blueprint \$table) {
                  //HERE IS YOUR CODE    
             });
 EOL;
+            }
+        } else {
+            $body = '//HERE IS YOUR CODE' . PHP_EOL;
         }
 
         $method->setBody($body);
