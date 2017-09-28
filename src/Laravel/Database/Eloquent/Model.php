@@ -1,5 +1,6 @@
 <?php namespace FrenchFrogs\Laravel\Database\Eloquent;
 
+use FrenchFrogs\Core\Nenuphar;
 use Illuminate\Support\Str;
 use Webpatser\Uuid\Uuid;
 use Illuminate\Database\Eloquent\Builder;
@@ -25,6 +26,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
 {
 
     const BINARY16_UUID = 'binuuid';
+    const NENUPHAR = 'nenuphar';
 
     /**
      * Desactivate gard
@@ -75,6 +77,8 @@ class Model extends \Illuminate\Database\Eloquent\Model
                 return $this->asTimestamp($value);
             case static::BINARY16_UUID:
                 return \Webpatser\Uuid\Uuid::import($value)->bytes;
+            case static::NENUPHAR :
+                return '';
             default:
                 return $value;
         }
@@ -119,6 +123,12 @@ class Model extends \Illuminate\Database\Eloquent\Model
             $value = $this->castAsBinaryBytes($value);
         }
 
+
+        // Gestion des uuid primaire
+        if ($this->hasCast($key, static::NENUPHAR) && ! is_null($value)) {
+            $value = $this->castAsNenuphar($value);
+        }
+
         // If this attribute contains a JSON ->, we'll set the proper value in the
         // attribute's underlying array. This takes care of properly nesting an
         // attribute in the array's value in the case of deeply nested items.
@@ -129,6 +139,19 @@ class Model extends \Illuminate\Database\Eloquent\Model
         $this->attributes[$key] = $value;
 
         return $this;
+    }
+
+
+    /**
+     * cast a filed as a nenuphar
+     *
+     * @param $value
+     * @return mixed
+     */
+    public function castAsNenuphar($value)
+    {
+
+        return $value;
     }
 
     /**

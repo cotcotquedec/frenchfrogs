@@ -28,7 +28,6 @@ class Nenuphar
      */
     protected $method;
 
-
     /**
      * @var
      */
@@ -64,6 +63,19 @@ class Nenuphar
         $this->token = uuid()->string;
     }
 
+
+    /**
+     * Setter pour la method
+     *
+     * @param $method
+     * @return $this
+     */
+    public function setMethod($method)
+    {
+        $this->method = $method;
+        return $this;
+    }
+
     /**
      * @param array $extra
      * @return $this
@@ -85,15 +97,33 @@ class Nenuphar
     }
 
     /**
-     *
+     * @param null $class
+     * @return mixed
+     * @throws \Exception
      */
-    protected function buildDefault()
+    protected function buildDefault($class = null)
     {
+        // Récupération de la method pour simplifier l'utilisation
+        $method = $this->method;
 
-        dd('Fonction non implementé');
-//        $instance = new \ReflectionClass($this->class);
-//        $class = $instance->newInstance();
-//        $table = call_user_func_array([$controller, $method], $params);
+        // Si la class est vide, on l'a crée
+        if (empty($class)) {
+
+            // Si pas de method, on veux juste de constructeur
+            if (empty($method)) {
+                return new $this->class(...$this->params);
+            } else {
+                $class = new $this->class;
+            }
+        }
+
+        // Verification de la class
+        if (!($class instanceof $this->class)) {
+            throw new \Exception('Classe de mauvais type : "' . get_class($class) . '" , demandé : "' . $this->class . '"');
+        }
+
+        // Execution
+        return $class->$method(...$this->params);
     }
 
 
@@ -113,7 +143,7 @@ class Nenuphar
     /**
      *
      */
-    public function execute()
+    public function execute(...$params)
     {
         $interpreter = camel_case('build_' . $this->interpreter);
 
@@ -121,7 +151,7 @@ class Nenuphar
             throw new \Exception('L\'interpreteur n\'existe pas : ' . $interpreter);
         }
 
-        return $this->$interpreter();
+        return $this->$interpreter(...$params);
     }
 
     /**
@@ -192,6 +222,61 @@ class Nenuphar
         return $this->class . '@' . $this->method . '|' . $this->interpreter . ':' . base64_encode($params) . '#' . base64_encode($extras);
     }
 
+
+    /**
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->serialize();
+    }
+
+
+    /**
+     *
+     *
+     * @param $string
+     * @return static
+     */
+    static function fromString($string)
+    {
+        // Reconstruction des paramètre de construction
+        $match = [];
+        preg_match('#^(?<class>[^@]+)@(?<method>[^\|]+)\|(?<interpreter>[^:]+):(?<params>[^\#]+)\#(?<extras>.+)$#', $string, $match);
+
+        /// Formatage des paramètre
+        $params = base64_decode($match['params']);
+        $params = json_decode($params, JSON_OBJECT_AS_ARRAY);
+
+        // Formatage des extras
+        $extras = base64_decode($match['extras']);
+        $extras = json_decode($extras, JSON_OBJECT_AS_ARRAY);
+
+        return (new static($match['class'], $match['method'], $params, $match['interpreter'], $extras));
+    }
+
+    /**
+     * Getter for $params
+     *
+     * @return array
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * Setter for $params
+     *
+     * @param array $params
+     */
+    public function setParams(array $params)
+    {
+        $this->params = $params;
+        return $this;
+    }
+
     /**
      *
      *
@@ -204,19 +289,7 @@ class Nenuphar
             throw new \Exception('Impossible de trouver le token dans le session : ' . $token) ;
         }
 
-        // Reconstruction des paramètre de construction
-        $match = [];
-        preg_match('#^(?<class>[^@]+)@(?<method>[^\|]+)\|(?<interpreter>[^:]+):(?<params>[^\#]+)\#(?<extras>.+)$#', session($token), $match);
-
-        /// Formatage des paramètre
-        $params = base64_decode($match['params']);
-        $params = json_decode($params, JSON_OBJECT_AS_ARRAY);
-
-        // Formatage des extras
-        $extras = base64_decode($match['extras']);
-        $extras = json_decode($extras, JSON_OBJECT_AS_ARRAY);
-
-        return (new static($match['class'], $match['method'], $params, $match['interpreter'], $extras))->setToken($token);
+       return static::fromString(session($token))->setToken($token);
     }
 
 }

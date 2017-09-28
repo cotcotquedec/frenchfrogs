@@ -113,12 +113,6 @@ class Php extends Renderer
         $content = '';
         $reflection = $maker->getClass();
 
-        // NAMESPACE
-        if ($maker->hasNamespace()) {
-            $content .= 'namespace ' . $maker->getNamespace() . ';' . PHP_EOL;
-        }
-        $content .= str_repeat(PHP_EOL, 2);
-
         // ALIASES
         if ($maker->hasAliases()) {
             foreach ($aliases = $maker->getAliases() as $alias => $class) {
@@ -157,6 +151,13 @@ class Php extends Renderer
 
         $content .= PHP_EOL;
         $content .= '{' . PHP_EOL . "\t" . str_replace(PHP_EOL, PHP_EOL . "\t", trim($body)) . PHP_EOL . '}';
+
+        // NAMESPACE
+        if ($maker->hasNamespace()) {
+            $content = 'namespace ' . $maker->getNamespace() . ';' .  str_repeat(PHP_EOL, 2) . $content;
+        } else {
+            $content = 'namespace {' . str_repeat(PHP_EOL, 2) . $content . PHP_EOL . '}';
+        }
 
         return $content;
     }
