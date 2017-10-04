@@ -519,6 +519,21 @@ class Maker
         $this->setSummary($docblock->getShortDescription());
         $this->setDescription($docblock->getLongDescription());
 
+
+        foreach($docblock->getTags() as $tag) {
+
+            switch ($tag->getName()) {
+//                case 'property' :
+//                    dd('dslkjnd');
+//                    $this->addTagProperty();
+                case 'validate' :
+                    $this->addTag($tag->getName(), $tag->getDescription());
+                    break;
+                default:
+            }
+        }
+
+
         // NAMESPACE
         $namespace = $reflection->getNamespaceName();
         if (!empty($namespace)) {

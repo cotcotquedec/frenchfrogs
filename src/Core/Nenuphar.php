@@ -1,5 +1,6 @@
 <?php namespace FrenchFrogs\Core;
 use App\Http\Controllers\Controller;
+use FrenchFrogs\PCRE\PCRE;
 
 /**
  *
@@ -243,17 +244,17 @@ class Nenuphar
     {
         // Reconstruction des paramètre de construction
         $match = [];
-        preg_match('#^(?<class>[^@]+)@(?<method>[^\|]+)\|(?<interpreter>[^:]+):(?<params>[^\#]+)\#(?<extras>.+)$#', $string, $match);
+        $result = PCRE::fromPattern('#^(?<class>[^@]+)@(?<method>[^\|]+)\|(?<interpreter>[^:]+):(?<params>[^\#]+)\#(?<extras>.+)$#')->match($string);
 
         /// Formatage des paramètre
-        $params = base64_decode($match['params']);
+        $params = base64_decode($result->get('params'));
         $params = json_decode($params, JSON_OBJECT_AS_ARRAY);
 
         // Formatage des extras
-        $extras = base64_decode($match['extras']);
+        $extras = base64_decode($result->get('extras'));
         $extras = json_decode($extras, JSON_OBJECT_AS_ARRAY);
 
-        return (new static($match['class'], $match['method'], $params, $match['interpreter'], $extras));
+        return (new static($result->get('class'), $result->get('method'), $params, $result->get('interpreter'), $extras));
     }
 
     /**

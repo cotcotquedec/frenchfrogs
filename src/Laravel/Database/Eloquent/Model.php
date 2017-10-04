@@ -1,6 +1,8 @@
 <?php namespace FrenchFrogs\Laravel\Database\Eloquent;
 
 use FrenchFrogs\Core\Nenuphar;
+use FrenchFrogs\Maker\Maker;
+use FrenchFrogs\PCRE\PCRE;
 use Illuminate\Support\Str;
 use Webpatser\Uuid\Uuid;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,6 +29,60 @@ class Model extends \Illuminate\Database\Eloquent\Model
 
     const BINARY16_UUID = 'binuuid';
     const NENUPHAR = 'nenuphar';
+
+
+    /**
+     *
+     * Validation du model
+     *
+     */
+    public function validate()
+    {
+
+        // chargement de la la classe
+        $maker = Maker::load(static::class);
+
+        // Initialisation des information de generation
+        $rules = [];
+        $messages = [];
+
+        // On recherche les informations dans les annotations
+        foreach($maker->getTags() as $tag) {
+
+            // si pas au moins 2 element, on zap
+            if (!is_array($tag) || count($tag) != 2) continue;
+
+            // Verification que le tag est bien un validate
+            $type = array_shift($tag);
+            if ($type != 'validate') continue;
+
+            // Extraction des informations
+            $result = PCRE::fromPattern('#^(?<property>[^\s]+) (?<validator>.+)#')->match(current($tag));
+
+            if ($result->isNotEmpty()) {
+
+                // Recuperation du nom du champs
+                $property = $result->get('property');
+
+                foreach (explode('|', $result->get('validator')) as $validator) {
+
+                    $v = PCRE::fromPattern('#^(?<rule>[^`]+)(`(?<message>.+)`)?$#')->match($validator);
+
+                    // Inscription des regles pour la propriété
+                    empty($rules[$property]) && $rules[$property] = [];
+                    $rules[$property][] = $v->get('rule');
+
+                    // Si message, inscription du message
+                    if ($v->has('message')) {
+                        $r = PCRE::fromPattern('#^(?<validator>[^:]+)(:.+)?$#')->match($v->get('rule'));
+                        $messages[$property . '.' .$r->get('validator')] = $v->get('message');
+                    }
+                }
+            }
+        }
+
+        return \Validator::make($this->toArray(), $rules, $messages);
+    }
 
     /**
      * Desactivate gard
@@ -75,6 +131,9 @@ class Model extends \Illuminate\Database\Eloquent\Model
                 return $this->asDateTime($value);
             case 'timestamp':
                 return $this->asTimestamp($value);
+
+
+
             case static::BINARY16_UUID:
                 return \Webpatser\Uuid\Uuid::import($value)->bytes;
             case static::NENUPHAR :
@@ -83,6 +142,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
                 return $value;
         }
     }
+
 
     /**
      * Set a given attribute on the model.
@@ -123,8 +183,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
             $value = $this->castAsBinaryBytes($value);
         }
 
-
-        // Gestion des uuid primaire
+        // Gestion des nenuphars
         if ($this->hasCast($key, static::NENUPHAR) && ! is_null($value)) {
             $value = $this->castAsNenuphar($value);
         }

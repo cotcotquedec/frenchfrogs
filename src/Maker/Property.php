@@ -2,6 +2,7 @@
 
 
 use BetterReflection\Reflection\ReflectionProperty;
+use phpDocumentor\Reflection\DocBlock\Tag\VarTag;
 
 class Property
 {
@@ -93,6 +94,22 @@ class Property
         $docblock = new \phpDocumentor\Reflection\DocBlock($reflection->getDocComment());
         $property->setSummary($docblock->getShortDescription());
         $property->setDescription($docblock->getLongDescription());
+
+        foreach($docblock->getTags() as $tag) {
+
+            switch ($tag->getName()) {
+                case 'var' :
+                    $property->addTagVar($tag->getType(), $tag->getDescription());
+                    break;
+                case 'sanitize' :
+                case 'validate' :
+                    $property->addTag($tag->getName(), $tag->getDescription());
+                    break;
+
+                default:
+
+            }
+        }
 
         // gestion des modifiers
         $reflection->isPrivate() ? $property->enablePrivate() : $property->disablePrivate();
