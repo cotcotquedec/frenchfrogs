@@ -69,6 +69,7 @@ $.fn.extend({
             searching: false,
             ordering: true,
             retrieve: true,
+            responsive: true,
             pagingType: "full_numbers", // pagination type(bootstrap, bootstrap_full_number or bootstrap_extended)
             autoWidth: false, // disable fixed width and enable fluid table
             processing: false, // enable/disable display message box on record load

@@ -649,6 +649,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
             $data['orderable'] = $c->hasOrder();
             $data['searchable'] = $c->hasStrainer();
             $data['name'] = $c->getName();
+//            $data['responsivePriority'] = rand(0,5);
 
             if ($data['searchable'] && !is_null($value = $c->getStrainer()->getValue())) {
                 $value = is_bool($value) ? intval($value) : $value;
