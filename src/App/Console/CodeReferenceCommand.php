@@ -239,7 +239,11 @@ class CodeReferenceCommand extends \FrenchFrogs\App\Console\CodeCommand
         // METHOD
         $method = $migration->addMethod('up');
         $method->setBody(<<<EOL
-        Reference::createDatabaseReference('{$this->id}', '{$this->name}', '{$this->collection}');
+// Insert reference        
+Reference::createDatabaseReference('{$this->id}', '{$this->name}', '{$this->collection}');
+
+// Construction des references
+Reference::build();
 EOL
 );
         $migration->write();

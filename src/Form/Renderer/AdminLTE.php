@@ -109,6 +109,70 @@ class AdminLTE extends Inline
     }
 
     /**
+     *
+     * @param Form\Element\Radio $element
+     * @return string
+     */
+    public function radio(Form\Element\Radio $element)
+    {
+
+        // CLASS
+        $class =  Style::FORM_GROUP_CLASS;
+
+        /// ERROR
+        if($hasError = !$element->getValidator()->isValid()){
+            $element->addClass('form-error');
+            if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
+            $message = '';
+            foreach($element->getValidator()->getErrors() as $error){
+                $message .= $error . ' ';
+            }
+            $element->addAttribute('data-original-title',$message);
+            $class .= ' ' .Style::FORM_GROUP_ERROR;
+        }
+
+        // LABEL
+        $elementLabel = '';
+        if ($element->getForm()->hasLabel()) {
+            $elementLabel = '<label for="' . $element->getName() . '" class="col-md-3 control-label">' . $element->getLabel() . ($element->hasRule('required') ? ' *' : '') . '</label>';
+        }
+
+        // OPTIONS
+        $options = '';
+        foreach($element->getOptions() as $value => $label){
+            $opt = '';
+
+            // INPUT
+            $attr = ['type' => 'radio', 'name' => $element->getName(), 'value' => $value];
+
+            // VALUE
+            $values = (array) $element->getValue();
+            if (!is_null( $element->getValue()) && in_array($value, $values)) {
+                $attr['checked'] = 'checked';
+            }
+
+            $opt .= html('input', $attr);
+            $opt .= $label;
+            $options .=  html('div', ['class' => 'checkbox'], '<label>'.$opt.'</label>');
+        }
+
+        // DESCRIPTION
+        if ($element->hasDescription()) {
+            $options .= html('span', ['class' => 'help-block'], $element->getDescription());
+        }
+
+        // INPUT
+        $html =  html('div', [], $options);
+
+        // FINAL CONTAINER
+        $html = html('div', ['class' => 'col-md-9 checkbox'], $html);
+        return html('div', compact('class'), $elementLabel . $html);
+
+        return $html;
+    }
+
+
+    /**
      * Render boolean element
      *
      * @param \FrenchFrogs\Form\Element\Boolean $element

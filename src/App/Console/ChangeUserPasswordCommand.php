@@ -40,6 +40,9 @@ class ChangeUserPasswordCommand extends Command
     public function handle()
     {
 
+
+        dd('A refaire avec code::');
+        /*
         // email
         $email = $this->argument('email');
 
@@ -51,7 +54,7 @@ class ChangeUserPasswordCommand extends Command
 
         // on valide que l'utilisateur n'existe pas déjà
         $user = \FrenchFrogs\App\Models\Db\User\User::where('email', $email)
-            ->where('user_interface_id', $interface)
+            ->where('interface_rid', $interface)
             ->firstOrFail();
 
         // création de l'utilisateur
@@ -60,5 +63,6 @@ class ChangeUserPasswordCommand extends Command
 
         // affichage du mot de passe
         $this->info('Le mot de passe généré est : ' . $password );
+        */
     }
 }

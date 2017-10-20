@@ -63,7 +63,7 @@ class User extends Business
         // on valide que l'utilisateur n'existe pas déjà
         $user = $class::firstOrNew([
             'email' => $email,
-            'user_interface_id' => $interface
+            'interface_rid' => $interface
         ]);
 
         // si l'utilisateur existe déjà on coupe le script
@@ -78,7 +78,7 @@ class User extends Business
 
         // si admin on donne accès a tout
         if ($is_admin) {
-            $permission = Db\User\Permission::where('user_interface_id', $interface)->pluck('user_permission_id');
+            $permission = Db\User\Permission::where('interface_rid', $interface)->pluck('user_permission_id');
             User::get($user->getKey())->setPermissions($permission->toArray());
         }
 

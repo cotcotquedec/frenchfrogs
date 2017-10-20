@@ -21,14 +21,4 @@ class Navigation extends Model
     {
         return $this->hasOne(Permission::class, 'user_navigation_id', 'user_navigation_id');
     }
-
-    /**
-     * Renvoie l'interface
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function userInterface()
-    {
-        return $this->belongsTo(UserInterface::class, 'user_navigation_id', 'user_navigation_id');
-    }
 }

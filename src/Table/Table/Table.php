@@ -431,7 +431,7 @@ class Table
                     $data = json_decode($row[$field], JSON_OBJECT_AS_ARRAY);
 
                     foreach((array) $data as $k => $v) {
-                        $row[sprintf('_%s__%s', $field, $k)] = $v;
+                        $row[sprintf('%s.%s', $field, $k)] = $v;
                     }
                 }
             }

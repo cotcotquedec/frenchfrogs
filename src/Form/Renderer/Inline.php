@@ -511,8 +511,14 @@ class Inline extends Renderer\Renderer {
         return html('div', compact('class'), $label . $html);
     }
 
+    /**
+     *
+     * @param Form\Element\Radio $element
+     * @return string
+     */
     public function radio(Form\Element\Radio $element)
     {
+
         $html =  '<div class="form-group">';
         $html .= '<label for="'.$element->getName().'">' . $element->getLabel() . '</label>';
 
