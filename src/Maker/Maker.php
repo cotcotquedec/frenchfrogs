@@ -685,6 +685,7 @@ class Maker
     }
 
     /**
+     *
      * Maker constructor.
      */
     public function __construct()

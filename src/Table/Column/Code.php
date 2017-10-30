@@ -109,6 +109,11 @@ class Code extends Text
      */
     public function render(array $row)
     {
+        // Check visibility
+        if (!$this->isVisible($row)) {
+            return '';
+        }
+
         $render = '';
         try {
             $this->addClass($this->getLanguage());

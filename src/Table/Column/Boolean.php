@@ -35,6 +35,11 @@ class Boolean extends Text
      */
     public function render(array $row)
     {
+        // Check visibility
+        if (!$this->isVisible($row)) {
+            return '';
+        }
+
         $render = '';
         try {
             $render = $this->getRenderer()->render('boolean', $this, $row);

@@ -58,6 +58,7 @@ class CodeMigrationCommand extends CodeCommand
 
         // Cratiuon de la migration
         $migration = Maker::load($class);
+
         $migration->clearAliases();
         $migration->addAlias('Migration', Migration::class);
         $migration->addAlias('Blueprint', Blueprint::class);
@@ -72,6 +73,7 @@ class CodeMigrationCommand extends CodeCommand
 
         // METHOD
         $method = $migration->addMethod('up');
+
 
         // table
         $table = $this->argument('table') ?: static::CHOISE_NULL;

@@ -16,9 +16,9 @@ class Button extends Link
      * @param array $binds
      * @param array $attr
      */
-    public function __construct($name, $label = '%s', $link = '#', $binds = [], $attr = [] )
+    public function __construct($name, $label = '%s', $link = '#', $binds = [], $attr = [])
     {
-        parent::__construct($name, $label, $link, $binds, $attr );
+        parent::__construct($name, $label, $link, $binds, $attr);
         $this->setSizeAsExtraSmall();
     }
 
@@ -33,7 +33,7 @@ class Button extends Link
         $bind = isset($row[$this->getName()]) ? $row[$this->getName()] : false;
         return sprintf($this->getLabel(), $bind);
     }
-	
+
     /**
      *
      *
@@ -41,6 +41,12 @@ class Button extends Link
      */
     public function render(array $row)
     {
+
+        // Check visibility
+        if (!$this->isVisible($row)) {
+            return '';
+        }
+
         $render = '';
         try {
             // on force l'affichage du label si pas d'icon
@@ -48,10 +54,8 @@ class Button extends Link
                 $this->disableIconOnly();
             }
 
-            if ($this->isVisible($row)) {
-                $render = $this->getRenderer()->render('button', $this, $row);
-            }
-        } catch(\Exception $e){
+            $render = $this->getRenderer()->render('button', $this, $row);
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

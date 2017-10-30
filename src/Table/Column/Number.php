@@ -26,6 +26,12 @@ class Number extends Text
      */
     public function render(array $row)
     {
+
+        // Check visibility
+        if (!$this->isVisible($row)) {
+            return '';
+        }
+
         $render = '';
         try {
             if ($this->isVisible($row)) {

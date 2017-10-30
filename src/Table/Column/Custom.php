@@ -91,6 +91,11 @@ class Custom extends Column
      */
     public function render(array $row)
     {
+        // Check visibility
+        if (!$this->isVisible($row)) {
+            return '';
+        }
+
         $render = '';
         try {
             $render = $this->getRenderer()->render('custom', $this, $row);

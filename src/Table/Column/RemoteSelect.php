@@ -1,5 +1,4 @@
 <?php namespace FrenchFrogs\Table\Column;
-use FrenchFrogs\Form\Element\Element;
 
 /**
  * Boolean column with remote process
@@ -54,7 +53,7 @@ class RemoteSelect extends Column
      * @param string $label
      * @param null $function
      */
-    public function __construct($name, $label = '', $index = null,  $options = [], $function = null )
+    public function __construct($name, $label = '', $index = null, $options = [], $function = null)
     {
         $this->setName($name);
         $this->setLabel($label);
@@ -76,12 +75,16 @@ class RemoteSelect extends Column
      */
     public function render(array $row)
     {
+
+        // Check visibility
+        if (!$this->isVisible($row)) {
+            return '';
+        }
+
         $render = '';
         try {
-            if ($this->isVisible($row)) {
-                $render = $this->getRenderer()->render('remote_select', $this, $row);
-            }
-        } catch(\Exception $e){
+            $render = $this->getRenderer()->render('remote_select', $this, $row);
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 

@@ -55,6 +55,12 @@ class Container extends Column
      */
     public function render(array $row)
     {
+
+        // Check visibility
+        if (!$this->isVisible($row)) {
+            return '';
+        }
+
         $render = '';
         try {
             $render = $this->getRenderer()->render('container', $this, $row);

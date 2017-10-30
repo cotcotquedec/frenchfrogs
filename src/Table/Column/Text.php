@@ -14,7 +14,7 @@ class Text extends Column implements Exportable
      * @param string $label
      * @param array $attr
      */
-    public function __construct($name, $label = '', $attr = [] )
+    public function __construct($name, $label = '', $attr = [])
     {
         $this->setAttributes($attr);
         $this->setName($name);
@@ -28,7 +28,8 @@ class Text extends Column implements Exportable
      * @return mixed|string
      * @throws \Exception
      */
-    public function getValue($row) {
+    public function getValue($row)
+    {
 
         $value = isset($row[$this->getName()]) ? $row[$this->getName()] : '';
         if ($this->hasFilterer()) {
@@ -44,12 +45,16 @@ class Text extends Column implements Exportable
      */
     public function render(array $row)
     {
+
+        // Check visibility
+        if (!$this->isVisible($row)) {
+            return '';
+        }
+
         $render = '';
         try {
-            if ($this->isVisible($row)) {
-                $render = $this->getRenderer()->render('text', $this, $row);
-            }
-        } catch(\Exception $e){
+            $render = $this->getRenderer()->render('text', $this, $row);
+        } catch (\Exception $e) {
             dd($e->getMessage());
         }
 
