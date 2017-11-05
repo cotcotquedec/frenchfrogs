@@ -370,7 +370,7 @@ trait Datatable
      */
     public function setConstructor($constructor, $method = null, $params = [])
     {
-        $this->setNenuphar(new Nenuphar($constructor, $method, $params, 'controller'));
+        $this->setNenuphar(new Nenuphar($constructor, $method, (array) $params, 'controller'));
         return $this;
     }
 

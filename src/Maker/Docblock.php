@@ -202,6 +202,29 @@ trait Docblock
 
 
     /**
+     *
+     * @param $name
+     * @param $type
+     * @param null $description
+     * @return $this
+     */
+    public function addTagVar($type, $description = null)
+    {
+        // construction du tag
+        $tag  = '';
+        $tag .=  $type . ' ';
+
+        if (!is_null($description)) {
+            $tag .= ' ' . $description;
+        }
+
+        $this->addTag('var', $tag);
+
+        return $this;
+    }
+
+
+    /**
      * Getter for tags
      *
      * @return array
@@ -209,6 +232,33 @@ trait Docblock
     public function getTags()
     {
         return $this->tags;
+    }
+
+    /**
+     * Getter pour un tag avec un notion de default
+     *
+     * @param $name
+     * @param null $default
+     * @return mixed
+     */
+    public function getTag($name, $default = null)
+    {
+        // si le tag exists on le renvoie
+
+        foreach ($this->tags as $tag) {
+
+            // On verifie que l'on a bien un tabvleau avec de valeurs
+            if (is_array($tag) && count($tag) > 1) {
+                $n = array_shift($tag);
+
+                // si c'est le bon tag, on le renvoie
+                if ($n == $name) {
+                    return implode(' ', $tag);
+                }
+            }
+        }
+
+        return $default;
     }
 
 

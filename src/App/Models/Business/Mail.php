@@ -113,6 +113,19 @@ class Mail extends Business
 
 
     /**
+     * Ajout d'un référence pour l'email
+     *
+     * @param $reference
+     * @return $this
+     */
+    public function ref($reference)
+    {
+        $this->getModel()->update(['ref_uuid' => uuid($reference)->bytes]);
+        return $this;
+    }
+
+
+    /**
      * Envoie le prochain email
      *
      * @return bool
