@@ -94,7 +94,7 @@ class Media extends Link
         $this->setMediaWidth($width);
         $this->setName($name);
         $this->setLink($link);
-        $this ->setWidth($width);
+        $this->setWidth($width);
         $this->setBinds((array) $binds);
         $this->center();
     }

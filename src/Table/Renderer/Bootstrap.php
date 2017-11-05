@@ -1,8 +1,9 @@
 <?php namespace FrenchFrogs\Table\Renderer;
 
+use FrenchFrogs\Renderer\Style\Style;
 use FrenchFrogs\Table\Column;
 use FrenchFrogs\Table\Table;
-use FrenchFrogs\Renderer\Style\Style;
+use function GuzzleHttp\Psr7\parse_query;
 
 class Bootstrap extends \FrenchFrogs\Renderer\Renderer
 {
@@ -13,7 +14,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
      * @var array
      */
     protected $renderers = [
-        'table' ,
+        'table',
         'text',
         'link',
         'code',
@@ -35,7 +36,6 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         'custom',
         'number'
     ];
-
 
 
     /*
@@ -60,12 +60,12 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         $head = '';
         $headers = [];
         $hasStrainer = false;
-        foreach($table->getColumns() as $column) {
+        foreach ($table->getColumns() as $column) {
             /** @var Column\Column $column */
-			$label = $column->getLabel();
-			if ($column->hasDescription()) {
-				$label .= '<i class="fa fa-question-circle" data-toggle="tooltip" title="'.$column->getDescription().'"></i>';
-			}
+            $label = $column->getLabel();
+            if ($column->hasDescription()) {
+                $label .= '<i class="fa fa-question-circle" data-toggle="tooltip" title="' . $column->getDescription() . '"></i>';
+            }
             $head .= html('th', ['class' => 'text-center'], $label);
             $headers[] = $column->getName();
             $hasStrainer = $hasStrainer || $column->hasStrainer();
@@ -78,14 +78,14 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
 
             // initialisation des strainer
             $strainer = '';
-            foreach($table->getColumns() as $column) {
+            foreach ($table->getColumns() as $column) {
                 /** @var Column\Column $column */
                 $content = '';
                 if ($column->hasStrainer()) {
                     $content = $column->getStrainer()->render();
                 }
 
-                $strainer .= html('th', ['class' => 'text-center'],$content);
+                $strainer .= html('th', ['class' => 'text-center'], $content);
             }
 
             $head .= html('tr', ['class' => 'filter'], $strainer);
@@ -94,13 +94,13 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         // Data
         $body = '';
 
-        foreach($table->getRows() as $row) {
+        foreach ($table->getRows() as $row) {
 
             // on force le cast des lignes
-            $row = (array) $row;
+            $row = (array)$row;
 
             $line = '';
-            foreach($table->getColumns() as $name => $column) {
+            foreach ($table->getColumns() as $name => $column) {
 
                 $attributes = $column->getAttributes();
                 if ($table->hasIdField()) {
@@ -118,37 +118,36 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
                     unset($attributes['class']);
                 }
 
-                $line .= html('td', $attributes, $column->render((array) $row)) . PHP_EOL;
+                $line .= html('td', $attributes, $column->render((array)$row)) . PHP_EOL;
             }
 
-            $body .= html('tr', [],$line );
+            $body .= html('tr', [], $line);
         }
 
-		// Footer
-		$footer = '';
+        // Footer
+        $footer = '';
 
         if ($table->isDatatable()) {
             $this->render('datatable', $table);
         } elseif ($table->hasFooter()) {
-			$current = $table->getPage();
-			$footer .= sprintf('<li class="disabled"><span>&laquo;</span></li>');
-			for ($i = 1; $i <= min(10, $table->getPagesTotal()); $i++) {
-				$footer .= html('li', ['class' => $current == $i ? 'active' : null], sprintf('<a href="%s">%s</a>', $table->getPageUrl($i), $i));
-			}
+            $current = $table->getPage();
+            $footer .= sprintf('<li class="disabled"><span>&laquo;</span></li>');
+            for ($i = 1; $i <= min(10, $table->getPagesTotal()); $i++) {
+                $footer .= html('li', ['class' => $current == $i ? 'active' : null], sprintf('<a href="%s">%s</a>', $table->getPageUrl($i), $i));
+            }
 
-			$footer .= sprintf('<li><a href="%s" rel="next">&raquo;</a></li>', '#');
-			$footer = html('ul', ['class' => 'pagination'], $footer);
-			$footer = html('td', ['colspan' => count($headers)], $footer);
-			$footer = html('tr', [], $footer);
-			$footer = html('tfoot', ['class' => 'text-center'], $footer);
-		}
-
+            $footer .= sprintf('<li><a href="%s" rel="next">&raquo;</a></li>', '#');
+            $footer = html('ul', ['class' => 'pagination'], $footer);
+            $footer = html('td', ['colspan' => count($headers)], $footer);
+            $footer = html('tr', [], $footer);
+            $footer = html('tfoot', ['class' => 'text-center'], $footer);
+        }
 
 
         // Bootstrap class management
         $table->addClass(Style::TABLE_CLASS);
 
-        if ($table->isStriped()){
+        if ($table->isStriped()) {
             $table->addClass(Style::TABLE_CLASS_STRIPED);
         }
 
@@ -165,11 +164,10 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         }
 
 
-
-        $html =  html('table', $table->getAttributes(), html('thead', [], $head) . html('tbody', [], $body) . $footer);
+        $html = html('table', $table->getAttributes(), html('thead', [], $head) . html('tbody', [], $body) . $footer);
 
         // responsive
-        if ($table->isResponsive()){
+        if ($table->isResponsive()) {
             $html = html('div', ['class' => Style::TABLE_CLASS_RESPONSIVE], $html);
         }
 
@@ -188,10 +186,11 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
      * @param array $row
      * @return string
      */
-    public function container(Column\Container $column, array $row) {
+    public function container(Column\Container $column, array $row)
+    {
 
         $html = '';
-        foreach($column->getColumns() as $c) {
+        foreach ($column->getColumns() as $c) {
             /** @var Column\Column $c */
             $html .= $c->render($row) . PHP_EOL;
         }
@@ -210,7 +209,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
     {
 
         $html = '';
-        if($column->getValue($row)) {
+        if ($column->getValue($row)) {
             $html .= '<i class="fa fa-check"></i>';
         }
 
@@ -236,10 +235,10 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
             'data-size' => 'small',
             'value' => true,
             'data-id' => $row[$column->getTable()->getIdField()],
-            'data-column' =>  $column->getName(),
+            'data-column' => $column->getName(),
         ];
 
-        if(isset($row[$column->getName()]) && !empty($row[$column->getName()])) {
+        if (isset($row[$column->getName()]) && !empty($row[$column->getName()])) {
             $attributes['checked'] = 'checked';
         }
 
@@ -261,7 +260,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
     {
 
         $html = '';
-        $html .= '<i class="fa '. $column->getValue($row).'"></i>';
+        $html .= '<i class="fa ' . $column->getValue($row) . '"></i>';
 
         return $this->post($html, $column, $row);
     }
@@ -292,7 +291,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
 
         $attributes = $column->getAttributes();
 
-        if($column->hasTooltip()){
+        if ($column->hasTooltip()) {
             $attributes += [
                 'data-placement' => $column->getTooltipPosition(),
                 'data-original-title' => $column->getValue($row),
@@ -301,7 +300,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
 
             $html = html('div', $attributes, str_limit($column->getValue($row), 70));
         } else {
-            $html = html('span',$attributes, $column->getValue($row));
+            $html = html('span', $attributes, $column->getValue($row));
         }
 
         return $this->post($html, $column, $row);
@@ -314,7 +313,8 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
      * @return mixed|string
      * @throws \Exception
      */
-    public function getValue($row) {
+    public function getValue($row)
+    {
 
         $value = isset($row[$this->getName()]) ? $row[$this->getName()] : '';
         if ($this->hasFilterer()) {
@@ -333,7 +333,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
      */
     public function number(Column\Number $column, array $row)
     {
-       return $this->text($column, $row);
+        return $this->text($column, $row);
     }
 
 
@@ -351,7 +351,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         $html .= html('input', [
             'type' => 'text',
             'data-id' => $row[$column->getTable()->getIdField()],
-            'data-column' =>  $column->getName()
+            'data-column' => $column->getName()
         ]);
         $html = html('div', ['class' => 'ff-remote-text'], $html);
         return $html;
@@ -370,9 +370,9 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         // OPTIONS
         $options = html('option', [], '--');
         $elementValue = $row[$column->getIndex()];
-        foreach($column->getOptions() as $value => $key){
+        foreach ($column->getOptions() as $value => $key) {
             $attr = ['value' => $value];
-            if ($value == $elementValue){
+            if ($value == $elementValue) {
                 $attr['selected'] = 'selected';
             }
             $options .= html('option', $attr, $key);
@@ -381,7 +381,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         $html = html('select', [
             'class' => 'ff-remote-select',
             'data-id' => $row[$column->getTable()->getIdField()],
-            'data-column' =>  $column->getName()
+            'data-column' => $column->getName()
         ], $options);
         return $html;
     }
@@ -400,11 +400,13 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         if ($column->isRemote()) {
             $column->addAttribute('data-target', '#' . $column->getRemoteId())
                 ->addAttribute('data-toggle', 'modal');
-        } elseif($column->isCallback()) {
+        } elseif ($column->isCallback()) {
             $column->addClass('callback-remote');
         }
 
-        $html = html('a', ['href' => $column->getBindedLink($row)], $column->getValue($row));
+        $attr = $column->getAttributes() + ['href' => $column->getBindedLink($row)];
+
+        $html = html('a', $attr, $column->getValue($row));
         return $this->post($html, $column, $row);
     }
 
@@ -418,7 +420,52 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
     public function media(Column\Media $column, array $row)
     {
 
-        $media =  $column->getBindedLink($row);
+        // Recuperrtation du media
+        $media = $column->getBindedLink($row);
+
+        // INITIALISATION
+        $match = [];
+
+        // YOUTUBE
+        if (preg_match('#https?://[^/]+\.youtube.com/.+#', $media)) {
+            $url = parse_url($media);
+
+            if (!empty($url['query'])) {
+
+                $query = parse_query($url['query']);
+
+                if (!empty($query['v'])) {
+                    return html('iframe', [
+                        'width' => $column->getMediaWidth(),
+                        'height' => $column->getMediaHeight(),
+                        'src' => 'https://www.youtube.com/embed/' . $query['v'],
+                        'frameborder' => 0,
+                    ]);
+                }
+            }
+        }
+
+        // YOUTUBE SHARE
+        if (preg_match('#https?://youtu.be/(?<id>.+)#', $media, $match)) {
+
+            return html('iframe', [
+                'width' => $column->getMediaWidth(),
+                'height' => $column->getMediaHeight(),
+                'src' => 'https://www.youtube.com/embed/' . $match['id'],
+                'frameborder' => 0,
+            ]);
+        }
+
+        // VIMEO
+        if (preg_match('#https?://vimeo.com/(?<id>[^/]+)#', $media, $match)) {
+            return html('iframe', [
+                'width' => $column->getMediaWidth(),
+                'height' => $column->getMediaHeight(),
+                'src' => 'https://player.vimeo.com/video/' . $match['id'],
+                'frameborder' => 0,
+            ]);
+        }
+
         $extension = pathinfo($media, PATHINFO_EXTENSION);
 
         if (empty($extension)) {
@@ -433,9 +480,10 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         if (in_array($extension, ['jpg', 'png', 'jpeg', 'gif'])) {
             $html = html('img', ['style' => 'object-fit: cover;', 'width' => $column->getMediaWidth(), 'height' => $column->getMediaHeight(), 'src' => $media]);
             return html('a', ['href' => $media, 'class' => 'fancybox'], $html);
-        }elseif(in_array($extension, ['mp4'])) {
-            $source  = html('source', ['src' => $media, 'type' => 'video/' . $extension]);
+        } elseif (in_array($extension, ['mp4'])) {
+            $source = html('source', ['src' => $media, 'type' => 'video/' . $extension]);
             return html('video', ['style' => sprintf('width:%spx;height:%spx', $column->getMediaWidth(), $column->getMediaHeight()), 'controls' => 'controls'], $source);
+
         } else {
             dd($extension);
             throw new \Exception('Extension pas trouvé : ' . $media);
@@ -458,15 +506,15 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
     {
 
         if ($column->hasOption()) {
-            $column->addClass(constant(  Style::class . '::' . $column->getOption()));
+            $column->addClass(constant(Style::class . '::' . $column->getOption()));
         }
 
         if ($column->hasSize()) {
-            $column->addClass(constant(  Style::class . '::' . $column->getSize()));
+            $column->addClass(constant(Style::class . '::' . $column->getSize()));
         }
 
         $column->addClass(Style::BUTTON_CLASS);
-        $column->addAttribute('href',$column->getBindedLink($row));
+        $column->addAttribute('href', $column->getBindedLink($row));
 
         $label = '';
         if ($column->hasIcon()) {
@@ -484,13 +532,13 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         if ($column->isRemote()) {
             $column->addAttribute('data-target', '#' . $column->getRemoteId())
                 ->addClass('modal-remote');
-        } elseif($column->isCallback()) {
+        } elseif ($column->isCallback()) {
             $column->addClass('callback-remote');
         }
 
         $column->addAttribute('title', $name);
 
-        $html = html('a', $column->getAttributes(), $label );
+        $html = html('a', $column->getAttributes(), $label);
 
         $column->clearClasses()->center();
 
@@ -507,7 +555,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
      */
     public function code(Column\Code $column, array $row)
     {
-        $html = html('code', $column->getAttributes() ,$column->getValue($row));
+        $html = html('code', $column->getAttributes(), $column->getValue($row));
         $html = html('pre', [], $html);
         return $this->post($html, $column, $row);
     }
@@ -521,10 +569,9 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
      */
     public function pre(Column\Pre $column, array $row)
     {
-        $html = html('pre', [],$column->getValue($row));
+        $html = html('pre', [], $column->getValue($row));
         return $this->post($html, $column, $row);
     }
-
 
 
     /**
@@ -543,7 +590,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
             $table->addClass('datatable-remote');
             $table->save();
             $options += [
-                'ajax' => ['url' => route('datatable', ['token' => $table->getNenuphar()->getToken()],false)],
+                'ajax' => ['url' => route('datatable', ['token' => $table->getNenuphar()->getToken()], false)],
                 'processing' => true,
                 'serverSide' => true,
                 'pageLength' => $table->getItemsPerPage(),
@@ -572,7 +619,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         if ($table->hasFooter()) {
             $dom .= '<"row"<"col-md-5 col-sm-12"i><"col-md-7 col-sm-12"p>>';
         }
-        
+
         //Set dom
         $options += ['dom' => $dom];
 
@@ -583,7 +630,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         $index = 0;
         $search = [];
 
-        foreach($table->getColumns() as $c) {
+        foreach ($table->getColumns() as $c) {
 
             $data = [];
 
@@ -604,7 +651,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
             $data['name'] = $c->getName();
 
             if ($data['searchable'] && !is_null($value = $c->getStrainer()->getValue())) {
-				$value = is_bool($value) ? intval($value) : $value;
+                $value = is_bool($value) ? intval($value) : $value;
                 $search[] = $value;
             } else {
                 $search[] = null;
@@ -625,8 +672,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         }
 
         // buttons
-        if ($table->hasDatatableButtons())
-        {
+        if ($table->hasDatatableButtons()) {
             $options += ['buttons' => $table->getDatatableButtons()];
         }
 
@@ -636,9 +682,11 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         js('onload', '#' . $table->getAttribute('id'), 'dtt', $options);
 
         // init search configuration - seartchcols doesn't work
-        foreach($search as $i => $s) {
-            if (is_null($s)) {continue;}
-            js('onload',  '#' . $table->getAttribute('id'), 'DataTable().columns('.$i.').search', $s);
+        foreach ($search as $i => $s) {
+            if (is_null($s)) {
+                continue;
+            }
+            js('onload', '#' . $table->getAttribute('id'), 'DataTable().columns(' . $i . ').search', $s);
         }
 
         return '';
@@ -658,13 +706,13 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
 
         $options = '';
 
-        if ($element->hasPlaceholder()){
+        if ($element->hasPlaceholder()) {
             $options .= html('option', ['value' => null], $element->getPlaceholder());
         }
 
-        foreach($element->getOptions() as $value => $label){
+        foreach ($element->getOptions() as $value => $label) {
             $attr = ['value' => $value];
-            if ($element->hasValue() && in_array($value, $element->getValue())){
+            if ($element->hasValue() && in_array($value, $element->getValue())) {
                 $attr['selected'] = 'selected';
             }
             $options .= html('option', $attr, $label);
@@ -705,13 +753,13 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
 
         $options = '';
 
-        if ($element->hasPlaceholder()){
+        if ($element->hasPlaceholder()) {
             $options .= html('option', ['value' => null], $element->getPlaceholder());
         }
 
-        foreach($element->getOptions() as $value => $label){
+        foreach ($element->getOptions() as $value => $label) {
             $attr = ['value' => $value];
-            if ($element->hasValue() && in_array($value, $element->getValue())){
+            if ($element->hasValue() && in_array($value, $element->getValue())) {
                 $attr['selected'] = 'selected';
             }
             $options .= html('option', $attr, $label);
@@ -736,7 +784,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         return html('div', [
             'name' => $element->getName(),
             'class' => 'input-group date-picker daterange input-daterange text-center',
-            'data-date-format' =>  configurator()->get('form.element.date.formatjs')
+            'data-date-format' => configurator()->get('form.element.date.formatjs')
         ], $html);
     }
 
