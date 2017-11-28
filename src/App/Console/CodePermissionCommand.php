@@ -1,5 +1,6 @@
 <?php namespace FrenchFrogs\App\Console;
 
+use FrenchFrogs\App\Models\Db\User\Permission;
 use FrenchFrogs\Maker\Maker;
 use FrenchFrogs\App\Models\Acl;
 use Illuminate\Console\Command;
@@ -255,7 +256,7 @@ class CodePermissionCommand extends CodeCommand
         $ruler->addConstant($constant, $permission);
 
         // INTERFACE
-        $interfaces = $ruler->getInterfacesConstants();
+        $interfaces = ref('interfaces')->pairs();
         $interface = $this->choice('A quelle interface voulez vous rattacher cette permission?', array_values($interfaces), 0);
         $interface = array_search($interface, $interfaces);
 
@@ -264,10 +265,21 @@ class CodePermissionCommand extends CodeCommand
 
         // MAJ RULER
         $ruler->write();
+        $migration->addAlias( 'Permission', Permission::class);
 
         // Inscirption de la migration
         $up = $migration->getMethod('up');
-        $up->appendBody(sprintf('Acl::createDatabasePermission(Acl::%s, Acl::%s, Acl::%s, \'%s\');', $constant, $group, $interface, $label));
+        $up->appendBody(<<<PHP
+            
+        Permission::create([
+            'user_permission_id' => '$constant',
+            'user_permission_group_id' => '$group',
+            'interface_rid' => '$interface',
+            'name' => '$label',
+        ]);
+             
+PHP
+);
         $migration->write();
 
         // RELOAD COMPOSER

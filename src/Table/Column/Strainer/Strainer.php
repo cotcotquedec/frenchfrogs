@@ -125,14 +125,9 @@ class Strainer
             array_unshift($params, $table);
             call_user_func_array($this->callable, $params);
         } else {
-
-            // verify that source is a query
-            if (!$table->isSourceQueryBuilder()) {
-                throw new \Exception('Table source is not an instance of query builder');
-            }
-
             $this->setValue($params[0]);
-            $table->getSource()->where($this->getField(), '=', $params[0]);
+            $source  = $table->getSource()->where($this->getField(), $params[0]);
+            $table->setSource($source);
         }
 
         return $this;

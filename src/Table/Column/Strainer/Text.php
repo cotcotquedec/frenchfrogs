@@ -84,11 +84,17 @@ class Text extends Strainer
         } else {
 
             // verify that source is a query
-            if (!$table->isSourceQueryBuilder()) {
-                throw new \Exception('Table source is not an instance of query builder');
-            }
+            if ($table->isSourceQueryBuilder()) {
+                $table->getSource()->where($this->getField(), 'LIKE', '%' . $params[0] . '%');
+            } else {
 
-            $table->getSource()->where($this->getField(), 'LIKE', '%' . $params[0] . '%');
+                // cas de la collection
+                $source = $table->getSource()->filter(function($row) use ($params){
+                    return !empty($row[$this->getField()]) && stristr(strtolower($row[$this->getField()]), strtolower($params[0]));
+                });
+
+                $table->setSource($source);
+            }
         }
 
         return $this;

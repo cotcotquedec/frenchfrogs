@@ -320,7 +320,7 @@ function ruler($namespace = null)
  */
 function raw(...$params)
 {
-    return DB::raw(...$params);
+    return \DB::raw(...$params);
 }
 
 /**

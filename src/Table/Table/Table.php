@@ -140,7 +140,7 @@ class Table
      * @param \Iterator  $rows
      * @return $this
      */
-    public function setRows(\Iterator $rows)
+    public function setRows(Collection $rows)
     {
         $this->rows = $rows;
         return $this;
@@ -165,7 +165,7 @@ class Table
      */
     public function clearRows()
     {
-        $this->rows = new \ArrayIterator();
+        $this->rows = collect([]);
         return $this;
     }
 
@@ -183,6 +183,8 @@ class Table
             while(method_exists($source, 'getQuery')) {
                 $source = $source->getQuery();
             }
+        } elseif (is_array($source)) {
+            $source = collect($source);
         }
 
         $this->source = $source;
@@ -220,30 +222,23 @@ class Table
         $source = $this->source;
 
         // Laravel query builder case
-        if(  $this->isSourceQueryBuilder())  {
+        if( $this->isSourceQueryBuilder())  {
             /** @var $source \Illuminate\Database\Query\Builder */
 
             $count = query(raw("({$source->toSql()}) as a"), [raw('COUNT(*) as _num_rows')], $source->getConnection()->getName())->mergeBindings($source)->first();
-            a($count); // cast
-
-            $this->itemsTotal = isset($count['_num_rows']) ?  $count['_num_rows'] : null;
+            $this->itemsTotal = object_get($count, '_num_rows');
             $source = $source->skip($this->getItemsOffset())->take($this->getItemsPerPage())->get();
 
-            // Compatibilité avec laravel  5.3
-            a($source); // cast
-
-            $source = new \ArrayIterator($source);
-
-            // Array case
-        } elseif(is_array($source)) {
-            $this->itemsTotal = count($source);
-            $source = array_slice($source, $this->getItemsOffset(), $this->getItemsPerPage());
-            $source = new \ArrayIterator($source);
+        } elseif($source instanceof Collection) {
+            $this->itemsTotal = $source->count();
+            $source = $source->slice($this->getItemsOffset(), $this->getItemsPerPage());
         }
 
+
+
         /**@var $source \Iterator */
-        if (!($source instanceof \Iterator)) {
-            throw new \InvalidArgumentException("Source must be an array or an Iterator : " . get_class($source));
+        if (!($source instanceof Collection)) {
+            throw new \InvalidArgumentException("Source must be a Collection : " . get_class($source));
         }
 
 
