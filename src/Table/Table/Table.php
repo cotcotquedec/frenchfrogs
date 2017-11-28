@@ -34,7 +34,7 @@ class Table
      *
      * Data for the table
      *
-     * @var \Iterator $rows
+     * @var Collection $rows
      */
     protected $rows;
 
@@ -137,7 +137,7 @@ class Table
     /**
      * Set all the rows container
      *
-     * @param \Iterator  $rows
+     * @param Collection  $rows
      * @return $this
      */
     public function setRows(Collection $rows)
@@ -150,7 +150,7 @@ class Table
     /**
      * return all the rows container
      *
-     * @return \Iterator
+     * @return Collection
      */
     public function getRows()
     {
@@ -418,8 +418,9 @@ class Table
      */
     public function extractJson()
     {
-        foreach($this->getRows() as &$row) {
 
+        $this->getRows()->transform(function($row) {
+            a($row);
             foreach($this->getJsonFields() as $field) {
                 if (isset($row[$field])) {
 
@@ -430,7 +431,9 @@ class Table
                     }
                 }
             }
-        }
+
+            return $row;
+        });
         return $this;
     }
 
