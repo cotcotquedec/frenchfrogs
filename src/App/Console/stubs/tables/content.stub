@@ -1,0 +1,32 @@
+<?php
+
+use FrenchFrogs\Laravel\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+use FrenchFrogs\App\Models\Reference;
+
+class CreateContentTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Reference::createDatabaseReference('LANG_FR', 'Francais', 'lang');
+
+        Schema::create('content', function (Blueprint $table) {
+            $table->binaryUuid('uuid');
+            $table->string('content_index');
+            $table->string('lang_sid', 64)->nullable();
+            $table->longText('content');
+            $table->boolean('is_published')->default(false);
+            $table->timestamp('published_at');
+            $table->softDeletes();
+            $table->timestamps();
+
+            $table->foreign('lang_sid')->references('reference_id')->on('reference');
+            $table->index('content_index');
+        });
+    }
+}

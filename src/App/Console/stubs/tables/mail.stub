@@ -1,0 +1,38 @@
+<?php
+
+use FrenchFrogs\Laravel\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+use FrenchFrogs\App\Models\Reference;
+
+class CreateMailTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+
+        Reference::createDatabaseReference('MAIL_STATUS_CREATED', 'Crée', 'mail_status');
+        Reference::createDatabaseReference('MAIL_STATUS_PROCESSING', 'En cours', 'mail_status');
+        Reference::createDatabaseReference('MAIL_STATUS_SENT', 'Envoyé', 'mail_status');
+        Reference::createDatabaseReference('MAIL_STATUS_ERROR', 'Erreur', 'mail_status');
+        Reference::createDatabaseReference('MAIL_STATUS_OPENED', 'Ouvert', 'mail_status');
+
+        Schema::create('mail', function (Blueprint $table) {
+            $table->binaryUuid('uuid');
+            $table->string('mail_status_id', 64);
+            $table->string('class');
+            $table->text('params')->nullable();
+            $table->text('message')->nullable();
+            $table->json('data')->nullable();
+            $table->timestamp('processing_at')->nullable();
+            $table->timestamp('sent_at')->nullable();
+            $table->timestamp('opened_at')->nullable();
+            $table->timestamp('error_at')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+}

@@ -1,0 +1,52 @@
+<?php
+use FrenchFrogs\Laravel\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+use FrenchFrogs\App\Models\Db;
+use FrenchFrogs\App\Models\Business\Media;
+class CreateMediaTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+
+        // media type
+        Schema::create('media_type', function (Blueprint $table) {
+            $table->stringId();
+            $table->string('name');
+        });
+
+        // media
+        Schema::create('media', function (Blueprint $table) {
+            $table->binaryUuid();
+            $table->stringId('media_type_sid', 32, null);
+            $table->string('hash_md5');
+            $table->timestamps();
+            $table->foreign('media_type_sid')->references('sid')->on('media_type')->onDelete('cascade');
+        });
+
+        // attachemùent
+        Schema::create('media_attachment', function(Blueprint $table){
+            $table->binaryUuid();
+            $table->string('name');
+            $table->binary('content');
+            $table->integer('size')->default(0);
+            $table->string('mime')->nullable();
+            $table->timestamps();
+        });
+    }
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('media_attachment');
+        Schema::dropIfExists('media');
+        Schema::dropIfExists('media_type');
+    }
+}
