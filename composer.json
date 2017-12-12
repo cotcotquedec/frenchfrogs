@@ -42,7 +42,7 @@
   },
   "autoload": {
     "files": [
-      "src/function.php"
+      "src/helpers.php"
     ],
     "psr-4": {
       "FrenchFrogs\\": "src/"

@@ -105,56 +105,56 @@ class FrenchFrogsServiceProvider extends ServiceProvider
      */
     public function extendQuerybuilder()
     {
-        // Ajout du count
-        Builder::macro('addSelectCount', function ($expression) {
-
-            $alias = null;
-
-            if (strpos($expression, ' as ')) {
-                list($expression, $alias) = explode(' as ', $expression);
-            }
-
-            $raw = sprintf('COUNT(%s)', $expression);
-
-            if (!is_null($alias)) {
-                $raw .= ' as ' . $this->grammar->wrap($alias);
-            }
-
-            return $this->selectRaw($raw);
-        });
-
-        // Ajout du de la somme
-        Builder::macro('addSelectSum', function ($expression) {
-
-            $alias = null;
-
-            if (strpos($expression, ' as ')) {
-                list($expression, $alias) = explode(' as ', $expression);
-            }
-
-            $raw = sprintf('SUM(%s)', $expression);
-
-            if (!is_null($alias)) {
-                $raw .= ' as ' . $this->grammar->wrap($alias);
-            }
-
-            return $this->selectRaw($raw);
-        });
-
-        // Ajout du de la somme
-        Builder::macro('addSelectHex', function ($expression) {
-
-            $alias = null;
-
-            if (strpos($expression, ' as ')) {
-                list($expression, $alias) = explode(' as ', $expression);
-            }
-
-            $raw = sprintf('HEX(%s)', $expression);
-            $raw .= ' as ' . $this->grammar->wrap($alias);
-
-            return $this->selectRaw($raw);
-        });
+//        // Ajout du count
+//        Builder::macro('addSelectCount', function ($expression) {
+//
+//            $alias = null;
+//
+//            if (strpos($expression, ' as ')) {
+//                list($expression, $alias) = explode(' as ', $expression);
+//            }
+//
+//            $raw = sprintf('COUNT(%s)', $expression);
+//
+//            if (!is_null($alias)) {
+//                $raw .= ' as ' . $this->grammar->wrap($alias);
+//            }
+//
+//            return $this->selectRaw($raw);
+//        });
+//
+//        // Ajout du de la somme
+//        Builder::macro('addSelectSum', function ($expression) {
+//
+//            $alias = null;
+//
+//            if (strpos($expression, ' as ')) {
+//                list($expression, $alias) = explode(' as ', $expression);
+//            }
+//
+//            $raw = sprintf('SUM(%s)', $expression);
+//
+//            if (!is_null($alias)) {
+//                $raw .= ' as ' . $this->grammar->wrap($alias);
+//            }
+//
+//            return $this->selectRaw($raw);
+//        });
+//
+//        // Ajout du de la somme
+//        Builder::macro('addSelectHex', function ($expression) {
+//
+//            $alias = null;
+//
+//            if (strpos($expression, ' as ')) {
+//                list($expression, $alias) = explode(' as ', $expression);
+//            }
+//
+//            $raw = sprintf('HEX(%s)', $expression);
+//            $raw .= ' as ' . $this->grammar->wrap($alias);
+//
+//            return $this->selectRaw($raw);
+//        });
 
 
         // Ajout du de la somme

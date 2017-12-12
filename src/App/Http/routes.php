@@ -57,8 +57,3 @@ Route::post('/ff/datatable/{token}', function ($token) {
     $table = FrenchFrogs\Table\Table\Table::load($token);
     return $table->getColumn($request->get('column'))->remoteProcess($request->get('id'), $request->get('value'));
 });
-
-
-//Route::get('/ff/media/{id}', '\FrenchFrogs\App\Http\Controllers\MediaController@show')->name('media-show');
-//Route::get('/ff/media/dl/{id}', '\FrenchFrogs\App\Http\Controllers\MediaController@download')->name('media-dl');
-
