@@ -166,7 +166,7 @@ class Reference
     {
         $pairs = [];
         foreach ($this->data as $row) {
-            $pairs[$row->reference_id] = $row->name;
+            $pairs[$row->rid] = $row->name;
         }
 
         return $pairs;

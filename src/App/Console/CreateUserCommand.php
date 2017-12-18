@@ -1,8 +1,6 @@
 <?php namespace FrenchFrogs\App\Console;
 
-use App\Models\Db\Users\Interfaces;
-use App\Models\Db\Users\Users;
-use FrenchFrogs\App\Models\Acl;
+use FrenchFrogs\Maker\Maker;
 
 class CreateUserCommand extends CodeCommand
 {
@@ -56,15 +54,16 @@ class CreateUserCommand extends CodeCommand
         $name = $this->askUntilValid('Nom complet?', null, 'required|min:3', $name);
 
         // interface
-        $interface =  $this->option('interface')?: Interfaces::DEFAULT;
-        $interface = $this->askUntilValid('Interface?', Interfaces::DEFAULT, 'required|min:3', $interface);
+        $interface = $this->choice('Interface?', ref('interfaces')->pairs());
 
         // Creation de l'utilisateur
-        $user = Users::create([
+        $model = Maker::getModelFromTableName('users');
+
+        $model->create([
             'email' => $email,
             'name' => $name,
             'password' => bcrypt($password),
-            'interface_sid' => $interface,
+            'interface_rid' => $interface,
         ]);
 
         // affichage du mot de passe

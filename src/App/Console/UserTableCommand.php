@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Composer;
 
-class ReferenceTableCommand extends Command
+class UserTableCommand extends Command
 {
     /**
      * The name and signature of the console command.

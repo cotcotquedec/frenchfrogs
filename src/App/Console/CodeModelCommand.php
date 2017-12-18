@@ -121,8 +121,9 @@ class CodeModelCommand extends CodeCommand
             $file = $this->ask('Quelle est le nom du fichier?', $this->determineFileFromClass($class));
         }
 
+
         // Creation de la classe
-        $maker = file_exists(app_path('/../' . $file)) ? Maker::load($class) : Maker::init($class, $file);
+        $maker = file_exists($file) ? Maker::load($class) : Maker::init($class, $file);
 
         // Attributiuon du maker a la commande
         $this->maker = $maker;
@@ -177,7 +178,7 @@ class CodeModelCommand extends CodeCommand
             //PRIMARY KEY
             if ($row->Key == 'PRI') {
 
-                // si la clé primaiure est autre que "id" on l'inscrit
+                // si la clé primaire est autre que "id" on l'inscrit
                 if ($row->Field != 'id') {
                     $maker->addProperty('primaryKey', $row->Field)->enableProtected();
                 }
@@ -194,6 +195,7 @@ class CodeModelCommand extends CodeCommand
 
                 // cas d'un id string
                 if (preg_match('#^varchar\(\d+\)$#', $row->Type) && $row->Extra != 'auto_increment') {
+                    $maker->addProperty('keyType', 'string')->enableProtected();
                     $maker->addProperty('incrementing', false)->enablePublic();
                 }
             }
@@ -295,7 +297,7 @@ class CodeModelCommand extends CodeCommand
                 $config['id'] = str_random(3);
 
                     // Recuperation du nom de la table
-                $config['class'] = Maker::findTable($constraint['referenced_table_name']);
+                $config['class'] = Maker::findTable($constraint->referenced_table_name);
 
                 if (empty($config['class'])) {
                     $this->table(['table_name', 'column_name', 'referenced_table_name', 'referenced_column_name'], [(array) $constraint]);
@@ -354,7 +356,7 @@ class CodeModelCommand extends CodeCommand
 
 
         // Validation
-        while (!$this->confirm('Voulez vous appliquez les contraintes telle quelle?', false)) {
+        while (!$this->confirm('Voulez vous appliquez les contraintes telle quelle?', true)) {
 
             $choice = $this->choice('Laquel souhaitez vous modifier', $configuration->pluck('name', 'id')->toArray());
 
