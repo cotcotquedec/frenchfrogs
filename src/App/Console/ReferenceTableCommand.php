@@ -32,6 +32,8 @@ class ReferenceTableCommand extends Command
      * @var \Illuminate\Support\Composer
      */
     protected $composer;
+
+
     /**
      * Create a new session table command instance.
      *
@@ -50,10 +52,10 @@ class ReferenceTableCommand extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         $fullPath = $this->createTable();
-        $this->files->put($fullPath, $this->files->get(__DIR__.'/stubs/tables/reference.stub'));
+        $this->files->put($fullPath, $this->files->get(__DIR__.'/stubs/tables/references.stub'));
         $this->info('Migration created successfully!');
         $this->composer->dumpAutoloads();
     }

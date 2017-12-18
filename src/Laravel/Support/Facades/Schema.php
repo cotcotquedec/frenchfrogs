@@ -1,8 +1,8 @@
 <?php namespace FrenchFrogs\Laravel\Support\Facades;
 
 
-use FrenchFrogs\Laravel\Database\Schema\MySqlGrammar;
 use FrenchFrogs\Laravel\Database\Schema\MySqlBuilder;
+use Illuminate\Database\MySqlConnection;
 
 class Schema extends \Illuminate\Support\Facades\Schema
 {
@@ -27,10 +27,7 @@ class Schema extends \Illuminate\Support\Facades\Schema
     static public function getSchemaBuilder($connection)
     {
 
-        if (get_class($connection) === 'Illuminate\Database\MySqlConnection') {
-            /** @var \Illuminate\Database\MySqlConnection $connection */
-            $MySqlGrammar = $connection->withTablePrefix(new MySqlGrammar);
-            $connection->setSchemaGrammar($MySqlGrammar);
+        if (get_class($connection) === MySqlConnection::class) {
             return new MySqlBuilder($connection);
         }
 

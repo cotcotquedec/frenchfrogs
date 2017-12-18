@@ -10,23 +10,23 @@
 class Blueprint extends \Illuminate\Database\Schema\Blueprint
 {
 
-    /**
-     * Ajoute une column de type binary UUID
-     *
-     * @param string $column
-     * @return \Illuminate\Support\Fluent
-     */
-    public function binaryUuid($column = 'uuid', $primary = true)
-    {
-        $column = $this->addColumn('binaryuuid', $column, ['length' => 16]);
-
-        // gestion de la clé primaire
-        if ($primary) {
-            $column->primary();
-        }
-
-        return $column;
-    }
+//    /**
+//     * Ajoute une column de type binary UUID
+//     *
+//     * @param string $column
+//     * @return \Illuminate\Support\Fluent
+//     */
+//    public function binaryUuid($column = 'uuid', $primary = true)
+//    {
+//        $column = $this->addColumn('binaryuuid', $column, ['length' => 16]);
+//
+//        // gestion de la clé primaire
+//        if ($primary) {
+//            $column->primary();
+//        }
+//
+//        return $column;
+//    }
 
 
     /**
@@ -48,15 +48,9 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
      * @param int $size
      * @return mixed
      */
-    public function stringId($column = 'sid', $size = 32, $primary = true)
+    public function sid($column = 'sid', $size = 32)
     {
         $column = $this->string($column, $size);
-
-        // gestion de la clé primaire
-        if ($primary) {
-            $column->primary();
-        }
-
         return $column;
     }
 }

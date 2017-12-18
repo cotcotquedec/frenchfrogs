@@ -2,6 +2,7 @@
 
 use BetterReflection\Reflection\ReflectionClass;
 use FrenchFrogs\Core\Renderer;
+use FrenchFrogs\Maker\Renderer\Php;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\Filesystem;
 
@@ -224,7 +225,6 @@ class Maker
     }
 
 
-
     /**
      * Getter for $interfaces
      *
@@ -392,16 +392,16 @@ class Maker
         $name = $class;
 
         // cas du namespace
-        if($this->hasNamespace()) {
-            $name = preg_replace('#^'.str_replace('\\', '\\\\', $this->getNamespace()).'\\\\#', '', $name);
+        if ($this->hasNamespace()) {
+            $name = preg_replace('#^' . str_replace('\\', '\\\\', $this->getNamespace()) . '\\\\#', '', $name);
         }
 
         // cas des alias
         foreach ($this->getAliases() as $alias => $c) {
-            $a = preg_replace('#^'.str_replace('\\', '\\\\', $c).'#', $alias, $class);
+            $a = preg_replace('#^' . str_replace('\\', '\\\\', $c) . '#', $alias, $class);
             $name = strlen($a) < strlen($name) ? $a : $name;
         }
-        return $name == $class ?  '\\' . $class : $name;
+        return $name == $class ? '\\' . $class : $name;
     }
 
     /**
@@ -520,7 +520,7 @@ class Maker
         $this->setDescription($docblock->getLongDescription());
 
 
-        foreach($docblock->getTags() as $tag) {
+        foreach ($docblock->getTags() as $tag) {
 
             switch ($tag->getName()) {
 //                case 'property' :
@@ -570,7 +570,7 @@ class Maker
         $this->setConstants($reflection->getConstants());
 
         // PROPERTIES
-        foreach($reflection->getProperties() as $property) {
+        foreach ($reflection->getProperties() as $property) {
             $this->addProperty(Property::fromReflection($property));
         }
 
@@ -611,7 +611,7 @@ class Maker
      */
     public function addProperty($name, $default = Maker::NO_VALUE, $type = null)
     {
-        $property = $name instanceof Property ?  $name : new Property($name, $default, $type);
+        $property = $name instanceof Property ? $name : new Property($name, $default, $type);
 
         $this->properties[$property->getName()] = $property;
         return $this->properties[$property->getName()];
@@ -624,7 +624,7 @@ class Maker
      */
     public function addMethod($name, $params = [])
     {
-        $method = $name instanceof Method ?  $name : new Method($name, $params);
+        $method = $name instanceof Method ? $name : new Method($name, $params);
         return $this->methods[$method->getName()] = $method;
     }
 
@@ -676,7 +676,7 @@ class Maker
     {
         $instance = new static();
 
-        if(!class_exists($class, true)){
+        if (!class_exists($class, true)) {
             \exc('La classe "' . $class . '" n\'existe pas!');
         }
 
@@ -691,8 +691,8 @@ class Maker
     {
         // CONFIGURATION
         if (!$this->hasRenderer()) {
-            $class = configurator()->get('maker.renderer.class');
-            $this->setRenderer(new $class);
+//            $class = configurator()->get('maker.renderer.class');
+            $this->setRenderer(new Php());
         }
     }
 
@@ -721,13 +721,9 @@ class Maker
             $file = static::findFile($class);
         }
 
-        // recuperation du realpath du fichier
-//        $file = app_path('../' . $file);
-
-
-
+        // on verifie que le fichier n'existe pas deja
         if (file_exists($file)) {
-            exc('Impossible de créer la classe "'.$class.'", Le fichier existe deja : ' . $file );
+            exc('Impossible de créer la classe "' . $class . '", Le fichier existe deja : ' . $file);
         }
 
         // initialisation du gestionnaire de fichier
@@ -772,7 +768,7 @@ class Maker
         $render = '';
         try {
             $render = $this->getRenderer()->render('maker', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             dd($e->getMessage());//@todo find a good way to warn the developper
         }
 
@@ -843,7 +839,7 @@ class Maker
             }
 
             // construction du chemin complet
-            $path =  $root . DIRECTORY_SEPARATOR . $name;
+            $path = $root . DIRECTORY_SEPARATOR . $name;
 
             // cas des repertoires
             if (is_dir($path)) {
@@ -890,6 +886,34 @@ class Maker
 
 
     /**
+     * Renvoie le Repertoire dans lequel créer les modeles
+     *
+     * @param bool $create
+     * @return string
+     */
+    static public function getDbDirectory($create = true)
+    {
+        // On verifie que le repertoire existe
+        $dir = app_path('Models');
+        $create || is_dir($dir) || mkdir($dir);
+        $dir .= '/Db';
+        $create || is_dir($dir) || mkdir($dir);
+
+        return $dir;
+    }
+
+    /**
+     * Return ModelDbNamespace
+     *
+     * @return string
+     */
+    static public function getDbNamespace()
+    {
+        return app()->getNamespace() .  '\\Models\\Db';
+    }
+
+
+    /**
      * Recuperation des controllers de l'application
      *
      * @return array
@@ -902,12 +926,11 @@ class Maker
         $classes = collect([]);
 
         // recuperation des classes
-        foreach(static::findClasses(app_path('Models/Db')) as $class) {
+        foreach (static::findClasses(static::getDbDirectory()) as $class) {
             $classes->push($class);
         }
 
-
-        $classes->each(function($class) use (&$dbs) {
+        $classes->each(function ($class) use (&$dbs) {
             $reflection = ReflectionClass::createFromName($class);
 
             if (!$reflection->hasProperty('table')) {
@@ -962,7 +985,6 @@ class Maker
 
         return $class;
     }
-
 
 
     /**

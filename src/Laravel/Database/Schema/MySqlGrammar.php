@@ -1,21 +1,17 @@
-<?php namespace FrenchFrogs\Laravel\Database\Schema;
+<?php
+/**
+ * Created by PhpStorm.
+ * User: jhouvion
+ * Date: 18/12/17
+ * Time: 12:00
+ */
+
+namespace FrenchFrogs\Laravel\Database\Schema;
 
 
-use Illuminate\Support\Fluent;
-
-class MySqlGrammar extends \Illuminate\Database\Schema\Grammars\MySqlGrammar
+class MySqlGrammar
 {
-
-
-
-
-    /**
-     * Create the column definition for a binary type.
-     *
-     * @param  \Illuminate\Support\Fluent  $column
-     * @return string
-     */
-    protected function typeBinaryUuid(Fluent $column)
+    protected function typeUuid(Fluent $column)
     {
         return 'binary(16)';
     }

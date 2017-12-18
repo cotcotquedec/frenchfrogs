@@ -131,9 +131,6 @@ class Model extends \Illuminate\Database\Eloquent\Model
                 return $this->asDateTime($value);
             case 'timestamp':
                 return $this->asTimestamp($value);
-
-
-
             case static::BINARY16_UUID:
                 return \Webpatser\Uuid\Uuid::import($value)->bytes;
             case static::NENUPHAR :

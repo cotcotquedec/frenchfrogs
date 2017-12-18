@@ -15,10 +15,6 @@ use Models\Db\User;
 class CodeModelCommand extends CodeCommand
 {
 
-    protected $namespace = '\\Models\\Db\\';
-    protected $directory = 'app/Models/Db/';
-
-
     protected $relations = [
         'BelongsTo' => 'BelongsTo',
         'HasMany' => 'HasMany',
@@ -58,6 +54,7 @@ class CodeModelCommand extends CodeCommand
         $file = preg_replace('#^' . addslashes(app()->getNamespace()) . '#', app_path('/'), $class);
         $file = str_replace('\\', '/', $file) . '.php';
         $file = str_replace('//', '/', $file);
+
         return $file;
     }
 
@@ -86,38 +83,35 @@ class CodeModelCommand extends CodeCommand
             }
         } while (empty($name));
 
-
         // choix des nom de classe
         $choices = [];
 
         // determination du nom de la classe et du fichier de sortie
         $class = $file = null;
 
-
         // le cas où le fichier existe déja
         if ($class = Maker::findTable($name))  {
             $file = $this->determineFileFromClass($class);
         } else {
-            // cas du des underscore
-            if (strpos($name, '_')) {
 
-                // oin seprae les underscore et on ajoute des majuscule
-                $break = [];
+            // Construction du nom de la classe
+            $class = $name;
+
+            // cas du des underscore
+            if (strpos($class, '_')) {
+
+                // on separe les underscore et on ajoute des majuscule
+                $class = [];
                 foreach (explode('_', $name) as $item) {
-                    $break[] = ucfirst($item);
+                    $class[] = ucfirst($item);
                 }
 
                 // reconstruction du  nom de la class
-                $break = implode('\\', $break);
-                $choices[] = $this->namespace . ucfirst(camel_case($break));
+                $class = implode('\\', $class);
             }
 
-            // ajout du choix par default
-            $choices[] = $this->namespace . ucfirst(camel_case($name));
-
-            // chois par default
-            $class = app()->getNamespace() . $choices[0];
-            $class = str_replace('\\\\', '\\', $class);
+            // choix par default
+            $class = str_replace('\\\\', '\\', Maker::getDbNamespace() . '\\' . ucfirst(camel_case($class)));
             $file = $this->determineFileFromClass($class);
         }
 
@@ -173,10 +167,8 @@ class CodeModelCommand extends CodeCommand
         $updated = false;
         $deleted = false;
 
-
         // recuperation des colonnes
         $columns = \DB::select('SHOW COLUMNS FROM `'.$name.'`');
-
 
         foreach ($columns as $row) {
 
@@ -289,32 +281,32 @@ class CodeModelCommand extends CodeCommand
         $maker->addAlias('HasOne', HasOne::class);
         $maker->addAlias('BelongsTo', BelongsTo::class);
 
+
         $configuration = collect([]);
 
         // Essaie de definir le resultats
-        foreach (a($constraints) as $constraint) {
+        foreach ($constraints as $constraint) {
 
             $config = [];
 
             // cas d'une liaison externe
-            if ($constraint['table_name'] == $table) {
+            if ($constraint->table_name == $table) {
 
                 $config['id'] = str_random(3);
 
                     // Recuperation du nom de la table
                 $config['class'] = Maker::findTable($constraint['referenced_table_name']);
 
-
                 if (empty($config['class'])) {
-                    $this->table(['table_name', 'column_name', 'referenced_table_name', 'referenced_column_name'], [$constraint]);
-                    $this->warn('Le model pour la table : ' . $constraint['table_name'] . ' n\'a pas été trouvé!');
+                    $this->table(['table_name', 'column_name', 'referenced_table_name', 'referenced_column_name'], [(array) $constraint]);
+                    $this->warn('Le model pour la table : ' . $constraint->table_name . ' n\'a pas été trouvé!');
                     continue;
                 }
 
 
                 $config['type'] = 'BelongsTo';
 
-                $name = $constraint['column_name'];
+                $name = $constraint->column_name;
                 $name = collect(explode('_', $name));
                 // on depop l'id
                 $name->pop();
@@ -322,8 +314,8 @@ class CodeModelCommand extends CodeCommand
                 $name = $name->pop();
 
                 $config['name'] = Pluralizer::singular($name);
-                $config['from'] = $constraint['column_name'];
-                $config['to'] = $constraint['referenced_column_name'];
+                $config['from'] = $constraint->column_name;
+                $config['to'] = $constraint->referenced_column_name;
                 $config['exists'] = $maker->hasMethod($config['name']) ? '*' : '';
 
             } else {
@@ -332,25 +324,25 @@ class CodeModelCommand extends CodeCommand
                 $config['id'] = str_random(3);
 
                 // Recuperation du nom de la table
-                $config['class'] = Maker::findTable($constraint['table_name']);
+                $config['class'] = Maker::findTable($constraint->table_name);
 
                 if (empty($config['class'])) {
-                    $this->table(['table_name', 'column_name', 'referenced_table_name', 'referenced_column_name'], [$constraint]);
-                    $this->warn('Le model pour la table : ' . $constraint['table_name'] . ' n\'a pas été trouvé!');
+                    $this->table(['table_name', 'column_name', 'referenced_table_name', 'referenced_column_name'], []);
+                    $this->warn('Le model pour la table : ' . $constraint->table_name . ' n\'a pas été trouvé!');
                     continue;
                 }
 
                 $config['type'] = 'HasMany';
 
-                $name = $constraint['table_name'];
+                $name = $constraint->table_name;
                 $name = collect(explode('_', $name));
 
                 // on prend la parti precedente l'id pour definir le nom de la liaison
                 $name = $name->pop();
 
                 $config['name'] = Pluralizer::plural($name);
-                $config['from'] = $constraint['column_name'];
-                $config['to'] = $constraint['referenced_column_name'];
+                $config['from'] = $constraint->column_name;
+                $config['to'] = $constraint->referenced_column_name;
                 $config['exists'] = $maker->hasMethod($config['name']) ? '*' : '';
             }
 

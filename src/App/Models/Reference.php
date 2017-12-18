@@ -180,6 +180,17 @@ class Reference
     {
         $file = storage_path('/../bootstrap/') . static::CLASS_NAME . '.php';
 
+        // Si le fichier n'existe pas, opn le crée
+        if (!is_file($file)) {
+            file_put_contents($file, <<<EOL
+<?php namespace {
+       class Ref {}
+}
+EOL
+);
+            include $file;
+        }
+
         // recuperation des données
         $constant = Maker::getModelFromTableName('references')->pluck('rid', 'rid')->toArray();
 
