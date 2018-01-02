@@ -225,7 +225,6 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
      */
     public function remote_boolean(Column\RemoteBoolean $column, array $row)
     {
-
         $table = $column->getTable();
 
         // Attributes

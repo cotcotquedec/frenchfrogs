@@ -243,7 +243,7 @@ class CodeModelCommand extends CodeCommand
         }
 
         // timemstamps
-        !$created || !$updated && $maker->addProperty('timestamps')->enablePublic()->setDefault(false);
+        (!$created || !$updated) && $maker->addProperty('timestamps')->enablePublic()->setDefault(false);
 
         // cas du soft deleted
         if ($deleted) {

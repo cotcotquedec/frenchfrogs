@@ -40,7 +40,7 @@ class RemoteBoolean extends Boolean
         try {
             $render = $this->getRenderer()->render('remote_boolean', $this, $row);
         } catch(\Exception $e){
-            dd($e->getMessage(), $e->getTraceAsString());
+            debug($e->getMessage());
         }
 
         return $render;

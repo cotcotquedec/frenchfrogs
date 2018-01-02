@@ -168,12 +168,18 @@ trait Datatable
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function removeSearch()
     {
         unset($this->search);
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function hasSearch()
     {
         return isset($this->search);
@@ -340,12 +346,22 @@ trait Datatable
 
 
     /**
-     *
-     * @param Nenuphar $nenuphar
+     * @param Nenuphar|string $nenuphar
+     * @param null $method
+     * @param array $params
+     * @param string $interpreter
      * @return $this
      */
-    public function setNenuphar(Nenuphar $nenuphar)
+    public function setNenuphar($class, $method = null, $params = [], $interpreter = 'controller')
     {
+
+        // Formatage des parmaetre en nenuphar
+        if ($class instanceof Nenuphar) {
+            $nenuphar = $class;
+        } else {
+            $nenuphar = new Nenuphar(...func_get_args());
+        }
+
         $this->nenuphar = $nenuphar;
         return $this;
     }
@@ -428,7 +444,7 @@ trait Datatable
      */
     public function processQuery($columns, $search = null, $order = null)
     {
-        // gestion des reccherches
+        // gestion des recherches
         foreach ($columns as $c) {
             if ($c['searchable'] == "true" && $c['search']['value'] != '') {
                 $this->getColumn($c['name'])->getStrainer()->call($this, $c['search']['value']);

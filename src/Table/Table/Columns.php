@@ -417,10 +417,8 @@ trait Columns
      * @param array $attr
      * @return \FrenchFrogs\Table\Column\Button
      */
-    public function addButtonEdit($link = '#', $binds = [], $is_remote = true, $method = 'post')
+    public function addButtonEdit($link = '#', $binds = [], $is_remote = true, $method = 'get')
     {
-
-
         $c = new Column\Button(configurator()->get('button.edit.name'), configurator()->get('button.edit.label'), $link, $binds);
         $c->setOptionAsPrimary();
         $c->icon(configurator()->get('button.edit.icon'));

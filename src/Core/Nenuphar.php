@@ -163,7 +163,6 @@ class Nenuphar
      */
     public function register($token = null)
     {
-
         if (!empty($token)) {
             $this->token = $token;
         }

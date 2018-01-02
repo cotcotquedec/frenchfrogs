@@ -40,27 +40,6 @@ trait FrenchFrogsController
 
 
     /**
-     * Surcharge de la validation pour recuperer le request
-     *
-     * @param Request $request
-     * @param array $rules
-     * @param array $messages
-     * @param array $customAttributes
-     * @return Request
-     */
-    public function validate(Request $request, array $rules, array $messages = [], array $customAttributes = [])
-    {
-        $validator = $this->getValidationFactory()->make($request->all(), $rules, $messages, $customAttributes);
-
-        if ($validator->fails()) {
-            $this->throwValidationException($request, $validator);
-        }
-
-        return $request;
-    }
-
-
-    /**
      * getter for l'utilisateur courant
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null

@@ -458,6 +458,7 @@ class Table
      */
     public function getIdField()
     {
+        throw_if(is_null($this->idField), 'La propriété idField n\'a pas été setté pour le table');
         return $this->idField;
     }
 
