@@ -28,7 +28,7 @@ class Submit extends Button
         try {
             $render = $this->getRenderer()->render('submit', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

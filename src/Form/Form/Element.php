@@ -209,16 +209,10 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Text
      */
-    public function addText($name, $label = '', $is_mandatory = true)
+    public function addText($name, $label = '')
     {
         $e = new \FrenchFrogs\Form\Element\Text($name, $label);
         $this->addElement($e);
-
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
 
         return $e;
     }
@@ -232,16 +226,10 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Date
      */
-    public function addDate($name, $label = '', $is_mandatory = true)
+    public function addDate($name, $label = '')
     {
         $e = new \FrenchFrogs\Form\Element\Date($name, $label);
         $this->addElement($e);
-
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
 
         return $e;
     }
@@ -253,19 +241,12 @@ trait Element
      * @param string $label
      * @param string $from
      * @param string $to
-     * @param bool $is_mandatory
      * @return FrenchFrogs\Form\Element\DateRange
      */
-    public function addDateRange($name, $label = '', $from = '', $to = '', $is_mandatory = true)
+    public function addDateRange($name, $label = '', $from = '', $to = '')
     {
         $e = new \FrenchFrogs\Form\Element\DateRange($name, $label, $from, $to);
         $this->addElement($e);
-
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
 
         return $e;
     }
@@ -276,19 +257,12 @@ trait Element
      *
      * @param $name
      * @param string $label
-     * @param bool $is_mandatory
      * @return \FrenchFrogs\Form\Element\Date
      */
-    public function addTime($name, $label = '', $is_mandatory = true)
+    public function addTime($name, $label = '')
     {
         $e = new \FrenchFrogs\Form\Element\Time($name, $label);
         $this->addElement($e);
-
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
 
         return $e;
     }
@@ -301,17 +275,11 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Password
      */
-    public function addPassword($name, $label = '',  $is_mandatory = true )
+    public function addPassword($name, $label = '' )
     {
         $e = new \FrenchFrogs\Form\Element\Password($name, $label);
         $this->addElement($e);
 
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
-
         return $e;
     }
 
@@ -323,17 +291,11 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Textarea
      */
-    public function addTextarea($name, $label = '', $is_mandatory = true )
+    public function addTextarea($name, $label = '' )
     {
         $e = new \FrenchFrogs\Form\Element\Textarea($name, $label);
         $this->addElement($e);
 
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
-
         return $e;
     }
 
@@ -347,16 +309,10 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Textarea
      */
-    public function addMarkdown($name, $label = '', $is_mandatory = true )
+    public function addMarkdown($name, $label = '' )
     {
         $e = new \FrenchFrogs\Form\Element\Markdown($name, $label);
         $this->addElement($e);
-
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
 
         return $e;
     }
@@ -418,17 +374,11 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Tel
      */
-    public function addTel($name, $label = '', $is_mandatory = true)
+    public function addTel($name, $label = '')
     {
         $e = new \FrenchFrogs\Form\Element\Tel($name, $label);
         $this->addElement($e);
         $e->addRule('laravel','laravel', ['regex:/^[+]{0,1}[0-9]{9,13}$/'],['regex' => 'Le champ doit être un numero valide . Il peut commencer par un + et ne doit contenir que des chiffres (Au moins 10)']);
-
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
 
         return $e;
     }
@@ -441,16 +391,11 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Email
      */
-    public function addEmail($name, $label = '',$is_mandatory = true )
+    public function addEmail($name, $label = '')
     {
         $e = new \FrenchFrogs\Form\Element\Email($name, $label);
         $this->addElement($e);
 
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
         $e->addRule('email');
 
         return $e;
@@ -480,16 +425,10 @@ trait Element
      * @param array $attr
      * @return  \FrenchFrogs\Form\Element\Hidden
      */
-    public function addSelectRemote($name, $label = '', $url = '#', $length = 1, $is_mandatory = true)
+    public function addSelectRemote($name, $label = '', $url = '#', $length = 1)
     {
         $e = new \FrenchFrogs\Form\Element\SelectRemote($name, $label, $url, $length);
         $this->addElement($e);
-
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
 
         return $e;
     }
@@ -643,17 +582,10 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Number
      */
-    public function addNumber($name, $label = '', $is_mandatory = true)
+    public function addNumber($name, $label = '')
     {
         $e = new \FrenchFrogs\Form\Element\Number($name, $label);
         $this->addElement($e);
-
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
-
         return $e;
     }
 
@@ -667,16 +599,10 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Radio
      */
-    public function addRadio($name, $label = '', $multi  = [], $is_mandatory = true )
+    public function addRadio($name, $label = '', $multi  = [] )
     {
         $e = new \FrenchFrogs\Form\Element\Radio($name, $label, $multi);
         $this->addElement($e);
-
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
 
         return $e;
     }
@@ -692,16 +618,10 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Select
      */
-    public function addSelect($name, $label, $multi = [],  $is_mandatory = true)
+    public function addSelect($name, $label, $multi = [])
     {
         $e = new \FrenchFrogs\Form\Element\Select($name, $label, $multi);
         $this->addElement($e);
-
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
 
         return $e;
     }
@@ -712,19 +632,12 @@ trait Element
      * @param $name
      * @param $label
      * @param array $options
-     * @param bool|true $is_mandatory
      * @return FrenchFrogs\Form\Element\DataList
      */
-    public function addDataList($name, $label, $options = [],  $is_mandatory = true)
+    public function addDataList($name, $label, $options = [])
     {
         $e = new \FrenchFrogs\Form\Element\DataList($name, $label, $options);
         $this->addElement($e);
-
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
 
         return $e;
     }
@@ -738,21 +651,10 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\File
      */
-    public function addFile($name, $label = '', $is_mandatory = true)
+    public function addFile($name, $label = '')
     {
         $e = new \FrenchFrogs\Form\Element\File($name, $label);
         $this->addElement($e);
-
-        if ($is_mandatory) {
-            $e->addRule('required');
-        } else {
-            $e->addFilter('nullable');
-        }
-
         return $e;
     }
-
-
-
-
 }

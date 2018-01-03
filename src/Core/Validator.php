@@ -1,128 +1,178 @@
-<?php namespace FrenchFrogs\Core;
-
+<?php
 /**
- * Trait for validator polymorphisme
- *
- * Class Validator
- * @package FrenchFrogs\Core
+ * Created by PhpStorm.
+ * User: jhouvion
+ * Date: 03/01/18
+ * Time: 11:28
  */
-trait Validator
-{
 
+namespace FrenchFrogs\Core;
+
+
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationRuleParser;
+
+class Validator
+{
     /**
-     * Validator container
-     *
-     * @var \FrenchFrogs\Validator\Validator
+     * @var \Illuminate\Validation\Validator
      */
     protected $validator;
 
+    /**
+     * @var array
+     */
+    protected $rules = [];
 
     /**
-     * Getter
-     *
-     * @return \FrenchFrogs\Validator\Validator
+     * @var array
      */
-    public function getValidator()
-    {
-        return $this->validator;
-    }
+    protected $messages = [];
+
+    /**
+     * @var array
+     */
+    protected $customAttributes = [];
 
 
     /**
-     * Setter
      *
-     * @param \FrenchFrogs\Validator\Validator $validator
-     * @return $this
+     *
+     * @param $rules
      */
-    public function setValidator(\FrenchFrogs\Validator\Validator $validator)
+    public function setRules(array $rules)
     {
-        $this->validator = $validator;
+        $this->rules = $rules;
         return $this;
     }
 
     /**
-     * Return TRUE if validator is set
-     *
-     * @return bool
-     */
-    public function hasValidator()
-    {
-        return isset($this->validator);
-    }
-
-    /**
-     * Ajout un validator laravel
-     *
-     * @param $validator
+     * @param Rule[]|string|array $rules
      * @param string $index
      * @return $this
      */
-    public function addLaravelValidator($validator, $index = 'laravel', $message = null )
+    public function setRulesForIndex(string $index, $rules)
     {
-        return $this->addValidator($index, 'laravel', $validator, $message);
+        // Explode des rules
+        $response = (new ValidationRuleParser([]))
+            ->explode([$rules]);
+
+        $this->rules[$index] = array_get($response->rules, 0, []);
+        return $this;
     }
 
-
     /**
-     * Add a single validator with message to the validator container
      *
      * @param $index
-     * @param null $method
-     * @param array $params
-     * @param null $message
-     * @return $this
-     */
-    public function addValidator($index, $method = null, $params = [], $message = null)
-    {
-        $params = (array) $params;
-
-        // set up params
-        array_unshift($params, $method);
-        array_unshift($params, $index);
-
-        call_user_func_array([$this->getValidator(), 'addRule'], $params);
-
-        // Message management
-        if (!is_null($message)) {
-            $this->getValidator()->addMessage($index, $message);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * Shortcut to the main function of the model
-     *
-     * @param $value
-     * @return $this
-     * @throws \Exception
-     */
-    public function valid($value)
-    {
-        $this->getValidator()->valid($value);
-        return $this;
-    }
-
-
-    /**
-     * Return TRUE if the element is valid
-     *
+     * @param $rule
      * @return bool
      */
-    public function isValid()
+    public function hasRule($index, $rule)
     {
-        return $this->getValidator()->isValid();
+        return isset(array_get($this->rules, $index, [])[$rule]);
+    }
+
+    /**
+     * @param array $messages
+     * @return $this
+     */
+    public function addMessage($index, $message)
+    {
+        $this->messages[$index] = $message;
+    }
+
+    /**
+     * @param null $index
+     * @return bool
+     */
+    public function errors($index = null)
+    {
+        if ($this->validator) {
+            $errors = $this->validator->errors()->toArray();
+            return is_null($index) ? $errors : array_get($errors, $index, []);
+        }
+
+        return [];
     }
 
 
     /**
-     * Return the error message format as a string
-     *
-     * @return string
+     * @param null $index
+     * @return bool
      */
-    public function getErrorAsString()
+    public function fails(...$args)
     {
-        return $this->getValidator()->getErrorAsString();
+        $this->make(...$args)->fails();
+    }
+
+    /**
+     * @param array ...$args
+     * @return array
+     * @throws \Throwable
+     */
+    public function valid(...$args)
+    {
+        return $this->make(...$args)->valid();
+    }
+
+
+    /**
+     * @param array ...$args
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Throwable
+     */
+    public function validate(...$args)
+    {
+        return $this->make(...$args)->validate();
+    }
+
+    /**
+     *
+     *
+     * @param null $data
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
+     * @return \Illuminate\Validation\Validator
+     * @throws \Throwable
+     */
+    public function make($data = null, $rules = [], $messages = [], $customAttributes = [])
+    {
+        // DATA
+        // Si vide on prend la requete en cours
+        if (is_null($data)) {
+            $data = request();
+        }
+
+        // formatage en table si c'est une requete
+        if ($data instanceof Request) {
+            $data = $data->all();
+        }
+
+        // On verifie que les data sont bien la
+        throw_if(!is_array($data), 'Les données transmises ne sont pas au bon format');
+
+
+        // RULES
+        throw_if(!is_array($rules), 'Les rules transmises ne sont pas au bon format');
+
+        // ON merge les rules si jamais on en a des présetté
+        if (!empty($this->rules)) {
+            $rules = array_merge($this->rules, $rules);
+        }
+
+        // MESSAGES
+        throw_if(!is_array($messages), 'Les messages transmises ne sont pas au bon format');
+
+        // ON merge les rules si jamais on en a des présetté
+        if (!empty($this->messages)) {
+            $messages = array_merge($this->messages, $messages);
+        }
+
+        // Creation du validator
+        $this->validator = \Validator::make($data, $rules, $messages, $customAttributes);
+
+        return $this->validator;
     }
 }

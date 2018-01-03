@@ -29,7 +29,7 @@ class Number extends Text
         try {
             $render = $this->getRenderer()->render('number', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

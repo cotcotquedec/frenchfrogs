@@ -69,7 +69,7 @@ class Content extends Element
 
             $render = $this->getRenderer()->render('content', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

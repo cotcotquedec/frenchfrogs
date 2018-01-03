@@ -17,8 +17,6 @@ trait Renderer
      */
     protected $renderer;
 
-
-
     /**
      * Getter
      *

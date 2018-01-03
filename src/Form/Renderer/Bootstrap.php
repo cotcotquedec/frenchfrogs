@@ -89,12 +89,12 @@ class Bootstrap extends Renderer\Renderer {
     public function text(Form\Element\Text $element)
     {
         // Error
-        if($hasError = !$element->getValidator()->isValid()){
+        if($hasError = $element->fails()){
             $element->removeAttribute('data-trigger');//Si il y avait un popoover au départ on le surcharge par un tooltip
             $element->addClass('form-error');
             if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
             $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
+            foreach($element->errors() as $error){
                 $message .= $error . ' ';
             }
             $element->addAttribute('data-original-title',$message);
@@ -134,12 +134,12 @@ class Bootstrap extends Renderer\Renderer {
     {
 
         //error
-        if($hasError = !$element->getValidator()->isValid()){
+        if($hasError = $element->fails()){
             $element->removeAttribute('data-trigger');//Si il y avait un popoover au départ on le surcharge par un tooltip
             $element->addClass('form-error');
             if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
             $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
+            foreach($element->errors() as $error){
                 $message .= $error . ' ';
             }
             $element->addAttribute('data-original-title',$message);
@@ -203,12 +203,12 @@ class Bootstrap extends Renderer\Renderer {
     {
 
         // error
-        if($hasError = !$element->getValidator()->isValid()){
+        if($hasError = $element->fails()){
             $element->removeAttribute('data-trigger');//Si il y avait un popoover au départ on le surcharge par un tooltip
             $element->addClass('form-error');
             if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
             $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
+            foreach($element->errors() as $error){
                 $message .= $error . ' ';
             }
             $element->addAttribute('data-original-title',$message);
@@ -336,12 +336,12 @@ class Bootstrap extends Renderer\Renderer {
 
     public function number(Form\Element\Number $element)
     {
-        if(!$element->getValidator()->isValid()){
+        if($element->fails()){
             $element->removeAttribute('data-trigger');//Si il y avait un popoover au départ on le surcharge par un tooltip
             $element->addClass('form-error');
             if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
             $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
+            foreach($element->errors() as $error){
                 $message .= $error . ' ';
             }
             $element->addAttribute('data-original-title',$message);
@@ -386,12 +386,12 @@ class Bootstrap extends Renderer\Renderer {
 
     public function select(Form\Element\Select $element)
     {
-        if($hasError = !$element->getValidator()->isValid()){
+        if($hasError = $element->fails()){
             $element->removeAttribute('data-trigger');//Si il y avait un popoover au départ on le surcharge par un tooltip
             $element->addClass('form-error');
             if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
             $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
+            foreach($element->errors() as $error){
                 $message .= $error . ' ';
             }
             $element->addAttribute('data-original-title',$message);
@@ -445,12 +445,12 @@ class Bootstrap extends Renderer\Renderer {
 
     public function file(Form\Element\File $element)
     {
-        if(!$element->getValidator()->isValid()){
+        if($element->fails()){
             $element->removeAttribute('data-trigger');//Si il y avait un popoover au départ on le surcharge par un tooltip
             $element->addClass('form-error');
             if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
             $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
+            foreach($element->errors() as $error){
                 $message .= $error . ' ';
             }
             $element->addAttribute('data-original-title',$message);
@@ -476,11 +476,11 @@ class Bootstrap extends Renderer\Renderer {
     public function date(Form\Element\Date $element)
     {
         // Error
-        if($hasError = !$element->getValidator()->isValid()){
+        if($hasError = $element->fails()){
             $element->removeAttribute('data-trigger');//Si il y avait un popoover au départ on le surcharge par un tooltip
             if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
             $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
+            foreach($element->errors() as $error){
                 $message .= $error . ' ';
             }
             $element->addAttribute('data-original-title',$message);
@@ -515,11 +515,11 @@ class Bootstrap extends Renderer\Renderer {
     {
 
         // Error
-        if($hasError = !$element->getValidator()->isValid()){
+        if($hasError = $element->fails()){
             $element->removeAttribute('data-trigger');//Si il y avait un popoover au départ on le surcharge par un tooltip
             if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
             $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
+            foreach($element->errors() as $error){
                 $message .= $error . ' ';
             }
             $element->addAttribute('data-original-title',$message);
@@ -554,12 +554,12 @@ class Bootstrap extends Renderer\Renderer {
     public function datalist(Form\Element\DataList $element)
     {
         // Error
-        if($hasError = !$element->getValidator()->isValid()){
+        if($hasError = $element->fails()){
             $element->removeAttribute('data-trigger');//Si il y avait un popoover au départ on le surcharge par un tooltip
             $element->addClass('form-error');
             if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
             $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
+            foreach($element->errors() as $error){
                 $message .= $error . ' ';
             }
             $element->addAttribute('data-original-title',$message);

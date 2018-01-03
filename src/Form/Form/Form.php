@@ -3,6 +3,7 @@
 use FrenchFrogs\Core;
 use FrenchFrogs;
 use FrenchFrogs\Form\Renderer;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Form polliwog
@@ -14,7 +15,7 @@ class Form
 {
     use \FrenchFrogs\Html\Html;
     use Core\Renderer;
-    use Core\Validator;
+    use Core\Integration\Validator;
     use Core\Filterer;
     use Core\Panel;
     use Remote;
@@ -156,12 +157,6 @@ class Form
         $class = $c->get('form.renderer.class');
         $this->setRenderer(new $class);
 
-        $class = $c->get('form.validator.class');
-        $this->setValidator(new $class);
-
-        $class = $c->get('form.filterer.class');
-        $this->setFilterer(new $class);
-
         $this->has_csrfToken = $c->get('form.default.has_csrfToken', true);
 
 
@@ -271,7 +266,7 @@ class Form
         try {
             $render = $this->getRenderer()->render('form', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());//@todo find a good way to warn the developper
+            debugbar()->addThrowable($e);
         }
 
         return $render;
@@ -291,6 +286,18 @@ class Form
 
 
     /**
+     * @param array ...$arg
+     * @return \Illuminate\Validation\Validator
+     * @throws \Throwable
+     */
+    public function make(...$arg)
+    {
+        $v = $this->getValidator()->make(...$arg);
+        $this->populate($v->getData());
+        return $v;
+    }
+
+    /**
      *
      * Fill the form with $values
      *
@@ -299,8 +306,6 @@ class Form
      */
     public function populate(array $values, $alias = false)
     {
-
-
         foreach($this->getElements() as $e) {
             /** @var $e \FrenchFrogs\Form\Element\Element */
             $name = $alias && $e->hasAlias() ? $e->getAlias() : $e->getName();
@@ -395,7 +400,27 @@ class Form
                 $values[$name] = $e->getFilteredValue();
             }
         }
+
         return $values;
+    }
+
+
+    public function save($function)
+    {
+        // Recuperationd es donnée du formulaire
+        $values = $this->getValues();
+
+        // Cas d'un callable
+        if (is_callable($function) && !is_string($function)) {
+            return $function($values, $this);
+        }
+
+        // Cas d'un model
+        if ($function instanceof Model) {
+            return $function->fill($values)->save();
+        }
+
+        throw new\Exception('Impossible de determiner le processus de sauvegarde');
     }
 
     /**
@@ -413,27 +438,27 @@ class Form
      * @param bool|true $populate
      * @return $this
      */
-    public function valid(array $values, $populate = true)
-    {
-        foreach($this->getElements() as $index => &$element) {
-            if(!array_key_exists($index, $values)) {
-                if(is_a($element, 'FrenchFrogs\Form\Element\Boolean')){
-                    $values[$index] = 0;
-                } else {
-                    $values[$index] = '';
-                }
-            }
-
-            $element->valid($values[$index]);
-
-            if (!$element->isValid()) {
-                $this->getValidator()->addError($index, $element->getErrorAsString());
-            }
-
-        }
-
-        return $this;
-    }
+//    public function valid(array $values, $populate = true)
+//    {
+//        foreach($this->getElements() as $index => &$element) {
+//            if(!array_key_exists($index, $values)) {
+//                if(is_a($element, 'FrenchFrogs\Form\Element\Boolean')){
+//                    $values[$index] = 0;
+//                } else {
+//                    $values[$index] = '';
+//                }
+//            }
+//
+//            $element->valid($values[$index]);
+//
+//            if (!$element->isValid()) {
+//                $this->getValidator()->addError($index, $element->getErrorAsString());
+//            }
+//
+//        }
+//
+//        return $this;
+//    }
 
 
     /**
@@ -442,12 +467,12 @@ class Form
      *
      * @return string
      */
-    public function getErrorAsString()
-    {
-        $errors  = [];
-        foreach($this->getValidator()->getErrors() as $index => $message){
-            $errors[] = sprintf('%s:%s %s', $index, PHP_EOL, $message);
-        }
-        return implode(PHP_EOL, $errors);
-    }
+//    public function getErrorAsString()
+//    {
+//        $errors  = [];
+//        foreach($this->getValidator()->getErrors() as $index => $message){
+//            $errors[] = sprintf('%s:%s %s', $index, PHP_EOL, $message);
+//        }
+//        return implode(PHP_EOL, $errors);
+//    }
 }

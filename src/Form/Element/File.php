@@ -28,7 +28,7 @@ class File extends Text
         try {
             $render = $this->getRenderer()->render('file', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

@@ -86,7 +86,7 @@ class DateRange extends Date
         try {
             $render = $this->getRenderer()->render('date_range', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

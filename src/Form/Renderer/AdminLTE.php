@@ -59,11 +59,11 @@ class AdminLTE extends Inline
         $class =  Style::FORM_GROUP_CLASS;
 
         /// ERROR
-        if($hasError = !$element->getValidator()->isValid()){
+        if($hasError = $element->fails()){
             $element->addClass('form-error');
             if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
             $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
+            foreach($element->errors() as $error){
                 $message .= $error . ' ';
             }
             $element->addAttribute('data-original-title',$message);
@@ -120,12 +120,12 @@ class AdminLTE extends Inline
         $class =  Style::FORM_GROUP_CLASS . ' row';
 
         // ERROR
-        if($hasError = !$element->getValidator()->isValid()){
+        if($hasError = $element->fails()){
 
             $element->addClass('form-error');
             if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
             $message = '';
-            foreach($element->getValidator()->getErrors() as $error){
+            foreach($element->errors() as $error){
                 $message .= $error . ' ';
             }
             $element->addAttribute('data-original-title',$message);

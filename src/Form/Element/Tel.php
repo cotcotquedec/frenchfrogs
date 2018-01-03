@@ -31,7 +31,7 @@ class Tel extends Text
         try {
             $render = $this->getRenderer()->render('tel', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

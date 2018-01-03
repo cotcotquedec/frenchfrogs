@@ -119,7 +119,7 @@ class SelectRemote extends Text
 
             $render = $this->getRenderer()->render('select2', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

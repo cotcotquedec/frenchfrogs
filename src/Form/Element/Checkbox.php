@@ -62,7 +62,7 @@ class Checkbox extends Element
         try {
             $render = $this->getRenderer()->render('checkbox', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

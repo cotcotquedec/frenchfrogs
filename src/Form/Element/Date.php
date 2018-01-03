@@ -169,7 +169,7 @@ class Date extends Text
         try {
             $render = $this->getRenderer()->render('date', $this);
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

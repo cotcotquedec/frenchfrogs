@@ -14,7 +14,7 @@ class Separator extends Element
         try {
             $render = $this->getRenderer()->render('separator', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

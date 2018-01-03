@@ -48,7 +48,7 @@ class Text extends Element
         try {
             $render = $this->getRenderer()->render('text', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

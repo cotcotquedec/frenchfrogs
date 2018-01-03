@@ -95,7 +95,7 @@ class Boolean extends Element
         try {
             $render = $this->getRenderer()->render('boolean', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

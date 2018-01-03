@@ -13,7 +13,7 @@ class Link extends Label
         try {
             $render = $this->getRenderer()->render('link', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

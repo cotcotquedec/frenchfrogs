@@ -37,7 +37,7 @@ class Image extends Label
         try {
             $render = $this->getRenderer()->render('image', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

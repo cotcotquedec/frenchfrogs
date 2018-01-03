@@ -8,7 +8,6 @@ abstract class Element
 {
     use \FrenchFrogs\Html\Html;
     use Core\Renderer;
-    use Core\Validator;
     use Core\Filterer;
 
     /**
@@ -400,107 +399,6 @@ abstract class Element
         }
     }
 
-    /**
-     * getter for form validator
-     *
-     * @return \FrenchFrogs\Validator\Validator|null
-     */
-    public function getValidator()
-    {
-        if(!$this->hasValidator() && $this->hasForm()) {
-            $this->setValidator(clone $this->getForm()->getValidator());
-            $this->getValidator()->clearErrors()->clearMessages()->clearRules();
-        }
-        return $this->validator;
-    }
-
-    /**
-     * **************
-     *
-     * VALIDATOR
-     *
-     * **************
-     */
-
-
-    /**
-     * Ajoute un validator
-     *
-     * @param $rule
-     * @param null $method
-     * @param array $params
-     * @param null $message
-     * @return $this
-     */
-    public function addRule($rule, $method = null, $params = [], $message = null)
-    {
-
-        // construction des paramètres
-        array_unshift($params, $rule, $method);
-
-        call_user_func_array([$this->getValidator(), 'addRule'], $params);
-
-        if (!is_null($message)) {
-            if(is_array($message)){
-                foreach($message as $rule => $message){
-                    $this->getValidator()->addMessage($rule, $message);
-                }
-            }else{
-                $this->getValidator()->addMessage($rule, $message);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Renvoie true si lee va
-     *
-     * @param $rule
-     * @return bool
-     */
-    public function hasRule($rule)
-    {
-        return $this->getValidator()->hasRule($rule);
-    }
-
-
-    /**
-     * Suppression d'un regle
-     *
-     * @param $rule
-     * @return $this
-     */
-    public function removeRule($rule)
-    {
-        $this->getValidator()->removeRule($rule);
-
-        return $this;
-    }
-
-
-    /**
-     * Validation de la valeur courant de l'element
-     *
-     * @param mixed $value
-     * @return $this
-     * @throws \Exception
-     */
-    public function valid($value = null)
-    {
-        // si la valeur n'ets pas null, on la set
-        if (!is_null($value)) {
-            $value = (is_string($value)) ? trim($value) : $value;
-            if ($this->hasFilterer()) {
-                $value = $this->getFilterer()->filter($value);
-            }
-            $this->setValue($value);
-        }
-
-        $this->getValidator()->valid($this->getValue());
-
-        return $this;
-    }
 
     /**
      * ******************
@@ -617,5 +515,44 @@ abstract class Element
     public function isDiscreet()
     {
         return $this->is_discreet;
+    }
+
+
+    /**
+     * @param $rules
+     * @param $messages
+     */
+    public function validator($rules)
+    {
+        $this->getForm()->getValidator()->setRulesForIndex($this->getName(), $rules);
+
+        return $this;
+    }
+
+    /**
+     * @param $rule
+     */
+    public function hasRule($rule)
+    {
+        $rules = $this->getForm()->getValidator()->hasRule($this->getName(), $rule);
+    }
+
+
+    /**
+     *
+     * @return mixed
+     */
+    public function fails()
+    {
+        return !empty($this->getForm()->getValidator()->errors($this->getName()));
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function errors()
+    {
+        return $this->getForm()->getValidator()->errors($this->getName());
     }
 }

@@ -30,7 +30,7 @@ class Password extends Text
         try {
             $render = $this->getRenderer()->render('password', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

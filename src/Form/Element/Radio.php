@@ -61,7 +61,7 @@ class Radio extends Element
         try {
             $render = $this->getRenderer()->render('radio', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

@@ -28,7 +28,7 @@ class Hidden extends Text
         try {
             $render = $this->getRenderer()->render('hidden', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

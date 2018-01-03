@@ -76,7 +76,7 @@ class DataList extends Element
         try {
             $render = $this->getRenderer()->render('datalist', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

@@ -1,14 +1,14 @@
 <?php namespace FrenchFrogs\App\Providers;
 
 use FrenchFrogs;
-use Spatie\BinaryUuid\MySqlGrammar;
+use FrenchFrogs\Laravel\Database\Schema\MySqlGrammar;
+use Illuminate\Database\Query\Grammars\MySqlGrammar as IlluminateMySqlGrammar;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\ServiceProvider;
 use Response;
 
 class FrenchFrogsServiceProvider extends ServiceProvider
 {
-
 
     /**
      * Boot principale du service
@@ -37,21 +37,16 @@ class FrenchFrogsServiceProvider extends ServiceProvider
         $queryGrammar = $connection->getQueryGrammar();
         $queryGrammarClass = get_class($queryGrammar);
 
+
         // Si pas mysql on pousse une erreur
         if (! in_array($queryGrammarClass, [
             IlluminateMySqlGrammar::class,
         ])) {
-            throw new Exception("There current grammar `$queryGrammarClass` doesn't support binary uuids. Only  MySql and SQLite connections are supported.");
+            throw new \Exception("There current grammar `$queryGrammarClass` doesn't support binary uuids. Only  MySql and SQLite connections are supported.");
         }
 
         // Upgrade
-        $connection->setSchemaGrammar(new \Spatie\BinaryUuid\MySqlGrammar());
-
-        // COnfiguration des uuid
-        $factory = new UuidFactory();
-        $codec = new OrderedTimeCodec($factory->getUuidBuilder());
-        $factory->setCodec($codec);
-        Uuid::setFactory($factory);
+        $connection->setSchemaGrammar(new MySqlGrammar());
     }
 
     /**

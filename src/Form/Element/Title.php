@@ -29,7 +29,7 @@ class Title extends Element
         try {
             $render = $this->getRenderer()->render('title', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;

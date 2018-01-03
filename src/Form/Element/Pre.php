@@ -14,7 +14,7 @@ class Pre extends Label
         try {
             $render = $this->getRenderer()->render('pre', $this);
         } catch(\Exception $e){
-            dd($e->getMessage());
+            debugbar()->addThrowable($e);
         }
 
         return $render;
