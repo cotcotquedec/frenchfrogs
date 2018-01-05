@@ -18,8 +18,63 @@ class FrenchFrogsServiceProvider extends ServiceProvider
     {
         $this->bootDb();
         $this->bootModal();
+        $this->bootConfig();
         $this->extendQuerybuilder();
         $this->extendUrlGenerator();
+    }
+
+
+    /**
+     *
+     * Chargement de la configuration de frenchefrogs
+     *
+     */
+    public function bootConfig()
+    {
+
+        // Gestion de la configuration
+        $config = config_path('frenchfrogs.php');
+        if (file_exists($config)) {
+            $config = include_once $config;
+
+            // on charge le namespace
+            $config = $config['namespaces'][$config['default']];
+            config()->set('frenchfrogs', $config);
+        }
+
+        app()->singleton('frenchfrogs', function () {
+
+            return new class()
+            {
+                /**
+                 * @param $index
+                 * @param null $default
+                 * @return \Illuminate\Config\Repository|mixed
+                 */
+                function get($index, $default = null)
+                {
+                    return config('frenchfrogs.' . $index, $default);
+                }
+
+                /**
+                 * @param $index
+                 * @param null $default
+                 * @param array $params
+                 * @return object
+                 * @throws \Throwable
+                 */
+                function build($index, $default = null, $params = [])
+                {
+                    // Recuperationd e la class
+                    $class = $this->get($index, $default);
+
+                    // Si on ne trouve pas la class, on envoie une exeception
+                    throw_unless(class_exists($class), new \Exception('Class doesn\'t exist for the index : ' . $class));
+
+                    return (new \ReflectionClass($class))->newInstanceArgs($params);
+                }
+            };
+        });
     }
 
 
@@ -99,51 +154,6 @@ class FrenchFrogsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
-        // Gestion de la configuration
-        $config = config_path('frenchfrogs.php');
-        if (file_exists($config)) {
-            $config = include_once $config;
-
-            // on charge le namespace
-            $config = $config['namespaces'][$config['default']];
-            config()->set('frenchfrogs', $config);
-        }
-
-        app()->singleton('frenchfrogs', function () {
-
-            return new class()
-            {
-                /**
-                 * @param $index
-                 * @param null $default
-                 * @return \Illuminate\Config\Repository|mixed
-                 */
-                function get($index, $default = null)
-                {
-                    return config('frenchfrogs.' . $index, $default);
-                }
-
-                /**
-                 * @param $index
-                 * @param null $default
-                 * @param array $params
-                 * @return object
-                 * @throws \Throwable
-                 */
-                function build($index, $default = null, $params = [])
-                {
-                    // Recuperationd e la class
-                    $class = $this->get($index, $default);
-
-                    // Si on ne trouve pas la class, on envoie une exeception
-                    throw_unless(class_exists($class), new \Exception('Class doesn\'t exist for the index : ' . $class));
-
-
-                    return (new \ReflectionClass($class))->newInstanceArgs($params);
-                }
-            };
-        });
     }
 
 
