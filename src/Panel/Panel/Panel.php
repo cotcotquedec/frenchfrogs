@@ -294,6 +294,19 @@ class Panel
         return $e;
     }
 
+    /**
+     * @param string $href
+     * @param array $attr
+     * @return Action\Button
+     */
+    public function addButtonCreate($href = '#', $attr = [])
+    {
+        $e = $this->addButton(ff('button.create.name'), ff('button.create.label'), $href, $attr);
+        $e->setOptionAsPrimary();
+        $e->icon(ff()->get('button.create.icon'), false);
+        return $e;
+    }
+
 
     /**
      * Render polliwog

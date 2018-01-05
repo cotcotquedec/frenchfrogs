@@ -93,7 +93,7 @@ trait Remote
      *
      * @return $this
      */
-    public function enableRemote($method = null)
+    public function enableRemote($method = 'get')
     {
         $this->is_remote = true;
         $this->disableCallback();// disable callback, we cannot have both

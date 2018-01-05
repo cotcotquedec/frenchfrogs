@@ -388,7 +388,7 @@ trait Columns
      * @param array $attr
      * @return \FrenchFrogs\Table\Column\Button
      */
-    public function addButtonRemote($name, $label = '%s', $link = '#', $binds = [], $method = 'post' )
+    public function addButtonRemote($name, $label = '%s', $link = '#', $binds = [], $method = 'get' )
     {
         return $this->addButton($name, $label, $link, $binds)->enableRemote($method);
     }
@@ -417,13 +417,13 @@ trait Columns
      * @param array $attr
      * @return \FrenchFrogs\Table\Column\Button
      */
-    public function addButtonEdit($link = '#', $binds = [], $is_remote = true, $method = 'get')
+    public function addButtonEdit($link = '#', $binds = [], $is_remote = true)
     {
         $c = new Column\Button(ff()->get('button.edit.name'), ff()->get('button.edit.label'), $link, $binds);
         $c->setOptionAsPrimary();
         $c->icon(ff()->get('button.edit.icon'));
         if ($is_remote) {
-            $c->enableRemote($method);
+            $c->enableRemote();
         }
 
         $this->addColumn($c);
@@ -438,13 +438,13 @@ trait Columns
      * @param array $attr
      * @return \FrenchFrogs\Table\Column\Button
      */
-    public function addButtonDelete($link = '#', $binds = [], $is_remote = true, $method = 'delete')
+    public function addButtonDelete($link = '#', $binds = [], $is_remote = true)
     {
         $c = new Column\Button(ff()->get('button.delete.name'), ff()->get('button.delete.label'), $link, $binds);
         $c->setOptionAsDanger();
         $c->icon(ff()->get('button.delete.icon'));
         if ($is_remote) {
-            $c->enableRemote($method);
+            $c->enableRemote();
         }
         $this->addColumn($c);
         return $c;
