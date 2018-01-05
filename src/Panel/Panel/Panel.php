@@ -53,10 +53,8 @@ class Panel
 
     public function __construct()
     {
-        $renderer = configurator()->get('panel.renderer.class');
+        $renderer = ff()->get('panel.renderer');
         $this->setRenderer(new $renderer);
-
-
         $this->setContextAsDefault();
     }
 

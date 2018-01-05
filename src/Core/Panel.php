@@ -36,7 +36,7 @@ trait Panel
     {
 
         /** @var $panel \FrenchFrogs\Panel\Panel\Panel */
-        $panel = configurator()->get('panel.class');
+        $panel = ff()->get('panel.class');
         $panel = new $panel;
         $panel->setTitle(strval($title));
 

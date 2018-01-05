@@ -160,7 +160,7 @@ class Javascript extends Container
      */
     public function warning($body = '', $title = '')
     {
-        $body = empty($body) ?  configurator()->get('toastr.warning.default') : $body;
+        $body = empty($body) ?  ff()->get('toastr.warning') : $body;
         $this->append( sprintf('toastr.warning("%s", "%s");', $body, $title));
         return $this;
     }
@@ -174,7 +174,7 @@ class Javascript extends Container
      */
     public function success($body = '', $title = '')
     {
-        $body = empty($body) ?  configurator()->get('toastr.success.default') : $body;
+        $body = empty($body) ?  ff()->get('toastr.success') : $body;
         $this->append( sprintf('toastr.success("%s", "%s");', $body, $title));
         return $this;
     }
@@ -189,7 +189,7 @@ class Javascript extends Container
      */
     public function error($body = '', $title = '')
     {
-        $body = empty($body) ?  configurator()->get('toastr.error.default') : $body;
+        $body = empty($body) ?  ff()->get('toastr.error') : $body;
         $this->append(sprintf('toastr.error("%s", "%s");', addslashes($body), $title));
         return $this;
     }

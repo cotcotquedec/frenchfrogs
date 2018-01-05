@@ -241,7 +241,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
 
 
         if ($this->getKeyType() == static::BINARY16_UUID) {
-            if ($method == 'find') {
+            if (preg_match('#^find(Or(Fail|New))?$#',$method)) {
                 $parameters[0] = $this->castAsBinaryBytes($parameters[0]);
             }
         }

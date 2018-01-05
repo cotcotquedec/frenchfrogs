@@ -193,12 +193,12 @@ class Modal
      */
     public function __construct($title = null, $body = null, $actions = null)
     {
-        (configurator()->get('modal.backdrop')) ? $this->enableBackdrop()   : $this->disableBackdrop();
-        (configurator()->get('modal.backdrop')) ? $this->enableEscToClose() : $this->disableEscToClose();
-        $this->setCloseButtonLabel(configurator()->get('modal.closeButtonLabel', $this->closeButtonLabel));
+        (ff()->get('modal.backdrop')) ? $this->enableBackdrop()   : $this->disableBackdrop();
+        (ff()->get('modal.backdrop')) ? $this->enableEscToClose() : $this->disableEscToClose();
+        $this->setCloseButtonLabel(ff()->get('modal.closeButtonLabel', $this->closeButtonLabel));
 
-        (configurator()->get('modal.is_remote')) ? $this->enableRemote()    : $this->disableRemote();
-        $this->setRemoteId(configurator()->get('modal.remote.id', $this->remoteId));
+        (ff()->get('modal.is_remote')) ? $this->enableRemote()    : $this->disableRemote();
+        $this->setRemoteId(ff()->get('modal.remoteId', $this->remoteId));
 
         if (!is_null($title)) {
             $this->setTitle($title);
@@ -214,7 +214,7 @@ class Modal
         }
 
         // Renderer
-        $renderer = configurator()->get('modal.renderer.class');
+        $renderer = ff()->get('modal.renderer');
         $this->setRenderer(new $renderer);
     }
 

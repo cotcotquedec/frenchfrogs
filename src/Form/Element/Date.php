@@ -58,10 +58,10 @@ class Date extends Text
         $this->setName($name);
         $this->setLabel($label);
 
-        $this->addAttribute('data-date-format', configurator()->get('form.element.date.formatjs'));
+        $this->addAttribute('data-date-format', ff()->get('form.element.date.formatjs'));
 
-        $this->setFormatDisplay(is_null($formatDisplay) ? configurator()->get('form.element.date.formatDisplay') : $formatDisplay);
-        $this->setFormatStore(is_null($formatStore) ? configurator()->get('form.element.date.formatStore') : $formatStore);
+        $this->setFormatDisplay(is_null($formatDisplay) ? ff()->get('form.element.date.formatDisplay') : $formatDisplay);
+        $this->setFormatStore(is_null($formatStore) ? ff()->get('form.element.date.formatStore') : $formatStore);
 
         $this->addFilter('dateFormat', 'dateFormat', $this->getFormatDisplay());
     }

@@ -783,7 +783,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         return html('div', [
             'name' => $element->getName(),
             'class' => 'input-group date-picker daterange input-daterange text-center',
-            'data-date-format' => configurator()->get('form.element.date.formatjs')
+            'data-date-format' => ff()->get('form.element.date.formatjs')
         ], $html);
     }
 

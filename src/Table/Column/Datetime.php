@@ -16,7 +16,7 @@ class Datetime extends Text
         $this->center();
 
         if (is_null($format)) {
-            $format = configurator()->get('table.column.datetime.format');
+            $format = ff()->get('datetime');
         }
 
         $this->addFilter('dateFormat', 'dateFormat', $format);

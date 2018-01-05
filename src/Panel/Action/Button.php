@@ -17,7 +17,7 @@ class Button extends Action
      */
     public function __construct($name, $label = '', $attr = [] )
     {
-        $this->setRemoteId(configurator()->get('modal.remote.id', $this->remoteId));
+        $this->setRemoteId(ff()->get('modal.remoteId', $this->remoteId));
         $this->setAttributes($attr);
         $this->setName($name);
         $this->setLabel($label);

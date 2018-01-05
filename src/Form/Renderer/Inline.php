@@ -742,7 +742,7 @@ class Inline extends Renderer\Renderer {
         $html .= html('input', ['type' => 'text', 'class' => Style::FORM_ELEMENT_CONTROL, 'name' => $element->getTo()]);
         $html = html('div', [
             'class' => 'input-group input-large date-picker daterange input-daterange',
-            'data-date-format' =>  configurator()->get('form.element.date.formatjs')
+            'data-date-format' =>  ff()->get('form.element.date.formatjs')
         ], $html);
 
         // DESCRIPTION

@@ -153,23 +153,22 @@ class Form
         /*
         * Configure polliwog
         */
-        $c = configurator();
-        $class = $c->get('form.renderer.class');
+        $c = ff();
+        $class = $c->get('form.renderer');
         $this->setRenderer(new $class);
 
-        $this->has_csrfToken = $c->get('form.default.has_csrfToken', true);
-
+        $this->has_csrfToken = $c->get('form.csrf', true);
 
         //default configuration
         $this->addAttribute('id', 'form-' . rand());
 
         // if method "init" exist, we call it.
         if (method_exists($this, 'init')) {
-            $this->setMethod($c->get('form.default.method', 'POST'));
+            $this->setMethod($c->get('form.method', 'POST'));
             call_user_func_array([$this, 'init'], func_get_args());
         } else {
             $this->setUrl($url);
-            $this->setMethod(is_null($method) ? $c->get('form.default.method', 'POST') : $method);
+            $this->setMethod(is_null($method) ? $c->get('form.method', 'POST') : $method);
         }
 
         // default url
@@ -245,8 +244,8 @@ class Form
                 // cas des element
             } else {
                 $namespace = __NAMESPACE__;
-                if(!empty(configurator()->get('form.namespace'))){
-                    $namespace = configurator()->get('form.namespace');
+                if(!empty(ff()->get('form.namespace'))){
+                    $namespace = ff()->get('form.namespace');
                 }
                 $class = new \ReflectionClass($namespace . '\Element\\' . $match['type']);
                 $e = $class->newInstanceArgs($arguments);
@@ -304,8 +303,14 @@ class Form
      * @param array $values
      * @return $this
      */
-    public function populate(array $values, $alias = false)
+    public function populate($values, $alias = false)
     {
+
+        if (is_object($values) && method_exists($values, 'toArray')) {
+            $values = $values->toArray();
+        }
+
+
         foreach($this->getElements() as $e) {
             /** @var $e \FrenchFrogs\Form\Element\Element */
             $name = $alias && $e->hasAlias() ? $e->getAlias() : $e->getName();

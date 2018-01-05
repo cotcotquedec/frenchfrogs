@@ -419,9 +419,9 @@ trait Columns
      */
     public function addButtonEdit($link = '#', $binds = [], $is_remote = true, $method = 'get')
     {
-        $c = new Column\Button(configurator()->get('button.edit.name'), configurator()->get('button.edit.label'), $link, $binds);
+        $c = new Column\Button(ff()->get('button.edit.name'), ff()->get('button.edit.label'), $link, $binds);
         $c->setOptionAsPrimary();
-        $c->icon(configurator()->get('button.edit.icon'));
+        $c->icon(ff()->get('button.edit.icon'));
         if ($is_remote) {
             $c->enableRemote($method);
         }
@@ -440,9 +440,9 @@ trait Columns
      */
     public function addButtonDelete($link = '#', $binds = [], $is_remote = true, $method = 'delete')
     {
-        $c = new Column\Button(configurator()->get('button.delete.name'), configurator()->get('button.delete.label'), $link, $binds);
+        $c = new Column\Button(ff()->get('button.delete.name'), ff()->get('button.delete.label'), $link, $binds);
         $c->setOptionAsDanger();
-        $c->icon(configurator()->get('button.delete.icon'));
+        $c->icon(ff()->get('button.delete.icon'));
         if ($is_remote) {
             $c->enableRemote($method);
         }

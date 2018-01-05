@@ -39,7 +39,7 @@ class FrenchFrogsServiceProvider extends ServiceProvider
 
 
         // Si pas mysql on pousse une erreur
-        if (! in_array($queryGrammarClass, [
+        if (!in_array($queryGrammarClass, [
             IlluminateMySqlGrammar::class,
         ])) {
             throw new \Exception("There current grammar `$queryGrammarClass` doesn't support binary uuids. Only  MySql and SQLite connections are supported.");
@@ -99,10 +99,53 @@ class FrenchFrogsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        foreach ((array)config('frenchfrogs') as $namespace => $config) {
-            configurator($namespace)->merge($config);
+
+        // Gestion de la configuration
+        $config = config_path('frenchfrogs.php');
+        if (file_exists($config)) {
+            $config = include_once $config;
+
+            // on charge le namespace
+            $config = $config['namespaces'][$config['default']];
+            config()->set('frenchfrogs', $config);
         }
+
+        app()->singleton('frenchfrogs', function () {
+
+            return new class()
+            {
+                /**
+                 * @param $index
+                 * @param null $default
+                 * @return \Illuminate\Config\Repository|mixed
+                 */
+                function get($index, $default = null)
+                {
+                    return config('frenchfrogs.' . $index, $default);
+                }
+
+                /**
+                 * @param $index
+                 * @param null $default
+                 * @param array $params
+                 * @return object
+                 * @throws \Throwable
+                 */
+                function build($index, $default = null, $params = [])
+                {
+                    // Recuperationd e la class
+                    $class = $this->get($index, $default);
+
+                    // Si on ne trouve pas la class, on envoie une exeception
+                    throw_unless(class_exists($class), new \Exception('Class doesn\'t exist for the index : ' . $class));
+
+
+                    return (new \ReflectionClass($class))->newInstanceArgs($params);
+                }
+            };
+        });
     }
+
 
     /**
      * Modal Manager
@@ -116,7 +159,7 @@ class FrenchFrogsServiceProvider extends ServiceProvider
             if ($title instanceof FrenchFrogs\Modal\Modal\Modal) {
                 $modal = $title->enableRemote();
             } elseif ($title instanceof FrenchFrogs\Form\Form\Form) {
-                $renderer = configurator()->get('form.renderer.modal.class');
+                $renderer = ff()->get('form.renderer_modal');
                 $modal = $title->setRenderer(new $renderer());
             } else {
                 $modal = \modal($title, $body, $actions)->enableRemote();

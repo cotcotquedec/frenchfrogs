@@ -418,7 +418,7 @@ abstract class Element
     public function addFilter($filter, $method = null, ...$params)
     {
         if (!$this->hasFilterer()) {
-            $this->setFilterer(configurator()->build('form.filterer.class'));
+            $this->setFilterer(ff()->build('form.filterer'));
         }
 
         call_user_func_array([$this->getFilterer(), 'addFilter'], func_get_args());
@@ -434,7 +434,7 @@ abstract class Element
     public function setFilters($filters)
     {
         if (!$this->hasFilterer()) {
-            $this->setFilterer(configurator()->build('form.filterer.class'));
+            $this->setFilterer(ff()->build('form.filterer'));
         }
 
         $this->getFilterer()->setFilters($filters);

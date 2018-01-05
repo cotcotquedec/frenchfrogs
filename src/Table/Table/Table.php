@@ -105,12 +105,12 @@ class Table
          * Default configuration
          */
         if (!$this->hasRenderer()) {
-            $class = configurator()->get('table.renderer.class');
+            $class = ff()->get('table.renderer');
             $this->setRenderer(new $class);
         }
 
         if (!$this->hasFilterer()) {
-            $class = configurator()->get('table.filterer.class');
+            $class = ff()->get('table.filterer');
             $this->setFilterer(new $class);
         }
 

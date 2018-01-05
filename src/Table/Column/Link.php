@@ -136,7 +136,7 @@ class Link extends Text
      */
     public function __construct($name, $label = '%s', $link = '#', $binds = [], $attr = [] )
     {
-        $this->setRemoteId(configurator()->get('modal.remote.id', $this->remoteId));
+        $this->setRemoteId(ff()->get('modal.remoteId', $this->remoteId));
 
         $this->setAttributes($attr);
         $this->setName($name);

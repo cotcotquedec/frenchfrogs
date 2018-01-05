@@ -152,9 +152,15 @@ function human_size($size, $round = 1)
  * @param null $namespace
  * @return \FrenchFrogs\Core\Configurator
  */
-function configurator($namespace = null)
+function ff($index = null, $default = null)
 {
-    return Configurator::getInstance($namespace);
+    $app = app('frenchfrogs');
+
+    if (!empty($index)) {
+        return $app->get($index, $default);
+    }
+
+    return $app;
 }
 
 
@@ -167,7 +173,7 @@ function configurator($namespace = null)
 function panel(...$args)
 {
     // retrieve the good class
-    $class = configurator()->get('panel.class', FrenchFrogs\Panel\Panel\Panel::class);
+    $class = ff()->get('panel.class', FrenchFrogs\Panel\Panel\Panel::class);
 
     // build the instance
     $reflection = new ReflectionClass($class);
@@ -183,7 +189,7 @@ function panel(...$args)
 function table(...$args)
 {
     // retrieve the good class
-    $class = configurator()->get('table.class', FrenchFrogs\Table\Table\Table::class);
+    $class = ff()->get('table.class', FrenchFrogs\Table\Table\Table::class);
 
     // build the instance
     $reflection = new ReflectionClass($class);
@@ -199,7 +205,7 @@ function table(...$args)
 function form(...$args)
 {
     // retrieve the good class
-    $class = configurator()->get('form.class', FrenchFrogs\Form\Form\Form::class);
+    $class = ff()->get('form.class', FrenchFrogs\Form\Form\Form::class);
 
     // build the instance
     $reflection = new ReflectionClass($class);
@@ -215,7 +221,7 @@ function form(...$args)
 function modal(...$args)
 {
     // retrieve the good class
-    $class = configurator()->get('modal.class', FrenchFrogs\Modal\Modal\Modal::class);
+    $class = ff()->get('modal.class', FrenchFrogs\Modal\Modal\Modal::class);
 
     // build the instance
     $reflection = new ReflectionClass($class);
@@ -296,22 +302,6 @@ function action_url($controller, $action = 'getIndex', $params = [], $query = []
     return URL::action($controller . '@' . $action, $params, false) . (empty($query) ? '' : ('?' . http_build_query($query)));
 }
 
-
-/**
- * Return ruler polliwog
- *
- * @return \FrenchFrogs\App\Models\Acl
- */
-function ruler($namespace = null)
-{
-    if (is_null($namespace)) {
-        $namespace = \auth()->user()->interface_sid;
-    }
-
-    // retrieve the good class
-    return configurator($namespace)->build('ruler.class', FrenchFrogs\App\Models\Acl::class);
-}
-
 /**
  *
  *
@@ -379,59 +369,6 @@ function uuid($uuid = null)
 
     return $uuid;
 }
-
-
-/**
- * Filter value
- *
- * @param $value
- * @param $filters
- */
-function f($value, $filters)
-{
-    $filter = new \FrenchFrogs\Filterer\Filterer();
-    $filter->setFilters($filters);
-    return $filter->filter($value);
-}
-
-/**
- * Validate value
- *
- * @param $value
- * @param $validators
- * @return bool
- */
-function v($value, $validators)
-{
-    $validator = Validator::make(['v' => $value], ['v' => $validators]);
-    return !$validator->fails();
-}
-
-/**
- * Return the filtered value if correct, else return null
- *
- * @param $value
- * @param null $filters
- * @param null $validators
- * @return mixed|null
- */
-function fv($value, $filters = null, $validators = null)
-{
-
-    if (!is_null($filters)) {
-        $value = f($value, $filters);
-    }
-
-    if (!is_null($validators)) {
-
-        if (!v($value, $validators)) {
-            $value = null;
-        }
-    }
-
-    return $value;
-}
-
 
 /**
  * Return true is application is in debug mode
@@ -635,27 +572,6 @@ if (!function_exists('extract_meta_url')) {
 }
 
 /**
- * Throw new Exception
- *
- * @param $message
- * @param bool $quiet
- * @throws \Exception
- */
-if (!function_exists('exc')) {
-    function exc($message, $quiet = false)
-    {
-
-        $e = new \Exception($message);
-        le($e->getMessage());
-        ld($e->getTraceAsString());
-
-        if (!$quiet) {
-            throw $e;
-        }
-    }
-}
-
-/**
  * Return Reference for the collection
  *
  * @param string $collection
@@ -674,36 +590,6 @@ function ref($collection, $force_refresh = false)
     }
 
     return $reference;
-}
-
-
-/**
- *
- *
- * @param $index
- * @param null $container
- * @param null $lang
- * @return string
- */
-function c($index, $lang = null, $bind = [])
-{
-
-    // definition de la langue
-    $lang = is_null($lang) ? Ref::LANG_FR : $lang;
-
-    // construction du contenu
-    if (\Session::get('ff-edit')) {
-
-        // charge tout les contenu 1 par 1
-        $content = \FrenchFrogs\App\Models\Db\Content::where('content_index', $index)->where('lang_sid', $lang)->orderBy('created_at', 'desc')->first();
-
-        // cas de l'edition
-        $content = html('ffedit', ['class' => 'ff-edit', 'data-target' => '#modal-remote', 'data-url' => route('content-edit', [$index]), 'data-edit-id' => $index], $content->content);
-    } else {
-        $content = trans($lang . '.' . $index, $bind);
-    }
-
-    return $content;
 }
 
 /**

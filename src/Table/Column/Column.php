@@ -135,7 +135,7 @@ abstract class Column
     public function addFilter($index, $method = null, ...$params)
     {
         if (!$this->hasFilterer()) {
-            $this->setFilterer(configurator()->build('table.filterer.class'));
+            $this->setFilterer(ff()->build('table.filterer'));
         }
 
         array_unshift($params, $index, $method);

@@ -691,7 +691,7 @@ class Maker
     {
         // CONFIGURATION
         if (!$this->hasRenderer()) {
-//            $class = configurator()->get('maker.renderer.class');
+//            $class = ff()->get('maker.renderer.class');
             $this->setRenderer(new Php());
         }
     }
