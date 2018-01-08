@@ -33,19 +33,30 @@ class FrenchFrogsServiceProvider extends ServiceProvider
     {
 
         // Gestion de la configuration
-        $config = config_path('frenchfrogs.php');
-        if (file_exists($config)) {
-            $config = include_once $config;
+//        $config = config_path('frenchfrogs.php');
+//        if (file_exists($config)) {
+//            $config = include_once $config;
+//
+//            // on charge le namespace
+//            $config = $config['namespaces'][$config['default']];
+//            config()->set('frenchfrogs', $config);
+//        }
 
-            // on charge le namespace
-            $config = $config['namespaces'][$config['default']];
-            config()->set('frenchfrogs', $config);
-        }
-
+        // Frenchfrogs
         app()->singleton('frenchfrogs', function () {
 
             return new class()
             {
+
+                protected $namespace;
+
+                public function __construct()
+                {
+                    $default = config('frenchfrogs.default');
+                    $this->namespace = 'frenchfrogs.namespaces.' . $default . '.';
+                }
+
+
                 /**
                  * @param $index
                  * @param null $default
@@ -53,7 +64,7 @@ class FrenchFrogsServiceProvider extends ServiceProvider
                  */
                 function get($index, $default = null)
                 {
-                    return config('frenchfrogs.' . $index, $default);
+                    return config($this->namespace . $index, $default);
                 }
 
                 /**
