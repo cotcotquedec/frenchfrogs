@@ -1,4 +1,4 @@
-<?php namespace FrenchFrogs\Core;
+<?php namespace FrenchFrogs\App\Http\Controllers;
 
 
 use Illuminate\Http\Request;

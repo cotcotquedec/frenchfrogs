@@ -21,20 +21,6 @@ trait Datatable
      */
     protected $is_remote;
 
-
-    /**
-     * Session token for remote
-     *
-     * @var
-     */
-    protected $token;
-
-
-    /**
-     * @var Nenuphar
-     */
-    protected $nenuphar;
-
     /**
      * Search function
      *
@@ -88,7 +74,7 @@ trait Datatable
      */
     public function addDatatableButtonExport($text = 'Export CSV')
     {
-        $this->addDatatableButtonLink($text, route('datatable-export', ['token' => $this->getNenuphar()->getToken()]));
+        $this->addDatatableButtonLink($text, route('datatable.xport', ['token' => $this->getNenuphar()->getToken()]));
         return $this;
     }
 
@@ -205,25 +191,6 @@ trait Datatable
         return $this;
     }
 
-
-    /**
-     * @return bool
-     */
-    static public function hasSingleToken()
-    {
-        return !empty(static::$singleToken);
-    }
-
-    /**
-     *
-     * @return mixed
-     */
-    static public function getSingleToken()
-    {
-        return static::$singleToken;
-    }
-
-
     /**
      * Set TRUE to $is_remote
      *
@@ -300,105 +267,6 @@ trait Datatable
         return isset($this->is_datatable);
     }
 
-    /**
-     * Getter for $token attribute
-     *
-     * @return mixed
-     */
-    public function getToken()
-    {
-     return $this->token;
-    }
-
-    /**
-     * Setter for $token attribute
-     *
-     * @param $token
-     * @return $this
-     */
-    public function setToken($token)
-    {
-        $this->token = strval($token);
-        return $this;
-    }
-
-
-    /**
-     * Return TRUE if the datatble have a token
-     *
-     * @return bool
-     */
-    public function hasToken()
-    {
-        return isset($this->token);
-    }
-
-    /**
-     * Generate a token and fill it
-     *
-     * @return $this
-     */
-    public function generateToken()
-    {
-        $this->token = 'table.' . md5(static::class . microtime());
-        return $this;
-    }
-
-
-    /**
-     * @param Nenuphar|string $nenuphar
-     * @param null $method
-     * @param array $params
-     * @param string $interpreter
-     * @return $this
-     */
-    public function setNenuphar($class, $method = null, $params = [], $interpreter = 'controller')
-    {
-
-        // Formatage des parmaetre en nenuphar
-        if ($class instanceof Nenuphar) {
-            $nenuphar = $class;
-        } else {
-            $nenuphar = new Nenuphar(...func_get_args());
-        }
-
-        $this->nenuphar = $nenuphar;
-        return $this;
-    }
-
-    /**
-     *
-     * @return Nenuphar
-     */
-    public function getNenuphar()
-    {
-        return $this->nenuphar;
-    }
-
-    /**
-     * Setter for $constructor attribute
-     *
-     * @deprecated
-     * @param $constructor
-     * @param null $method
-     * @param null $params
-     * @return $this
-     */
-    public function setConstructor($constructor, $method = null, $params = [])
-    {
-        $this->setNenuphar(new Nenuphar($constructor, $method, (array) $params, 'controller'));
-        return $this;
-    }
-
-    /**
-     * Save the Table configuration in Session
-     *
-     */
-    public function save()
-    {
-        $this->getNenuphar()->register();
-        return $this;
-    }
 
 
     /**
@@ -410,18 +278,10 @@ trait Datatable
     static public function load($token = null, $processQuery = false)
     {
         // Recuperation de la table
-        $nenuphar = Nenuphar::fromToken($token);
-
-        $table = $nenuphar->execute();
-        if (!($table instanceof static)) {
-            throw new \Exception('Le token "' . $token .'" ne renvoit pas un objet valide');
-        }
-
-        // attribution du token
-        $table->setNenuphar($nenuphar);
+        $table = static::loadFromToken($token);
 
         // Recuperation de sinformation de requete
-        $query = $nenuphar->getExtras();
+        $query = $table->getNenuphar()->getExtras();
 
         // process query
         if ($processQuery && !empty($query)) {

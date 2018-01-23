@@ -4,8 +4,14 @@
 trait Remote
 {
 
+    /**
+     * @var bool
+     */
     protected $is_remote = false;
 
+    /**
+     * @var bool
+     */
     protected $is_callback = false;
 
     /**

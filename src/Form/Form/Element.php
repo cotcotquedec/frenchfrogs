@@ -107,7 +107,6 @@ trait Element
     }
 
 
-
     /**
      * Set the action container
      *
@@ -130,7 +129,15 @@ trait Element
     public function addAction(\FrenchFrogs\Form\Element\Element $element)
     {
         $element->setForm($this);
-        $this->actions[$element->getName()] = $element;
+
+        $name = 'action__' . md5($element->getName());
+        $element->setName($name);
+
+        if (!$element->hasAttribute('id')) {
+            $element->addAttribute('id', $name);
+        }
+
+        $this->actions[$name] = $element;
         return $this;
     }
 
@@ -172,6 +179,17 @@ trait Element
     }
 
     /**
+     * Renvoie tru si l'action existe
+     *
+     * @param $name
+     * @return bool
+     */
+    public function hasAction($name)
+    {
+        return array_key_exists($name, $this->actions);
+    }
+
+    /**
      * Return the $name element from the actions container
      *
      * @param $name
@@ -197,8 +215,6 @@ trait Element
     {
         return $this->actions;
     }
-
-
 
 
     /**
@@ -275,7 +291,7 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Password
      */
-    public function addPassword($name, $label = '' )
+    public function addPassword($name, $label = '')
     {
         $e = new \FrenchFrogs\Form\Element\Password($name, $label);
         $this->addElement($e);
@@ -291,14 +307,13 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Textarea
      */
-    public function addTextarea($name, $label = '' )
+    public function addTextarea($name, $label = '')
     {
         $e = new \FrenchFrogs\Form\Element\Textarea($name, $label);
         $this->addElement($e);
 
         return $e;
     }
-
 
 
     /**
@@ -309,7 +324,7 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Textarea
      */
-    public function addMarkdown($name, $label = '' )
+    public function addMarkdown($name, $label = '')
     {
         $e = new \FrenchFrogs\Form\Element\Markdown($name, $label);
         $this->addElement($e);
@@ -324,12 +339,12 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Submit
      */
-    public function addSubmit($name, $attr = [])
+    public function addSubmit($name, $callable = null)
     {
-        $e = new \FrenchFrogs\Form\Element\Submit($name, $attr);
+        $e = new \FrenchFrogs\Form\Element\Submit($name);
         $e->setValue($name);
         $e->setOptionAsPrimary();
-        $this->addAction($e);
+        $this->addAction($e, $callable);
         return $e;
     }
 
@@ -342,7 +357,7 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Checkbox
      */
-    public function addCheckbox($name, $label = '', $multi  = [], $attr = [] )
+    public function addCheckbox($name, $label = '', $multi = [], $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Checkbox($name, $label, $multi, $attr);
         $this->addElement($e);
@@ -358,7 +373,7 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Boolean
      */
-    public function addBoolean($name, $label = '', $attr = [] )
+    public function addBoolean($name, $label = '', $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Boolean($name, $label, $attr);
         $this->addElement($e);
@@ -378,7 +393,7 @@ trait Element
     {
         $e = new \FrenchFrogs\Form\Element\Tel($name, $label);
         $this->addElement($e);
-        $e->addRule('laravel','laravel', ['regex:/^[+]{0,1}[0-9]{9,13}$/'],['regex' => 'Le champ doit être un numero valide . Il peut commencer par un + et ne doit contenir que des chiffres (Au moins 10)']);
+        $e->addRule('laravel', 'laravel', ['regex:/^[+]{0,1}[0-9]{9,13}$/'], ['regex' => 'Le champ doit être un numero valide . Il peut commencer par un + et ne doit contenir que des chiffres (Au moins 10)']);
 
         return $e;
     }
@@ -434,7 +449,6 @@ trait Element
     }
 
 
-
     /**
      * Add label element (read-only element)
      *
@@ -443,7 +457,7 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Label
      */
-    public function addLabel($name, $label = '', $attr = [] )
+    public function addLabel($name, $label = '', $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Label($name, $label, $attr);
         $this->addElement($e);
@@ -475,7 +489,7 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Label
      */
-    public function addPre($name, $label = '', $attr = [] )
+    public function addPre($name, $label = '', $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Pre($name, $label, $attr);
         $this->addElement($e);
@@ -490,7 +504,7 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Label
      */
-    public function addLink($name, $label = '', $attr = [] )
+    public function addLink($name, $label = '', $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Link($name, $label, $attr);
         $this->addElement($e);
@@ -505,7 +519,7 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Label
      */
-    public function addImage($name, $label = '', $width = null, $height = null )
+    public function addImage($name, $label = '', $width = null, $height = null)
     {
         $e = new \FrenchFrogs\Form\Element\Image($name, $label, $width, $height);
         $this->addElement($e);
@@ -520,7 +534,7 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Button
      */
-    public function addButton($name, $label, $attr = [] )
+    public function addButton($name, $label, $attr = [])
     {
         $e = new \FrenchFrogs\Form\Element\Button($name, $label, $attr);
         $this->addElement($e);
@@ -599,7 +613,7 @@ trait Element
      * @param array $attr
      * @return \FrenchFrogs\Form\Element\Radio
      */
-    public function addRadio($name, $label = '', $multi  = [] )
+    public function addRadio($name, $label = '', $multi = [])
     {
         $e = new \FrenchFrogs\Form\Element\Radio($name, $label, $multi);
         $this->addElement($e);

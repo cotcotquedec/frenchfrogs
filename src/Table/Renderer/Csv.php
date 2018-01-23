@@ -50,8 +50,8 @@ class Csv extends \FrenchFrogs\Renderer\Renderer
             }
             $csv->insertOne($line);
         }
-        $csv->output($table->getFilename());
-        exit;
+
+        return $csv->output($table->getFilename());
     }
 
 }

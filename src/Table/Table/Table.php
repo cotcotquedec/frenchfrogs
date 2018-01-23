@@ -26,7 +26,7 @@ class Table
     use Core\Panel;
     use Pagination;
     use Bootstrap;
-    use Datatable;
+    use Datatable, Core\Integration\Nenuphar;
     use Columns;
     use Export;
 
@@ -333,7 +333,7 @@ class Table
             $this->extractRows();
             $render = $this->getRenderer()->render('table', $this);
         } catch(\Exception $e){
-            \Debugbar::addThrowable($e);
+            debugbar()->addThrowable($e);
         }
 
         return $render;

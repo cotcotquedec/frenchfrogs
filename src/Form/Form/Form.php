@@ -3,7 +3,10 @@
 use FrenchFrogs\Core;
 use FrenchFrogs;
 use FrenchFrogs\Form\Renderer;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 /**
  * Form polliwog
@@ -16,10 +19,10 @@ class Form
     use \FrenchFrogs\Html\Html;
     use Core\Renderer;
     use Core\Integration\Validator;
-    use Core\Filterer;
     use Core\Panel;
     use Remote;
     use Element;
+    use Core\Integration\Nenuphar;
 
     /**
      * Legend of the form (title)
@@ -43,6 +46,14 @@ class Form
      * @var
      */
     protected $has_label = true;
+
+
+    /**
+     * donnée a traioter par le formulaire
+     *
+     * @var array
+     */
+    protected $data = [];
 
     /**
      * Set $has_csrfToken to TRUE
@@ -97,6 +108,7 @@ class Form
     {
         return $this->has_label;
     }
+
     /**
      * Getter for $has_csrfToken
      *
@@ -232,7 +244,7 @@ class Form
     function __call($name, $arguments)
     {
 
-        if (preg_match('#add(?<type>\w+)#', $name, $match)){
+        if (preg_match('#add(?<type>\w+)#', $name, $match)) {
 
             // cas des action
             if (substr($match['type'], 0, 6) == 'Action') {
@@ -244,7 +256,7 @@ class Form
                 // cas des element
             } else {
                 $namespace = __NAMESPACE__;
-                if(!empty(ff()->get('form.namespace'))){
+                if (!empty(ff()->get('form.namespace'))) {
                     $namespace = ff()->get('form.namespace');
                 }
                 $class = new \ReflectionClass($namespace . '\Element\\' . $match['type']);
@@ -264,7 +276,7 @@ class Form
         $render = '';
         try {
             $render = $this->getRenderer()->render('form', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             debugbar()->addThrowable($e);
         }
 
@@ -300,7 +312,7 @@ class Form
      *
      * Fill the form with $values
      *
-     * @param array $values
+     * @param array|Arrayable $values
      * @return $this
      */
     public function populate($values, $alias = false)
@@ -311,7 +323,7 @@ class Form
         }
 
 
-        foreach($this->getElements() as $e) {
+        foreach ($this->getElements() as $e) {
             /** @var $e \FrenchFrogs\Form\Element\Element */
             $name = $alias && $e->hasAlias() ? $e->getAlias() : $e->getName();
             if (array_key_exists($name, $values) !== false) {
@@ -344,140 +356,135 @@ class Form
     {
 
         $values = [];
-        foreach($this->getElements() as $name => $e) {
+        foreach ($this->getElements() as $name => $e) {
             /** @var $e \FrenchFrogs\Form\Element\Element */
-            if ($e->isDiscreet()) {continue;}
+            if ($e->isDiscreet()) {
+                continue;
+            }
             $values[$name] = $e->getValue();
         }
 
         return $values;
     }
 
-
-    /**
-     * Return single filtered value from the $name element
-     *
-     * @param $name
-     * @return mixed
-     */
-    public function getFilteredValue($name)
-    {
-        return $this->getElement($name)->getFilteredValue();
-    }
-
-
-    /**
-     * Return all filtered values from all elements
-     *
-     * @return array
-     */
-    public function getFilteredValues()
-    {
-        $values = [];
-
-        foreach($this->getElements() as $name => $e){
-            /** @var \FrenchFrogs\Form\Element\Element $e */
-            if ($e->isDiscreet()) {continue;}
-            $values[$name] = $e->getFilteredValue();
-        }
-        return $values;
-    }
-
-
-    public function getFilteredAliasValues()
+    public function detectAction()
     {
 
-        $values = [];
-        foreach($this->getElements() as $name => $e){
-            /** @var \FrenchFrogs\Form\Element\Element $e */
-            if ($e->isDiscreet()) {continue;}
-            $name = $e->hasAlias() ? $e->getAlias() : $name;
-
-            if ($e instanceof \FrenchFrogs\Form\Element\Checkbox) {
-                if(empty($values[$name])) {
-                    $values[$name] = [];
-                }
-
-                foreach((array) $e->getFilteredValue() as $value) {
-                    if(!empty($value)){$values[$name][] = $value;}
-                }
-            } else {
-                $values[$name] = $e->getFilteredValue();
+        // On cherche l'action qui a été lancé
+        foreach ($this->data as $k => $v) {
+            if (preg_match('#action__[0-9a-fA-F]{32}#', $k)) {
+                return $k;
             }
         }
 
-        return $values;
+        return false;
     }
 
 
-    public function save($function)
+    /**
+     * Set les datadu form depuis une request
+     *
+     * @param Request|null $request
+     * @return $this
+     * @throws \Throwable
+     */
+    public function setDataFromRequest(Request $request = null)
     {
+
+        // si pas de request spoécifié, on passe la requete courante
+        $request = $request ?: \request();
+        $this->setData($request);
+
+        return $this;
+    }
+
+
+    /**
+     *
+     * @param null $data
+     * @return $this
+     * @throws \Throwable
+     */
+    public function setData($data)
+    {
+
+        // Si pas un tableau on traite
+        if (!is_array($data)) {
+
+            // si on ne pas transformer l'object entableau, on envoie une exception
+            throw_unless(method_exists($data, 'toArray'), 'Impossible de recuperer les valeur pour le formulaire : ' . $this->getLegend());
+            $data = $data->toArray();
+        }
+
+        // Verification des donnée
+        throw_unless(is_array($data), 'Les données transmise au formulaire ne sont pas un tableau');
+
+        // Setter
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     *
+     * @return array
+     * @throws \Throwable
+     */
+    public function getData()
+    {
+        // Si pas de data on essaie de les detecté automatiquement
+        is_null($this->data) && $this->setData();
+
+        return $this->data;
+    }
+
+
+    /**
+     * Saéuvegarde d'un formulaire
+     *
+     * @param null $function
+     * @return bool
+     * @throws ValidationException
+     * @throws \Throwable
+     */
+    public function save($function = null)
+    {
+        // DATA
+        $data = $this->getData();
+
+        $return = false;
+
+
+        // Validation
+        $this->validate($data);
+
         // Recuperationd es donnée du formulaire
         $values = $this->getValues();
 
+        // Detection automatiuque d'une action
+        if (is_null($function) && $this->hasActions()) {
+
+            // Identific ation de l'action
+            $action = $this->detectAction();
+
+            //
+            if ($this->hasAction($action)) {
+                $return = $this->getAction($action)->process($values);
+            }
+        }
+
         // Cas d'un callable
         if (is_callable($function) && !is_string($function)) {
-            return $function($values, $this);
+            $return = $function($values, $this);
         }
 
         // Cas d'un model
         if ($function instanceof Model) {
-            return $function->fill($values)->save();
+            $return = $function->fill($values)->save();
         }
 
-        throw new\Exception('Impossible de determiner le processus de sauvegarde');
+        throw_if(empty($return), 'Impossible de determiner le processus de sauvegarde du formulaire');
+
+        return $return;
     }
-
-    /**
-     * *********************
-     *
-     * VALIDATOR
-     *
-     * ********************
-     */
-
-    /**
-     * Valid all the form elements
-     *
-     * @param array $values
-     * @param bool|true $populate
-     * @return $this
-     */
-//    public function valid(array $values, $populate = true)
-//    {
-//        foreach($this->getElements() as $index => &$element) {
-//            if(!array_key_exists($index, $values)) {
-//                if(is_a($element, 'FrenchFrogs\Form\Element\Boolean')){
-//                    $values[$index] = 0;
-//                } else {
-//                    $values[$index] = '';
-//                }
-//            }
-//
-//            $element->valid($values[$index]);
-//
-//            if (!$element->isValid()) {
-//                $this->getValidator()->addError($index, $element->getErrorAsString());
-//            }
-//
-//        }
-//
-//        return $this;
-//    }
-
-
-    /**
-     * Return string formated error from the form validation
-     *
-     *
-     * @return string
-     */
-//    public function getErrorAsString()
-//    {
-//        $errors  = [];
-//        foreach($this->getValidator()->getErrors() as $index => $message){
-//            $errors[] = sprintf('%s:%s %s', $index, PHP_EOL, $message);
-//        }
-//        return implode(PHP_EOL, $errors);
-//    }
 }
