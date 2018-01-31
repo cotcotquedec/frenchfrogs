@@ -482,6 +482,7 @@ class Table
     public function processRequest(Request $request)
     {
         // configuration de la navigation
+        $this->setRenderer(new Renderer\Remote());
         $this->setItemsPerPage($request->get('length'));
         $this->setPageFromItemsOffset($request->get('start'));
 
