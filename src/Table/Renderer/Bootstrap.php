@@ -589,7 +589,10 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
             $table->addClass('datatable-remote');
             $table->getNenuphar()->register();
             $options += [
-                'ajax' => ['url' => route('datatable', ['token' => $table->getNenuphar()->getToken()], false)],
+                'ajax' => [
+                    'url' => $table->getUrl()?:route('datatable', ['token' => $table->getNenuphar()->getToken()], false),
+                    'type' => 'POST'
+                ],
                 'processing' => true,
                 'serverSide' => true,
                 'pageLength' => $table->getItemsPerPage(),
