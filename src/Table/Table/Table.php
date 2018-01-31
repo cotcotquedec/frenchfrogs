@@ -38,7 +38,7 @@ class Table
      *
      * @var \Iterator $rows
      */
-    protected $rows;
+    protected $rows = [];
 
 
     /**
