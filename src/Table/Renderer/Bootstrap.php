@@ -587,7 +587,9 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
         // Is remote loading
         if ($table->isRemote()) {
             $table->addClass('datatable-remote');
-            $table->getNenuphar()->register();
+            if ($table->getNenuphar()) {
+                $table->getNenuphar()->register();
+            }
             $options += [
                 'ajax' => [
                     'url' => $table->getUrl()?:route('datatable', ['token' => $table->getNenuphar()->getToken()], false),
