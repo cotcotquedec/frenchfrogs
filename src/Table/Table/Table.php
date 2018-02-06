@@ -6,8 +6,10 @@ use FrenchFrogs\Table\Column;
 use FrenchFrogs\Table\Renderer;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
+
 
 /**
  * Table polliwog
@@ -36,7 +38,7 @@ class Table
      *
      * @var \Iterator $rows
      */
-    protected $rows;
+    protected $rows = [];
 
 
     /**
@@ -471,5 +473,22 @@ class Table
     {
         unset($this->idField);
         return $this;
+    }
+
+    /**
+     * @param Request $request
+     * @return $this
+     */
+    public function processRequest(Request $request)
+    {
+        // configuration de la navigation
+        $this->setRenderer(new Renderer\Remote());
+        $this->setItemsPerPage($request->get('length'));
+        $this->setPageFromItemsOffset($request->get('start'));
+
+        $columns = $request->get('columns');
+        $search = $request->get('search');
+        $order = $request->get('order');
+        return $this->processQuery($columns, $search, $order);
     }
 }
