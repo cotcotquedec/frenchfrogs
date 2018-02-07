@@ -145,7 +145,7 @@ class Css extends Container
 
 
                 // add css to minifier
-//                if (!file_exists($target)) {
+                if (!file_exists($target)) {
 
                     $minifier = new MiniCss();
 
@@ -179,7 +179,7 @@ class Css extends Container
                     // minify
                     $minifier->minify($target);
 
-//                }
+                }
 
                 // set $file
                 $result .= html('link',
