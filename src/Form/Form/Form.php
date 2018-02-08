@@ -124,7 +124,7 @@ class Form
      * Setter for $legend attribute
      *
      * @param $legend
-     * @return $this
+     * @return Form
      */
     public function setLegend($legend)
     {

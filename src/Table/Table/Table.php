@@ -69,6 +69,43 @@ class Table
      */
     protected $idField;
 
+
+    /**
+     *
+     * @var function
+     */
+    protected $setup;
+
+
+    /**
+     *
+     * @param $function
+     * @return $this
+     */
+    public function setSetup($function)
+    {
+        throw_unless(is_callable($function), new \Exception('Le setup doit être une fonction'));
+        $this->setup = $function;
+        return $this;
+    }
+
+    /**
+     * @return function
+     */
+    public function getSetup()
+    {
+        return $this->setup;
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function hasSetup()
+    {
+        return !empty($this->setup);
+    }
+
     /**
      * Return TRUE if a column has a strainer
      *
@@ -76,8 +113,8 @@ class Table
      */
     public function hasStrainer()
     {
-        foreach($this->getColumns() as $column) {
-            if ( $column->hasStrainer()) {
+        foreach ($this->getColumns() as $column) {
+            if ($column->hasStrainer()) {
                 return true;
             }
         }
@@ -116,7 +153,7 @@ class Table
             $this->setFilterer(new $class);
         }
 
-        if (!$this->hasUrl()){
+        if (!$this->hasUrl()) {
             $this->setUrl(request()->url());
         }
 
@@ -125,7 +162,7 @@ class Table
         // if method "init" exist, we call it.
         if (method_exists($this, 'init')) {
             call_user_func_array([$this, 'init'], func_get_args());
-        } elseif(func_num_args() == 1) {
+        } elseif (func_num_args() == 1) {
             $this->setSource(func_get_arg(0));
         }
 
@@ -139,7 +176,7 @@ class Table
     /**
      * Set all the rows container
      *
-     * @param \Iterator  $rows
+     * @param \Iterator $rows
      * @return $this
      */
     public function setRows(\Iterator $rows)
@@ -182,7 +219,7 @@ class Table
     {
 
         if (is_object($source)) {
-            while(method_exists($source, 'getQuery')) {
+            while (method_exists($source, 'getQuery')) {
                 $source = $source->getQuery();
             }
         }
@@ -222,13 +259,13 @@ class Table
         $source = $this->source;
 
         // Laravel query builder case
-        if(  $this->isSourceQueryBuilder())  {
+        if ($this->isSourceQueryBuilder()) {
             /** @var $source \Illuminate\Database\Query\Builder */
 
             $count = query(raw("({$source->toSql()}) as a"), [raw('COUNT(*) as _num_rows')], $source->getConnection()->getName())->mergeBindings($source)->first();
             a($count); // cast
 
-            $this->itemsTotal = isset($count['_num_rows']) ?  $count['_num_rows'] : null;
+            $this->itemsTotal = isset($count['_num_rows']) ? $count['_num_rows'] : null;
             $source = $source->skip($this->getItemsOffset())->take($this->getItemsPerPage())->get();
 
             // Compatibilité avec laravel  5.3
@@ -237,7 +274,7 @@ class Table
             $source = new \ArrayIterator($source);
 
             // Array case
-        } elseif(is_array($source)) {
+        } elseif (is_array($source)) {
             $this->itemsTotal = count($source);
             $source = array_slice($source, $this->getItemsOffset(), $this->getItemsPerPage());
             $source = new \ArrayIterator($source);
@@ -334,7 +371,7 @@ class Table
         try {
             $this->extractRows();
             $render = $this->getRenderer()->render('table', $this);
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             debugbar()->addThrowable($e);
         }
 
@@ -354,8 +391,6 @@ class Table
     }
 
 
-
-
     /**
      * Add json field to decode
      *
@@ -373,7 +408,7 @@ class Table
      * @param $field
      * @return $this
      */
-    public  function removeJsonField($field)
+    public function removeJsonField($field)
     {
 
         $i = array_search($field, $this->jsonField);
@@ -397,7 +432,7 @@ class Table
         $this->jsonField = $fields;
         return $this;
     }
-    
+
     /**
      * Getter for jsonField
      *
@@ -425,14 +460,14 @@ class Table
      */
     public function extractJson()
     {
-        foreach($this->getRows() as &$row) {
+        foreach ($this->getRows() as &$row) {
 
-            foreach($this->getJsonFields() as $field) {
+            foreach ($this->getJsonFields() as $field) {
                 if (isset($row[$field])) {
 
                     $data = json_decode($row[$field], JSON_OBJECT_AS_ARRAY);
 
-                    foreach((array) $data as $k => $v) {
+                    foreach ((array)$data as $k => $v) {
                         $row[sprintf('_%s__%s', $field, $k)] = $v;
                     }
                 }
@@ -479,16 +514,37 @@ class Table
      * @param Request $request
      * @return $this
      */
-    public function processRequest(Request $request)
+    public function processRequest(Request $request = null)
     {
-        // configuration de la navigation
-        $this->setRenderer(new Renderer\Remote());
-        $this->setItemsPerPage($request->get('length'));
-        $this->setPageFromItemsOffset($request->get('start'));
+        // Paramètre par default
+        $request = $request ?: request();
 
-        $columns = $request->get('columns');
-        $search = $request->get('search');
-        $order = $request->get('order');
-        return $this->processQuery($columns, $search, $order);
+
+        switch($request->getMethod()) {
+            case 'POST':
+                // configuration de la navigation
+                $this->setRenderer(new Renderer\Remote());
+                $this->setItemsPerPage($request->get('length'));
+                $this->setPageFromItemsOffset($request->get('start'));
+
+                $columns = $request->get('columns');
+                $search = $request->get('search');
+                $order = $request->get('order');
+
+                $this->processQuery($columns, $search, $order);
+                break;
+            case 'PUT':
+                // Inscription des champs remote
+                $this->setRenderer(new Renderer\Js());
+                $this->getColumn($request->get('_column'))
+                    ->remoteProcess($request->get('_id'), $request->get('_value', false));
+                break;
+
+            default :
+                $this->hasSetup() && call_user_func($this->setup, $this);
+        }
+
+
+        return $this;
     }
 }
