@@ -335,11 +335,16 @@ $.fn.extend({
             jQuery(this).find('input[type=checkbox].ff-remote-boolean').bootstrapSwitch({
                 onSwitchChange: function (event, state) {
                     event.preventDefault();
-                    jQuery.post(jQuery(this).closest('.datatable-remote').DataTable().ajax.url(), {
-                        id: jQuery(this).data('id'),
-                        column: jQuery(this).data('column')
-                    }, function (e, f) {
-                        eval(e)
+                    jQuery.ajax({
+                        url: jQuery(this).closest('.datatable-remote').DataTable().ajax.url(),
+                        type: 'PUT',
+                        data: {
+                            _id: jQuery(this).data('id'),
+                            _column: jQuery(this).data('column')
+                        },
+                        success: function(result) {
+                            eval(result);
+                        }
                     });
                 }
             });
