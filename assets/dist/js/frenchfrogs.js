@@ -113,6 +113,14 @@ $.fn.extend({
             });
         });
 
+        // TABLE
+        jQuery(this).find('.table-remote:empty').each(function () {
+            _that = jQuery(this);
+            jQuery(this).load(jQuery(this).data('url'), function(e){
+                _that.initialize();
+            })
+        });
+
 
         // FORM
         if (jQuery.fn.ajaxForm != undefined) {
