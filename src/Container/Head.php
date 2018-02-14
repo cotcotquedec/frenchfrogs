@@ -32,7 +32,6 @@ class Head extends Container
         return $this->append($meta);
     }
 
-
     /**
      * Fast identity set
      *
@@ -188,5 +187,13 @@ class Head extends Container
         return $this->append(html('link', ['rel'=>'shortcut icon', 'href'=> $favicon]));
     }
 
-
+    /**
+     *
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return '<!-- BEGIN META -->' . PHP_EOL . implode($this->glue, $this->container) . PHP_EOL . '<!-- END META -->';
+    }
 }
