@@ -836,7 +836,8 @@ class Inline extends Renderer\Renderer {
         $element->addAttribute('data-length', $element->getLength());
         $element->addAttribute('placeholder', $element->getLabel());
         $element->addAttribute('id', $element->getName());
-        $html = html('input', $element->getAttributes());
+        $element->addStyle('width', '100%');
+        $html = html('select', $element->getAttributes());
 
         // DESCRIPTION
         if ($element->hasDescription()) {
