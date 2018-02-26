@@ -9,4 +9,9 @@ class MySqlGrammar extends \Illuminate\Database\Schema\Grammars\MySqlGrammar
     {
         return 'binary(16)';
     }
+
+    protected function typeMediumBlob(Fluent $column)
+    {
+        return 'mediumblob';
+    }
 }
