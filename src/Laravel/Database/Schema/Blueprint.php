@@ -9,25 +9,16 @@
  */
 class Blueprint extends \Illuminate\Database\Schema\Blueprint
 {
-
-//    /**
-//     * Ajoute une column de type binary UUID
-//     *
-//     * @param string $column
-//     * @return \Illuminate\Support\Fluent
-//     */
-//    public function binaryUuid($column = 'uuid', $primary = true)
-//    {
-//        $column = $this->addColumn('binaryuuid', $column, ['length' => 16]);
-//
-//        // gestion de la clé primaire
-//        if ($primary) {
-//            $column->primary();
-//        }
-//
-//        return $column;
-//    }
-
+    /**
+     * Create a new medium blob column on the table.
+     *
+     * @param  string  $column
+     * @return \Illuminate\Support\Fluent
+     */
+    public function mediumBlob($column)
+    {
+        return $this->addColumn('mediumBlob', $column);
+    }
 
     /**
      * Ajoute une reference
