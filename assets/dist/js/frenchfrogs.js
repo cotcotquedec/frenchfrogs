@@ -262,12 +262,18 @@ $.fn.extend({
                     },
 
                     initSelection: function (element, callback) {
-                        $.ajax(jQuery(element).data('remote') + '?id=' + jQuery(element).val(), {dataType: "json"})
-                            .done(function (data) {
-                                if (data.results[0]) {
-                                    callback(data.results[0]);
-                                }
-                            });
+                        var id = jQuery(element).val();
+                        if (id === null) {
+                            id = jQuery(element).attr('value');
+                        }
+                        if (id !== "") {
+                            $.ajax(jQuery(element).data('remote') + '?id=' + id, {dataType: "json"})
+                                .done(function (data) {
+                                    if (data.results[0]) {
+                                        callback(data.results[0]);
+                                    }
+                                });
+                        }
                     },
                 });
             });
