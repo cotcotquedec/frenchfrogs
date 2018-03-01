@@ -674,12 +674,14 @@ function frenchfrogs_path($path = '')
  *
  * Constructeur de nenuphar
  *
- * @param array ...$params
- *
- *
+ * @param string $class
+ * @param string|null $method
+ * @param array $params
+ * @param string $interpreter
+ * @param array $extras
  * @return \FrenchFrogs\Core\Nenuphar
  */
-function n(...$params)
+function n(string $class, string $method = null, array $params = [], string $interpreter = 'default', $extras = [])
 {
-    return new \FrenchFrogs\Core\Nenuphar(...$params);
+    return new \FrenchFrogs\Core\Nenuphar($class, $method, $params, $interpreter, $extras);
 }
