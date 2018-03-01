@@ -668,3 +668,18 @@ function frenchfrogs_path($path = '')
 {
     return __DIR__ . ($path ? DIRECTORY_SEPARATOR . $path : $path);
 }
+
+
+/**
+ *
+ * Constructeur de nenuphar
+ *
+ * @param array ...$params
+ *
+ *
+ * @return \FrenchFrogs\Core\Nenuphar
+ */
+function n(...$params)
+{
+    return new \FrenchFrogs\Core\Nenuphar(...$params);
+}
