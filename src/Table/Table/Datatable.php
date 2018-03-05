@@ -306,7 +306,10 @@ trait Datatable
     {
         // gestion des recherches
         foreach ($columns as $c) {
-            if ($c['searchable'] == "true" && $c['search']['value'] != '') {
+
+            if ($c['search']['value'] == 'null' || $c['search']['value'] == '') {
+                continue;
+            } elseif ($c['searchable'] == "true") {
                 $this->getColumn($c['name'])->getStrainer()->call($this, $c['search']['value']);
             }
         }

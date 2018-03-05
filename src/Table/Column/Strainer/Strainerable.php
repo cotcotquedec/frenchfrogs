@@ -66,7 +66,7 @@ trait Strainerable
      * @param array $attr
      * @return \FrenchFrogs\Table\Column\Strainer\Strainerable
      */
-    public function setStrainerSelect($options = [], $callable = null, $attr = [])
+    public function setStrainerSelect($options = [], $callable = null, $is_multiple = false, $attr = [])
     {
 
         // if callable is a string , it's a field
@@ -78,6 +78,8 @@ trait Strainerable
         // create the strainer
         $strainer = new Select($this, $options, $callable, $attr);
 
+        // MULTIPLE
+        $is_multiple && $strainer->getElement()->enableMultiple();
 
         //if a fields is set, we configure the strainer
         if (isset($field)) {
@@ -88,6 +90,11 @@ trait Strainerable
     }
 
 
+    /**
+     * @param null $callable
+     * @param array $attr
+     * @return $this
+     */
     public function setStrainerText($callable = null, $attr = [])
     {
         // if callable is a string , it's a field

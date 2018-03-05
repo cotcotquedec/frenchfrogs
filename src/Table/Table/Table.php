@@ -533,6 +533,7 @@ class Table
 
                 $this->processQuery($columns, $search, $order);
                 break;
+
             case 'PUT':
                 // Inscription des champs remote
                 $this->setRenderer(new Renderer\Js());

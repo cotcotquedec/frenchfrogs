@@ -228,7 +228,10 @@ $.fn.extend({
         if (jQuery.fn.select2 != undefined) {
 
             jQuery(this).find('select.select2').each(function () {
-                    jQuery(this).select2();
+                var _that = jQuery(this);
+                _that.select2({
+                    allowClear : !_that.prop('required'),
+                });
             });
 
             jQuery(this).find('.select2-remote').each(function () {
@@ -356,7 +359,7 @@ $.fn.extend({
                             _id: jQuery(this).data('id'),
                             _column: jQuery(this).data('column')
                         },
-                        success: function(result) {
+                        success: function (result) {
                             eval(result);
                         }
                     });
@@ -465,10 +468,10 @@ $.fn.extend({
             jQuery($target)
                 .find('.modal-content')
                 .empty()
-                .load($url, $data, function(){
+                .load($url, $data, function () {
                     jQuery(this).initialize();
                     jQuery($target).modal('show');
-                    jQuery($target).on('hidden.bs.modal', function() {
+                    jQuery($target).on('hidden.bs.modal', function () {
                         jQuery(this).find('.modal-content').html('');
                     });
                 });
@@ -478,14 +481,14 @@ $.fn.extend({
 
         // SimpleMDE
         if (window.SimpleMDE != undefined) {
-            jQuery('textarea.ff-markdown').each(function() {
-                new SimpleMDE({ element: document.getElementById($(this).attr('id')), forceSync: true});
+            jQuery('textarea.ff-markdown').each(function () {
+                new SimpleMDE({element: document.getElementById($(this).attr('id')), forceSync: true});
             });
         }
 
         // HIGHLIGHT.JS
         if (window.hljs != undefined) {
-            jQuery('code.ff-highlight').each(function(i, block) {
+            jQuery('code.ff-highlight').each(function (i, block) {
                 hljs.highlightBlock(block);
             });
         }
@@ -548,10 +551,12 @@ $.fn.extend({
  */
 function ffContentPublish(e) {
     var $editid = '';
-    jQuery('.ff-edit[data-edit-id]').each(function() {$editid += jQuery(this).data('edit-id') + ',';});
+    jQuery('.ff-edit[data-edit-id]').each(function () {
+        $editid += jQuery(this).data('edit-id') + ',';
+    });
 
     // on envoie la demande de publication
-    jQuery.post(jQuery(e).attr('href'), {id:$editid}, function(r) {
+    jQuery.post(jQuery(e).attr('href'), {id: $editid}, function (r) {
         eval(r)
     });
 }

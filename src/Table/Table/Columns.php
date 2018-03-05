@@ -430,6 +430,7 @@ trait Columns
         return $c;
     }
 
+
     /**
      * Add default delete button
      *

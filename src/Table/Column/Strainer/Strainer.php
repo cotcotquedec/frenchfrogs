@@ -119,7 +119,6 @@ class Strainer
      */
     public function call(\FrenchFrogs\Table\Table\Table $table, ...$params)
     {
-
         if ($this->hasCallable()) {
             array_unshift($params, $this);
             array_unshift($params, $table);

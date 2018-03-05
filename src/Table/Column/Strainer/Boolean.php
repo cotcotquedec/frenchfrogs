@@ -3,69 +3,12 @@
 use FrenchFrogs\Form\Element\Select as FormSelect;
 use FrenchFrogs\Table\Column\Column;
 
-class Boolean extends Strainer
+class Boolean extends Select
 {
-
-    /**
-     *
-     *
-     * @var Select
-     */
-    protected $element;
-
 
     public function __construct(Column $column, $callable = null, $attr = [])
     {
-        $element = new FormSelect($column->getName(), '', ["No", "Yes"], $attr);
-        $element->setPlaceholder('All');
-        $this->setRenderer($column->getTable()->getRenderer());
-        $this->setElement($element);
-    }
-
-
-    /**
-     * Setter for $element attribute
-     *
-     * @param FormSelect $element
-     * @return $this
-     */
-    public function setElement(FormSelect $element)
-    {
-        $this->element = $element;
-        return $this;
-    }
-
-
-    /**
-     * Getter for $element attribute
-     *
-     * @return FormSelect
-     */
-    public function getElement()
-    {
-        return $this->element;
-    }
-
-
-    /**
-     * Return TRUE if $element is set
-     *
-     * @return bool
-     */
-    public function hasElement()
-    {
-        return isset($this->element);
-    }
-
-    /**
-     * Unset $element attribute
-     *
-     * @return $this
-     */
-    public function removeElement()
-    {
-        unset($this->element);
-        return $this;
+        parent::__construct($column, ["no" => "No", "yes" =>  "Yes"]);
     }
 
     /**
@@ -79,7 +22,6 @@ class Boolean extends Strainer
         $this->getElement()->setValue([$value]);
         return $this;
     }
-
     /**
      * Get value to strainer element
      *
@@ -87,8 +29,57 @@ class Boolean extends Strainer
      */
     public function getValue()
     {
-        return $this->element->getValue()[0];
+        return $this->getElement()->getValue();
     }
+
+
+    /**
+     * Execute strainer
+     *
+     * @param \FrenchFrogs\Table\Table\Table $table
+     * @param array ...$params
+     * @return $this
+     * @throws \Exception
+     */
+    public function call(\FrenchFrogs\Table\Table\Table $table, ...$params)
+    {
+
+        if ($this->hasCallable()) {
+            array_unshift($params, $this);
+            array_unshift($params, $table);
+            call_user_func_array($this->callable, $params);
+        } else {
+
+            // verify that source is a query
+            if (!$table->isSourceQueryBuilder()) {
+                throw new \Exception('Table source is not an instance of query builder');
+            }
+
+
+
+            // Filtrage des valeur
+            $value = $params[0];
+
+            if (!is_null($value)) {
+
+                // cas du NON
+                if ($value === 'no') {
+                    $value = false;
+                }
+
+                // Valeur en boolean
+                $value = !empty($value);
+
+                // GEstion du champs
+                $this->setValue($value ? 'yes' : 'no');
+
+                $table->getSource()->where($this->getField(), $value);
+            }
+        }
+
+        return $this;
+    }
+
 
     /**
      *

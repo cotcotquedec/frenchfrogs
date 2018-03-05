@@ -14,6 +14,15 @@ class Select extends Strainer
     protected $element;
 
 
+    /**
+     * Select constructor.
+     *
+     *
+     * @param Column $column
+     * @param array $options
+     * @param null $callable
+     * @param array $attr
+     */
     public function __construct(Column $column, $options = [], $callable = null, $attr = [])
     {
         $element = new FormSelect($column->getName(), '', $options, $attr);
@@ -81,6 +90,35 @@ class Select extends Strainer
     public function setValue($value)
     {
         $this->element->setValue((array) $value);
+        return $this;
+    }
+
+
+    /**
+     * Execute strainer
+     *
+     * @param \FrenchFrogs\Table\Table\Table $table
+     * @param array ...$params
+     * @return $this
+     * @throws \Exception
+     */
+    public function call(\FrenchFrogs\Table\Table\Table $table, ...$params)
+    {
+
+        if ($this->hasCallable()) {
+            array_unshift($params, $this);
+            array_unshift($params, $table);
+            call_user_func_array($this->callable, $params);
+        } else {
+
+            // verify that source is a query
+            if (!$table->isSourceQueryBuilder()) {
+                throw new \Exception('Table source is not an instance of query builder');
+            }
+
+            $table->getSource()->whereIn($this->getField(), explode(',', $params[0]));
+        }
+
         return $this;
     }
 
