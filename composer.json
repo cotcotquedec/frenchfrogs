@@ -1,6 +1,6 @@
 {
   "name": "cotcotquedec/frenchfrogs",
-  "description": "Framework backoffice construit sur laravel",
+  "description": "Framework construit sur laravel",
   "type": "library",
   "source": {
     "url": "https://github.com/cotcotquedec/frenchfrogs.git",
