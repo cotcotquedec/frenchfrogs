@@ -133,6 +133,9 @@ class Method
                     case 'phpDocumentor\Reflection\Types\Static_':
                         $type = 'static';
                         break;
+                    case 'phpDocumentor\Reflection\Types\Array_':
+                        $type = 'array';
+                        break;
                     default :
                         throw new \Exception('Type pas encore pris en compte : ' . get_class($type));
                 }
