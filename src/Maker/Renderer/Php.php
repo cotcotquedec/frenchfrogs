@@ -286,14 +286,14 @@ class Php extends Renderer
     {
         // On verifie que le trait est bien présent
         $traits = class_uses($docblock);
+
         if (!array_search(Docblock::class, $traits)) {
-            exc('la classe "' . get_class($docblock) . '" n\'utilise pas le trait "' . Docblock::class . '"');
+            throw new \Exception('la classe "' . get_class($docblock) . '" n\'utilise pas le trait "' . Docblock::class . '"');
         }
 
         $content = '';
         $summary = $docblock->getSummary();
         $description = str_replace(PHP_EOL, PHP_EOL . '* ', $docblock->getDescription());
-
 
         if (!empty($summary)) {
             $content .= '* ' . $summary . PHP_EOL;
@@ -316,9 +316,10 @@ class Php extends Renderer
 
             // on fait proprement mais bon!
             // @todo passer sur la version 3 de phpdocumentor
-            $factory = new \phpDocumentor\Reflection\DocBlock($content);
+            $factory  = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
+            $docblock = $factory->create($content);
             $serializer = new Serializer();
-            $content = $serializer->getDocComment($factory) . PHP_EOL;
+            $content = $serializer->getDocComment($docblock) . PHP_EOL;
         }
 
         return $content;

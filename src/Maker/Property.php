@@ -91,23 +91,26 @@ class Property
         $property = new static($reflection->getName(), $value, $type);
 
         // docblock
-        $docblock = new \phpDocumentor\Reflection\DocBlock($reflection->getDocComment());
-        $property->setSummary($docblock->getShortDescription());
-        $property->setDescription($docblock->getLongDescription());
+        if ($reflection->getDocComment()) {
+            $factory  = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
+            $docblock = $factory->create($reflection->getDocComment());
+            empty($docblock->getSummary()) || $property->setSummary($docblock->getSummary());
+            empty($docblock->getDescription()) || $property->setDescription($docblock->getDescription());
 
-        foreach($docblock->getTags() as $tag) {
 
-            switch ($tag->getName()) {
-                case 'var' :
-                    $property->addTagVar($tag->getType(), $tag->getDescription());
-                    break;
-                case 'sanitize' :
-                case 'validate' :
-                    $property->addTag($tag->getName(), $tag->getDescription());
-                    break;
+            foreach($docblock->getTags() as $tag) {
 
-                default:
+                switch ($tag->getName()) {
+                    case 'var' :
+                        $property->addTagVar($tag->getType(), $tag->getDescription());
+                        break;
+                    case 'sanitize' :
+                    case 'validate' :
+                        $property->addTag($tag->getName(), $tag->getDescription());
+                        break;
 
+                    default:
+                }
             }
         }
 

@@ -107,40 +107,44 @@ class Method
         $method = new static($reflection->getName(), [], $reflection->getBodyCode());
 
         // docblock
-        $docblock = new \phpDocumentor\Reflection\DocBlock($reflection->getDocComment());
-        $method->setSummary($docblock->getShortDescription());
-        $method->setDescription($docblock->getLongDescription());
+        if ($reflection->getDocComment()) {
+            $factory  = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
+            $docblock = $factory->create($reflection->getDocComment());
+            empty($docblock->getSummary()) || $method->setSummary($docblock->getSummary());
+            empty($docblock->getDescription()) || $method->setDescription($docblock->getDescription());
 
-        if ($reflection->getDocBlockReturnTypes()) {
-            foreach ($reflection->getDocBlockReturnTypes() as $type) {
 
-                switch (get_class($type)) {
-                    case 'phpDocumentor\Reflection\Types\Boolean' :
-                        $type = 'bool';
-                        break;
-                    case 'phpDocumentor\Reflection\Types\Object_' :
-                        $type = $type->getFqsen()->getName();
-                        break;
-                    case  'phpDocumentor\Reflection\Types\Mixed' :
-                        $type = 'mixed';
-                        break;
-                    case 'phpDocumentor\Reflection\Types\Void_':
-                        $type = 'void';
-                        break;
-                    case 'phpDocumentor\Reflection\Types\String_':
-                        $type = 'string';
-                        break;
-                    case 'phpDocumentor\Reflection\Types\Static_':
-                        $type = 'static';
-                        break;
-                    case 'phpDocumentor\Reflection\Types\Array_':
-                        $type = 'array';
-                        break;
-                    default :
-                        throw new \Exception('Type pas encore pris en compte : ' . get_class($type));
+            if ($reflection->getDocBlockReturnTypes()) {
+                foreach ($reflection->getDocBlockReturnTypes() as $type) {
+
+                    switch (get_class($type)) {
+                        case 'phpDocumentor\Reflection\Types\Boolean' :
+                            $type = 'bool';
+                            break;
+                        case 'phpDocumentor\Reflection\Types\Object_' :
+                            $type = $type->getFqsen()->getName();
+                            break;
+                        case  'phpDocumentor\Reflection\Types\Mixed' :
+                            $type = 'mixed';
+                            break;
+                        case 'phpDocumentor\Reflection\Types\Void_':
+                            $type = 'void';
+                            break;
+                        case 'phpDocumentor\Reflection\Types\String_':
+                            $type = 'string';
+                            break;
+                        case 'phpDocumentor\Reflection\Types\Static_':
+                            $type = 'static';
+                            break;
+                        case 'phpDocumentor\Reflection\Types\Array_':
+                            $type = 'array';
+                            break;
+                        default :
+                            throw new \Exception('Type pas encore pris en compte : ' . get_class($type));
+                    }
+
+                    $method->addTag('return', $type);
                 }
-
-                $method->addTag('return', $type);
             }
         }
 

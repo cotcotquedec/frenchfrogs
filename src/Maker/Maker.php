@@ -515,23 +515,26 @@ class Maker
         $reflection = $this->getClass();
 
         // docblock
-        $docblock = new \phpDocumentor\Reflection\DocBlock($reflection->getDocComment());
-        $this->setSummary($docblock->getSummary());
-        $this->setDescription($docblock->getDescription());
+        if ($reflection->getDocComment()) {
+            $factory  = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
+            $docblock = $factory->create($reflection->getDocComment());
+            empty($docblock->getSummary()) || $this->setSummary($docblock->getSummary());
+            empty($docblock->getDescription()) || $this->setDescription($docblock->getDescription());
 
-        foreach ($docblock->getTags() as $tag) {
 
-            switch ($tag->getName()) {
+            foreach ($docblock->getTags() as $tag) {
+
+                switch ($tag->getName()) {
 //                case 'property' :
 //                    dd('dslkjnd');
 //                    $this->addTagProperty();
-                case 'validate' :
-                    $this->addTag($tag->getName(), $tag->getDescription());
-                    break;
-                default:
+                    case 'validate' :
+                        $this->addTag($tag->getName(), $tag->getDescription());
+                        break;
+                    default:
+                }
             }
         }
-
 
         // NAMESPACE
         $namespace = $reflection->getNamespaceName();

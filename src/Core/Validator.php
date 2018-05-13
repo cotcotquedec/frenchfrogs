@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jhouvion
- * Date: 03/01/18
- * Time: 11:28
- */
-
 namespace FrenchFrogs\Core;
 
 
