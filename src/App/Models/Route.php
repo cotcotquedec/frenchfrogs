@@ -1,6 +1,6 @@
 <?php namespace FrenchFrogs\App\Models;
 
-use BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClass;
 
 /**
  * Class Route

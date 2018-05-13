@@ -1,6 +1,6 @@
 <?php namespace FrenchFrogs\Maker;
 
-use BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionMethod;
 
 /**
  *

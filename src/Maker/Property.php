@@ -1,7 +1,7 @@
 <?php namespace FrenchFrogs\Maker;
 
 
-use BetterReflection\Reflection\ReflectionProperty;
+use Roave\BetterReflection\Reflection\ReflectionProperty;
 use phpDocumentor\Reflection\DocBlock\Tag\VarTag;
 
 class Property

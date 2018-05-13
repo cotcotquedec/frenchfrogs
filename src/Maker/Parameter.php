@@ -1,7 +1,7 @@
 <?php namespace FrenchFrogs\Maker;
 
 
-use BetterReflection\Reflection\ReflectionParameter;
+use Roave\BetterReflection\Reflection\ReflectionParameter;
 use phpDocumentor\Reflection\Types\Array_;
 use phpDocumentor\Reflection\Types\Object_;
 

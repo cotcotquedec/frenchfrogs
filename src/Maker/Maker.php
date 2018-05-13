@@ -1,6 +1,6 @@
 <?php namespace FrenchFrogs\Maker;
 
-use BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionClass;
 use FrenchFrogs\Core\Renderer;
 use FrenchFrogs\Maker\Renderer\Php;
 use Illuminate\Database\Eloquent\Model;
@@ -516,9 +516,8 @@ class Maker
 
         // docblock
         $docblock = new \phpDocumentor\Reflection\DocBlock($reflection->getDocComment());
-        $this->setSummary($docblock->getShortDescription());
-        $this->setDescription($docblock->getLongDescription());
-
+        $this->setSummary($docblock->getSummary());
+        $this->setDescription($docblock->getDescription());
 
         foreach ($docblock->getTags() as $tag) {
 
@@ -677,7 +676,7 @@ class Maker
         $instance = new static();
 
         if (!class_exists($class, true)) {
-            \exc('La classe "' . $class . '" n\'existe pas!');
+            throw new \Exception('La classe "' . $class . '" n\'existe pas!');
         }
 
         $instance->setClass(ReflectionClass::createFromName($class));
