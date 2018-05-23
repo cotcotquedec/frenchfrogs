@@ -16,10 +16,6 @@ class Javascript extends Container
 
     use Minify;
 
-//    const TYPE_FILE = 'file';
-//    const TYPE_INLINE = 'inline';
-
-
     protected $files = [];
 
 
@@ -29,13 +25,12 @@ class Javascript extends Container
      * @param $href
      * @param string $rel
      * @param string $type
-     * @return $this
+     * @return Javascript
      */
     public function file($href)
     {
         $this->files[] = $href;
         return $this;
-//        return $this->append( $href);
     }
 
     /**
@@ -102,7 +97,7 @@ class Javascript extends Container
      * @param $selector
      * @param $function
      * @param ...$params
-     * @return $this
+     * @return Javascript
      */
     public function appendJs($selector, $function, ...$params)
     {
@@ -117,7 +112,7 @@ class Javascript extends Container
      * @param $selector
      * @param $function
      * @param ...$params
-     * @return $this
+     * @return Javascript
      */
     public function prependJs($selector, $function, ...$params)
     {
@@ -130,7 +125,7 @@ class Javascript extends Container
      * Add alert() javascript function to the container
      *
      * @param $message
-     * @return $this
+     * @return Javascript
      */
     public function alert($message)
     {
@@ -142,7 +137,7 @@ class Javascript extends Container
      * Add console.log() javascript function to the container
      *
      * @param $message
-     * @return $this
+     * @return Javascript
      */
     public function log($message)
     {
@@ -156,7 +151,7 @@ class Javascript extends Container
      *
      * @param $body
      * @param string $title
-     * @return $this
+     * @return Javascript
      */
     public function warning($body = '', $title = '')
     {
@@ -170,7 +165,7 @@ class Javascript extends Container
      *
      * @param $body
      * @param string $title
-     * @return $this
+     * @return Javascript
      */
     public function success($body = '', $title = '')
     {
@@ -185,7 +180,7 @@ class Javascript extends Container
      *
      * @param $body
      * @param string $title
-     * @return $this
+     * @return Javascript
      */
     public function error($body = '', $title = '')
     {
@@ -197,7 +192,7 @@ class Javascript extends Container
     /**
      * Close the remote modal
      *
-     * @return $this
+     * @return Javascript
      */
     public function closeRemoteModal()
     {
@@ -208,7 +203,7 @@ class Javascript extends Container
     /**
      * reload the page
      *
-     * @return $this
+     * @return Javascript
      */
     public function reload()
     {
@@ -220,7 +215,7 @@ class Javascript extends Container
      * Redirection javascript
      *
      * @param $url
-     * @return $this
+     * @return Javascript
      */
     public function redirect($url)
     {
@@ -232,7 +227,7 @@ class Javascript extends Container
      * ReloadAjaxDatatable
      *
      * @param bool|false $resetPaging
-     * @return $this
+     * @return Javascript
      */
     public function reloadDataTable($resetPaging = false)
     {
@@ -244,7 +239,7 @@ class Javascript extends Container
     /**
      * Clear the $container attribute
      *
-     * @return $this
+     * @return Javascript
      */
     public function clear()
     {
@@ -374,7 +369,7 @@ class Javascript extends Container
      * @param $category
      * @param $action
      * @param $label
-     * @return $this
+     * @return Javascript
      */
     public function gaEvent($category, $action, $label)
     {
@@ -390,7 +385,7 @@ class Javascript extends Container
      * @param $category
      * @param $action
      * @param $label
-     * @return $this
+     * @return Javascript
      */
     public function gaView($page = false)
     {
@@ -401,7 +396,7 @@ class Javascript extends Container
     /**
      *  Set un utilisateurt analytics
      * @param $user
-     * @return $this
+     * @return Javascript
      */
     public function gaSetUser($user)
     {

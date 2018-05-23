@@ -26,7 +26,7 @@ class Css extends Container
      * @param $href
      * @param string $rel
      * @param string $type
-     * @return $this
+     * @return Css
      */
     public function styleFile($href)
     {
@@ -37,7 +37,7 @@ class Css extends Container
      * Add css content
      *
      * @param $content
-     * @return $this
+     * @return Css
      */
     public function style($content)
     {
@@ -48,7 +48,7 @@ class Css extends Container
      * Add less content
      *
      * @param $content
-     * @return $this
+     * @return Css
      */
     public function less($content)
     {
@@ -60,7 +60,7 @@ class Css extends Container
      * Add less file
      *
      * @param $href
-     * @return $this
+     * @return Css
      */
     public function lessFile($href)
     {
