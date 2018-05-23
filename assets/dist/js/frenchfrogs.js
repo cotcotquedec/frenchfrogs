@@ -1,151 +1,214 @@
-/**
- * Tri le tableau en fonction des valeurs dans les filter
- *
- * @param oSettings
- * @returns {jQuery.fn.dataTableExt.oApi}
- */
-jQuery.fn.dataTableExt.oApi.fnStrainer = function (oSettings) {
+if (jQuery.fn.dataTableExt != undefined) {
 
-    var _that = this;// on conserve l'objet principale
+    /**
+     * Tri le tableau en fonction des valeurs dans les filter
+     *
+     * @param oSettings
+     * @returns {jQuery.fn.dataTableExt.oApi}
+     */
+    jQuery.fn.dataTableExt.oApi.fnStrainer = function (oSettings) {
 
-    this.each(function (i) {
-        jQuery.fn.dataTableExt.iApiIndex = i;
+        var _that = this;// on conserve l'objet principale
 
-        //Ajout des evenements
-        jQuery(_that).find('th select').each(function() {
-            _that.api().columns($(this).attr('name') + ':name').search($(this).val());
-        });
+        this.each(function (i) {
+            jQuery.fn.dataTableExt.iApiIndex = i;
 
-        // daterange
-        jQuery(_that).find('th > div.input-daterange.date-picker').each(function() {
-            search = $($(this).find('input').get(0)).val() + '#' + $($(this).find('input').get(1)).val();
-            _that.api().columns( $(this).attr('name') + ':name').search(search);
-        });
-
-        // input:text
-        jQuery(_that).find('th > input').each(function() {
-            _that.api().columns($(this).attr('name') + ':name').search($(this).val());
-        });
-
-        // jQuery.fn.dataTableExt.iApiIndex = i;
-        _that.api().draw();
-    });
-    return this;
-};
-
-
-/**
- * Assignation des evenement de filtre sur les strainer
- *
- * @param oSettings
- * @returns {jQuery.fn.dataTableExt.oApi}
- */
-jQuery.fn.dataTableExt.oApi.fnFilterColumns = function (oSettings) {
-
-    var _that = this;// on conserve l'objet principale
-
-    this.each(function (i) {
-        jQuery.fn.dataTableExt.iApiIndex = i;
-
-        //Ajout des evenements
-        jQuery(_that).find('th select').each(function() {
-            jQuery(this).change(function() {
-                _that.fnStrainer();
-            });
-        });
-
-        // daterange
-        jQuery(_that).find('th > div.input-daterange.date-picker').each(function() {
-
-            jQuery(this).datepicker().on('changeDate', function(e) {
-                _that.fnStrainer();
+            //Ajout des evenements
+            jQuery(_that).find('th select').each(function () {
+                _that.api().columns($(this).attr('name') + ':name').search($(this).val());
             });
 
-        });
+            // daterange
+            jQuery(_that).find('th > div.input-daterange.date-picker').each(function () {
+                search = $($(this).find('input').get(0)).val() + '#' + $($(this).find('input').get(1)).val();
+                _that.api().columns($(this).attr('name') + ':name').search(search);
+            });
 
-        // input:text
-        jQuery(_that).find('th > input').each(function() {
-            jQuery(this).unbind('keyup').unbind('keypress').bind('keypress', function (e) {
-                if (e.which == 13) {
+            // input:text
+            jQuery(_that).find('th > input').each(function () {
+                _that.api().columns($(this).attr('name') + ':name').search($(this).val());
+            });
+
+            // jQuery.fn.dataTableExt.iApiIndex = i;
+            _that.api().draw();
+        });
+        return this;
+    };
+
+
+    /**
+     * Assignation des evenement de filtre sur les strainer
+     *
+     * @param oSettings
+     * @returns {jQuery.fn.dataTableExt.oApi}
+     */
+    jQuery.fn.dataTableExt.oApi.fnFilterColumns = function (oSettings) {
+
+        var _that = this;// on conserve l'objet principale
+
+        this.each(function (i) {
+            jQuery.fn.dataTableExt.iApiIndex = i;
+
+            //Ajout des evenements
+            jQuery(_that).find('th select').each(function () {
+                jQuery(this).change(function () {
                     _that.fnStrainer();
-                }
+                });
+            });
+
+            // daterange
+            jQuery(_that).find('th > div.input-daterange.date-picker').each(function () {
+
+                jQuery(this).datepicker().on('changeDate', function (e) {
+                    _that.fnStrainer();
+                });
+
+            });
+
+            // input:text
+            jQuery(_that).find('th > input').each(function () {
+                jQuery(this).unbind('keyup').unbind('keypress').bind('keypress', function (e) {
+                    if (e.which == 13) {
+                        _that.fnStrainer();
+                    }
+                });
             });
         });
-    });
-    return this;
-};
+        return this;
+    };
 
-/**
- * Clear des strainers
- *
- * @param oSettings
- * @returns {jQuery.fn.dataTableExt.oApi}
- */
-jQuery.fn.dataTableExt.oApi.fnClearFilters = function (oSettings) {
+    /**
+     * Clear des strainers
+     *
+     * @param oSettings
+     * @returns {jQuery.fn.dataTableExt.oApi}
+     */
+    jQuery.fn.dataTableExt.oApi.fnClearFilters = function (oSettings) {
 
-    var _that = this;// on conserve l'objet principale
+        var _that = this;// on conserve l'objet principale
 
-    this.each(function (i) {
-        jQuery.fn.dataTableExt.iApiIndex = i;
+        this.each(function (i) {
+            jQuery.fn.dataTableExt.iApiIndex = i;
 
-        //Ajout des evenements
-        jQuery(_that).find('th select').each(function() {
-            $(this).val('');
+            //Ajout des evenements
+            jQuery(_that).find('th select').each(function () {
+                $(this).val('');
+            });
+
+            // daterange
+            jQuery(_that).find('th > div.input-daterange.date-picker').each(function () {
+                $(this).find('input').val('');
+            });
+
+            // input:text
+            jQuery(_that).find('th > input').each(function () {
+                $(this).val('');
+            });
+
+            _that.fnStrainer();
         });
-
-        // daterange
-        jQuery(_that).find('th > div.input-daterange.date-picker').each(function() {
-            $(this).find('input').val('');
-        });
-
-        // input:text
-        jQuery(_that).find('th > input').each(function() {
-            $(this).val('');
-        });
-
-        _that.fnStrainer();
-    });
-    return this;
-};
+        return this;
+    };
 
 
-/**
- * This plug-in removes the default behaviour of DataTables to filter on each
- * keypress, and replaces with it the requirement to press the enter key to
- * perform the filter.
- *
- *  @name fnFilterOnReturn
- *  @summary Require the return key to be pressed to filter a table
- *  @author [Jon Ranes](http://www.mvccms.com/)
- *
- *  @returns {jQuery} jQuery instance
- *
- *  @example
- *    $(document).ready(function() {
+    /**
+     * This plug-in removes the default behaviour of DataTables to filter on each
+     * keypress, and replaces with it the requirement to press the enter key to
+     * perform the filter.
+     *
+     *  @name fnFilterOnReturn
+     *  @summary Require the return key to be pressed to filter a table
+     *  @author [Jon Ranes](http://www.mvccms.com/)
+     *
+     *  @returns {jQuery} jQuery instance
+     *
+     *  @example
+     *    $(document).ready(function() {
  *        $('.dataTable').dataTable().fnFilterOnReturn();
  *    } );
- */
+     */
 
-jQuery.fn.dataTableExt.oApi.fnFilterOnReturn = function (oSettings) {
-    var _that = this;
+    jQuery.fn.dataTableExt.oApi.fnFilterOnReturn = function (oSettings) {
+        var _that = this;
 
-    this.each(function (i) {
-        $.fn.dataTableExt.iApiIndex = i;
-        var $this = this;
-        var anControl = $('input', _that.fnSettings().aanFeatures.f);
-        anControl
-            .unbind('keyup search input')
-            .bind('keypress', function (e) {
-                if (e.which == 13) {
-                    $.fn.dataTableExt.iApiIndex = i;
-                    _that.fnFilter(anControl.val());
-                }
-            });
+        this.each(function (i) {
+            $.fn.dataTableExt.iApiIndex = i;
+            var $this = this;
+            var anControl = $('input', _that.fnSettings().aanFeatures.f);
+            anControl
+                .unbind('keyup search input')
+                .bind('keypress', function (e) {
+                    if (e.which == 13) {
+                        $.fn.dataTableExt.iApiIndex = i;
+                        _that.fnFilter(anControl.val());
+                    }
+                });
+            return this;
+        });
         return this;
-    });
-    return this;
-};
+    };
 
+
+    $.fn.extend({
+
+        /**
+         *
+         * Datatable default configuration
+         *
+         * @param o
+         * @returns {*|{serverSide, ajax}|jQuery}
+         */
+        dtt: function (o) {
+
+            options = {
+                pageLength: 25, // default records per page
+                lengthChange: false,
+                deferRender: false,
+                language: {
+                    processing: "Traitement en cours...",
+                    search: "Rechercher :",
+                    lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
+                    info: "_START_ &agrave; _END_ | _TOTAL_ &eacute;l&eacute;ments",
+                    infoEmpty: "0 &agrave; 0 | 0 &eacute;l&eacute;ments",
+                    infoFiltered: "( _MAX_ )",
+                    infoPostFix: "",
+                    loadingRecords: "Chargement en cours...",
+                    zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
+                    emptyTable: "Aucune donnée disponible dans le tableau",
+                    paginate: {
+                        first: "<<",
+                        previous: "<",
+                        next: ">",
+                        last: ">>",
+                        page: "Page",
+                        pageOf: "de"
+                    },
+                    aria: {
+                        sortAscending: ": activer pour trier la colonne par ordre croissant",
+                        sortDescending: ": activer pour trier la colonne par ordre décroissant"
+                    }
+                },
+
+                buttons: [],
+
+                orderCellsTop: true,
+                order: [],
+                searching: false,
+                ordering: true,
+                retrieve: true,
+                pagingType: "full_numbers", // pagination type(bootstrap, bootstrap_full_number or bootstrap_extended)
+                autoWidth: false, // disable fixed width and enable fluid table
+                processing: false, // enable/disable display message box on record load
+                serverSide: false, // enable/disable server side ajax loading
+            };
+
+            return $(this).on('draw.dt', function (e) {
+                $(this).initialize();
+            }).dataTable($.extend(options, o)).fnFilterOnReturn().fnFilterColumns();
+        }
+    });
+
+}
 
 
 /**
@@ -156,11 +219,9 @@ jQuery.fn.dataTableExt.oApi.fnFilterOnReturn = function (oSettings) {
  * @param string
  * @returns {string}
  */
-function ucfirst(string)
-{
+function ucfirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
 
 
 $.fn.extend({
@@ -187,62 +248,6 @@ $.fn.extend({
                 }
             }
         });
-    },
-
-    /**
-     *
-     * Datatable default configuration
-     *
-     * @param o
-     * @returns {*|{serverSide, ajax}|jQuery}
-     */
-    dtt: function (o) {
-
-        options = {
-            pageLength: 25, // default records per page
-            lengthChange: false,
-            deferRender: false,
-            language: {
-                processing: "Traitement en cours...",
-                search: "Rechercher :",
-                lengthMenu: "Afficher _MENU_ &eacute;l&eacute;ments",
-                info: "_START_ &agrave; _END_ | _TOTAL_ &eacute;l&eacute;ments",
-                infoEmpty: "0 &agrave; 0 | 0 &eacute;l&eacute;ments",
-                infoFiltered: "( _MAX_ )",
-                infoPostFix: "",
-                loadingRecords: "Chargement en cours...",
-                zeroRecords: "Aucun &eacute;l&eacute;ment &agrave; afficher",
-                emptyTable: "Aucune donnée disponible dans le tableau",
-                paginate: {
-                    first: "<<",
-                    previous: "<",
-                    next: ">",
-                    last: ">>",
-                    page: "Page",
-                    pageOf: "de"
-                },
-                aria: {
-                    sortAscending: ": activer pour trier la colonne par ordre croissant",
-                    sortDescending: ": activer pour trier la colonne par ordre décroissant"
-                }
-            },
-
-            buttons: [],
-
-            orderCellsTop: true,
-            order: [],
-            searching: false,
-            ordering: true,
-            retrieve: true,
-            pagingType: "full_numbers", // pagination type(bootstrap, bootstrap_full_number or bootstrap_extended)
-            autoWidth: false, // disable fixed width and enable fluid table
-            processing: false, // enable/disable display message box on record load
-            serverSide: false, // enable/disable server side ajax loading
-        };
-
-        return $(this).on('draw.dt', function (e) {
-            $(this).initialize();
-        }).dataTable($.extend(options, o)).fnFilterOnReturn().fnFilterColumns();
     },
 
 
@@ -281,7 +286,7 @@ $.fn.extend({
         // TABLE
         jQuery(this).find('.table-remote:empty').each(function () {
             let _that = jQuery(this);
-            jQuery(this).load(jQuery(this).data('url'), function(e){
+            jQuery(this).load(jQuery(this).data('url'), function (e) {
                 _that.initialize();
             })
         });
@@ -395,7 +400,7 @@ $.fn.extend({
             jQuery(this).find('select.select2').each(function () {
                 var _that = jQuery(this);
                 _that.select2({
-                    allowClear : !_that.prop('required'),
+                    allowClear: !_that.prop('required'),
                 });
             });
 
