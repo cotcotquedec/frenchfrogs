@@ -143,9 +143,12 @@ class Css extends Container
                 }
                 $target .= md5($hash) . '.css';
 
+                // ""
+
 
                 // add css to minifier
-                if (!file_exists($target)) {
+//                if (!file_exists($target)) {
+                if (true) {
 
                     $minifier = new MiniCss();
 
@@ -154,14 +157,18 @@ class Css extends Container
 
                         list($t, $c) = $content;
 
+
                         // we get remote file content
                         if (in_array($t, ['remote', 'local'])) {
 
                             $ct = file_get_contents($c);
 
-                            // formatage du path de fichier
-                            $c = str_replace('//', '/', $c);
-                            $c = str_replace(public_path(), '', $c);
+
+                            if ($t == 'local') {
+                                // formatage du path de fichier
+                                $c = str_replace('//', '/', $c);
+                                $c = str_replace(public_path(), '', $c);
+                            }
 
                             if (preg_match_all('#url\(["\']?(?<url>[^\)]+)["\']?\)#', $ct, $matches)) {
                                 foreach ($matches['url'] as $url) {
