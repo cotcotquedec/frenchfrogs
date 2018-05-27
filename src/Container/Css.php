@@ -147,8 +147,7 @@ class Css extends Container
 
 
                 // add css to minifier
-//                if (!file_exists($target)) {
-                if (true) {
+                if (!file_exists($target)) {
 
                     $minifier = new MiniCss();
 
