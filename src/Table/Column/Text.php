@@ -30,7 +30,7 @@ class Text extends Column implements Exportable
      */
     public function getValue($row) {
 
-        $value = isset($row[$this->getName()]) ? $row[$this->getName()] : '';
+        $value = data_get($row, $this->getName(), '');
         if ($this->hasFilterer()) {
             $value = $this->getFilterer()->filter($value);
         }
