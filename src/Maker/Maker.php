@@ -573,12 +573,16 @@ class Maker
 
         // PROPERTIES
         foreach ($reflection->getProperties() as $property) {
-            $this->addProperty(Property::fromReflection($property));
+            if($property->getDeclaringClass()->getName() == $reflection->getName()) {
+                $this->addProperty(Property::fromReflection($property));
+            }
         }
 
         // METHODS
         foreach ($reflection->getImmediateMethods() as $method) {
-            $this->addMethod(Method::fromReflection($method));
+            if($method->getDeclaringClass()->getName() == $reflection->getName()) {
+                $this->addMethod(Method::fromReflection($method));
+            }
         }
 
         // @todo Gestion des interfaces
@@ -586,7 +590,7 @@ class Maker
         // traits
 
         foreach ($reflection->getTraitNames() as $traitName) {
-            $this->addTrait($traitName);
+                $this->addTrait($traitName);
         }
 
         return $this;
@@ -803,12 +807,12 @@ class Maker
         $class = '\\';
 
         // identification du namespace
-        if (preg_match('#namespace\s+(?<namespace>[^\s^;]+)#', $content, $match)) {
+        if (preg_match('#namespace\s+(?<namespace>[^\s^;^\{]+)#', $content, $match)) {
             $class .= trim($match['namespace']) . '\\';
         }
 
         // identification de la classe
-        if (preg_match('#\nclass\s+(?<class>[^\s\{]+)(\s|\{)?#', $content, $match)) {
+        if (preg_match('#\n*class\s+(?<class>[^\s\{]+)(\s|\{)?#', $content, $match)) {
             $class .= $match['class'];
         } else {
             $class = null;
