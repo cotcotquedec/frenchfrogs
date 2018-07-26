@@ -24,7 +24,7 @@ class Remote extends Bootstrap
             $data[] = $line;
         }
 
-        return json_encode([
+        return collect([
             'data' => $data,
             'draw' => request()->get('draw', 0),
             'recordsFiltered' => $table->getItemsTotal(),

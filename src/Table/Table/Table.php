@@ -9,6 +9,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
+use phpDocumentor\Reflection\Types\Callable_;
 
 
 /**
@@ -76,18 +77,32 @@ class Table
      */
     protected $setup;
 
-
     /**
-     *
-     * @param $function
+     * @param callable|null $function
      * @return $this
+     * @throws \Throwable
      */
-    public function setSetup($function)
+    public function setSetup(callable $function)
     {
-        throw_unless(is_callable($function), new \Exception('Le setup doit être une fonction'));
         $this->setup = $function;
         return $this;
     }
+
+
+    /**
+     * @return $this
+     * @throws \Throwable
+     */
+    public function execSetup()
+    {
+        if ($this->hasSetup()) {
+            throw_unless(is_callable($this->setup), new \Exception('Le setup du tableau n\'est pas valable'));
+            call_user_func($this->setup, $this);
+        }
+
+        return $this;
+    }
+
 
     /**
      * @return function
@@ -514,13 +529,13 @@ class Table
      * @param Request $request
      * @return $this
      */
-    public function processRequest(Request $request = null)
+    public function processRequest(Request $request = null, $method = null)
     {
         // Paramètre par default
         $request = $request ?: request();
+        $method = $method ?: $request->getMethod();
 
-
-        switch($request->getMethod()) {
+        switch ($method) {
             case 'POST':
                 // configuration de la navigation
                 $this->setRenderer(new Renderer\Remote());
@@ -532,19 +547,42 @@ class Table
                 $order = $request->get('order');
 
                 $this->processQuery($columns, $search, $order);
+
+
+                // RENDU
+                $content = $this->render();
+
+                // REPONSE
+                return response()->json($content);
                 break;
 
             case 'PUT':
+
+                dd('MIGRER');
                 // Inscription des champs remote
                 $this->setRenderer(new Renderer\Js());
                 $this->getColumn($request->get('_column'))
                     ->remoteProcess($request->get('_id'), $request->get('_value', false));
                 break;
 
-            default :
-                $this->hasSetup() && call_user_func($this->setup, $this);
-        }
+            case 'GET':
 
+                // SETP
+                $this->hasSetup() && $this->execSetup();
+                
+                // RENDU
+                $content = $this->render();
+
+                // JS
+                $content .= '<script>jQuery(function() {' . js('onload') . '});</script>';
+
+                // REPOSNE
+                return response($content);
+                break;
+
+            default :
+                throw new \Exception('Impossible de determiner la procedure de generation du tableau');
+        }
 
         return $this;
     }
