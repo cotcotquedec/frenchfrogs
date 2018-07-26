@@ -44,7 +44,7 @@ class Reference
     /**
      * @var Model
      */
-    protected $db;
+    static protected $db;
 
 
     /**
@@ -63,12 +63,23 @@ class Reference
      */
     protected function __construct($collection)
     {
+        // COLLECTION
         $this->collection = $collection;
 
-        $this->db = Maker::getModelFromTableName('references');
+        // DB
+        throw_unless(static::$db instanceof Model, new \Exception('Le model eloquent de référence n\'est pas défini'));
 
         // generation des données
         $this->getData();
+    }
+
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $model
+     */
+    static public function setReferenceTable(\Illuminate\Database\Eloquent\Model $model)
+    {
+        static::$db = $model;
     }
 
 
@@ -141,7 +152,7 @@ class Reference
 
             // si pas les données en cache, on les génère
             if (!Cache::has($cache)) {
-                $data = $this->db
+                $data = static::$db
                     ->where('collection', $this->collection)
                     ->orderBy('name')
                     ->get();

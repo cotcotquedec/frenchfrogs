@@ -75,7 +75,8 @@ if (!function_exists('dd')) {
 /**
  * Function de debug qui sor une quote au hazard
  */
-function dq() {
+function dq()
+{
 
     // citatyion par default
     $quote = 'I don\'t give a shit - cotcotquedec';
@@ -86,7 +87,7 @@ function dq() {
         $response = $client->get('http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json');
 
         if ($response->getStatusCode() == 200) {
-            $content =  $response->getBody()->getContents();
+            $content = $response->getBody()->getContents();
             $content = \json_decode($content);
 
             if (!empty($content->quoteText)) {
@@ -578,18 +579,21 @@ if (!function_exists('extract_meta_url')) {
  * @package Reference
  * @return \FrenchFrogs\App\Models\Reference
  */
-function ref($collection, $force_refresh = false)
-{
 
-    // recuperation de la collection
-    $reference = \FrenchFrogs\App\Models\Reference::getInstance($collection);
+if (!function_exists('ref')) {
+    function ref($collection, $force_refresh = false)
+    {
 
-    // on rafraichie le cache si demandé
-    if ($force_refresh) {
-        $reference->clear()->getData();
+        // recuperation de la collection
+        $reference = \FrenchFrogs\App\Models\Reference::getInstance($collection);
+
+        // on rafraichie le cache si demandé
+        if ($force_refresh) {
+            $reference->clear()->getData();
+        }
+
+        return $reference;
     }
-
-    return $reference;
 }
 
 /**
