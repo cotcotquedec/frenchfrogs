@@ -557,12 +557,15 @@ class Table
                 break;
 
             case 'PUT':
-
-                dd('MIGRER');
                 // Inscription des champs remote
                 $this->setRenderer(new Renderer\Js());
                 $this->getColumn($request->get('_column'))
                     ->remoteProcess($request->get('_id'), $request->get('_value', false));
+
+                $content = $this->render();
+
+                // REPONSE
+                return response($content);
                 break;
 
             case 'GET':

@@ -108,7 +108,7 @@ class Method
 
         // docblock
         if ($reflection->getDocComment()) {
-            $factory  = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
+            $factory = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
             $docblock = $factory->create($reflection->getDocComment());
             empty($docblock->getSummary()) || $method->setSummary($docblock->getSummary());
             empty($docblock->getDescription()) || $method->setDescription($docblock->getDescription());
@@ -138,6 +138,9 @@ class Method
                             break;
                         case 'phpDocumentor\Reflection\Types\Array_':
                             $type = 'array';
+                            break;
+                        case 'phpDocumentor\Reflection\Types\Mixed_':
+                            $type = 'mixed';
                             break;
                         default :
                             throw new \Exception('Type pas encore pris en compte : ' . get_class($type));
