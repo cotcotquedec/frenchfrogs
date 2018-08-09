@@ -29,32 +29,32 @@ trait Validator
 
 
     /**
-     * @param array ...$arg
+     * @param array ...$args
      * @return \Illuminate\Validation\Validator
      * @throws \Throwable
      */
-    public function make(...$arg)
+    public function make(...$args)
     {
-        return $this->getValidator()->make(...$arg);
+        return $this->getValidator()->make(...$args);
     }
 
     /**
-     * @param array ...$arg
+     * @param array ...$args
      * @throws \Illuminate\Validation\ValidationException
      * @throws \Throwable
      */
-    public function validate(...$arg)
+    public function validate(...$args)
     {
-        return $this->make(...$arg)->validate();
+        return $this->make(...$args)->validate();
     }
 
     /**
-     * @param array ...$arg
+     * @param array ...$args
      * @return bool
      */
-    public function fails(...$arg)
+    public function fails(...$args)
     {
-        return $this->make(...$arg)->fails();
+        return $this->make(...$args)->fails();
     }
 
     /**
@@ -64,7 +64,7 @@ trait Validator
      */
     public function valid(...$args)
     {
-        return $this->make(...$arg)->valid();
+        return $this->make(...$args)->valid();
     }
 
 
