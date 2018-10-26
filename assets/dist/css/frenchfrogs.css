@@ -1,0 +1,82 @@
+.portlet > .portlet-title > .actions > .select2-container {
+    margin-top: -12px;
+}
+
+table.dataTable.table-condensed thead > tr > th {
+    padding-right: 0px;
+}
+
+table.dataTable {
+    border-bottom: 1px solid #ddd
+}
+
+table.dataTable pre {
+    word-break: break-word;
+    word-wrap: break-word;
+    background-color: transparent;
+    border: none;
+    white-space: pre-wrap;
+}
+
+textarea {
+    resize: none;
+}
+
+div.dataTables_wrapper {
+    margin: 0px 15px;
+}
+
+div.datepicker.datepicker-dropdown {
+    z-index: 99999999999999999 !important;
+}
+
+.ff-remote-select {
+    width: 100%;
+    min-width: 100px;
+}
+
+.ff-remote-text > input {
+    width: 100%;
+    display: none;
+}
+
+.table-scrollable > .table > tbody > tr > td {
+    white-space: normal;
+}
+
+.ff-margin {
+    margin: 4em .2em;
+}
+
+ffedit.ff-edit {
+    width: 300px;
+    margin: 2px;
+    padding: .2em;
+}
+
+ffedit.ff-edit:hover {
+    cursor: pointer;
+    border-bottom: 2px dotted cornflowerblue;
+    margin: 0px;
+}
+
+.ff-toolbar {
+    height: 50px;
+    padding: 5px;
+    position: fixed;
+    background-color: #ffffff;
+    border-top: 1px solid grey;
+    bottom: 0px;
+    width: 100%;
+    z-index: 99999999;
+}
+
+.ff-toolbar button {
+    margin: 0px 2px;
+}
+
+.ff-toolbar h3 {
+    margin: 5px 2px;
+}
+
+
