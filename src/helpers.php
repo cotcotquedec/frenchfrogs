@@ -50,28 +50,6 @@ if (!function_exists('html')) {
     }
 }
 
-
-/**
- * Debug => die function
- *
- * dd => debug die
- *
- *
- */
-if (!function_exists('dd')) {
-
-    function dd()
-    {
-
-        array_map(function ($x) {
-            !d($x);
-        }, func_get_args());
-        d(microtime(), 'Stats execution');
-        die;
-    }
-}
-
-
 /**
  * Function de debug qui sor une quote au hazard
  */
