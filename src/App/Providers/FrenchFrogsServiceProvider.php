@@ -2,6 +2,9 @@
 
 use FrenchFrogs;
 use FrenchFrogs\Laravel\Database\Schema\MySqlGrammar;
+use Illuminate\Database\Connection;
+use Illuminate\Database\Connectors\MySqlConnector;
+use FrenchFrogs\Laravel\Database\MySqlConnection;
 use Illuminate\Database\Query\Grammars\MySqlGrammar as IlluminateMySqlGrammar;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\ServiceProvider;
@@ -85,23 +88,13 @@ class FrenchFrogsServiceProvider extends ServiceProvider
      */
     public function bootDb()
     {
-        /** @var \Illuminate\Database\Connection $connection */
-        $connection = app('db')->connection();
+        // Update mysql resolver
+        Connection::resolverFor('mysql', function($connection, $database, $prefix, $config) {
+            $connection = new MySqlConnection($connection, $database, $prefix, $config);
+            $connection->setSchemaGrammar(new MySqlGrammar());
+            return $connection;
+        });
 
-        // ON recupere la confiuguration existante
-        $queryGrammar = $connection->getQueryGrammar();
-        $queryGrammarClass = get_class($queryGrammar);
-
-
-        // Si pas mysql on pousse une erreur
-        if (!in_array($queryGrammarClass, [
-            IlluminateMySqlGrammar::class,
-        ])) {
-            throw new \Exception("There current grammar `$queryGrammarClass` doesn't support binary uuids. Only  MySql and SQLite connections are supported.");
-        }
-
-        // Upgrade
-        $connection->setSchemaGrammar(new MySqlGrammar());
     }
 
     /**

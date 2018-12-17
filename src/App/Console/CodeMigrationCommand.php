@@ -2,7 +2,6 @@
 
 use Carbon\Carbon;
 use FrenchFrogs\Laravel\Database\Schema\Blueprint;
-use FrenchFrogs\Laravel\Support\Facades\Schema;
 use FrenchFrogs\Maker\Maker;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Filesystem\Filesystem;
@@ -61,7 +60,6 @@ class CodeMigrationCommand extends CodeCommand
         $migration->clearAliases();
         $migration->addAlias('Migration', Migration::class);
         $migration->addAlias('Blueprint', Blueprint::class);
-        $migration->addAlias('Schema', Schema::class);
         $migration->setParent(Migration::class);
 
         // TAG
@@ -80,7 +78,7 @@ class CodeMigrationCommand extends CodeCommand
 
         $body = '';
         if (!empty($table) && $table != static::CHOICE_EMPTY) {
-            if (Schema::hasTable($table)) {
+            if (\Schema::hasTable($table)) {
                 $this->warn(sprintf('la table "%s" existe déjà... modification activé!!', $table));
 
                 $body = <<<EOL
@@ -106,8 +104,7 @@ EOL;
 
         // Clean du formatage du fichier
         $this->reformat($filepath);
-        $this->info('Migration généré : ');
-        $this->warn($migration->getFilename());
+        $this->info('Migration généré : ' . $migration->getClass()->getName());
 
         // recharge des elements
         $composer->dumpAutoloads();
