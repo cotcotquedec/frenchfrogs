@@ -2,6 +2,7 @@
 
 use FrenchFrogs\Laravel\Database\Eloquent\Model;
 use FrenchFrogs\Maker\Maker;
+use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -33,7 +34,7 @@ class CodeModelCommand extends CodeCommand
      *
      * @var string
      */
-    protected $signature = 'code:model {name? : Nom de la table}';
+    protected $signature = 'code:model {name? : Nom de la table} {--connection=}';
 
     /**
      * The console command description.
@@ -44,6 +45,13 @@ class CodeModelCommand extends CodeCommand
 
 
     /**
+     * @var Connection
+     */
+    protected $connection;
+
+
+    /**
+     *
      * Return a determined path for the file
      *
      * @param $class
@@ -70,12 +78,15 @@ class CodeModelCommand extends CodeCommand
         // nom du controller
         $name = $this->argument('name');
 
+        // CONNECTION
+        $this->connection = \DB::connection($this->option('connection') ?: \DB::getDefaultConnection());
+
         //PERMISSION
         do {
             if (empty($name)) {
 
                 $tables = [];
-                foreach (\DB::select('SHOW TABLES') as $row) {
+                foreach ($this->connection->select('SHOW TABLES') as $row) {
                     $tables[] = current($row);
                 }
 
@@ -120,7 +131,6 @@ class CodeModelCommand extends CodeCommand
             $class = $this->ask('Quelle est le nom de la classe?', $class);
             $file = $this->ask('Quelle est le nom du fichier?', $this->determineFileFromClass($class));
         }
-
 
         // Creation de la classe
         $maker = file_exists($file) ? Maker::load($class) : Maker::init($class, $file);
@@ -169,7 +179,7 @@ class CodeModelCommand extends CodeCommand
         $deleted = false;
 
         // recuperation des colonnes
-        $columns = \DB::select('SHOW COLUMNS FROM `'.$name.'`');
+        $columns = $this->connection->select('SHOW COLUMNS FROM `'.$name.'`');
 
         foreach ($columns as $row) {
 
@@ -220,10 +230,9 @@ class CodeModelCommand extends CodeCommand
             }
 
             // TIMESTAMP
-            if (preg_match('#_at$#', $row->Field)) {
-                $maker->addAlias('Carbon', '\\Carbon\\Carbon');
-                $type = 'Carbon';
+            if (in_array($row->Type, ['timestamp'])) {
 
+                $type = '\\Carbon\\Carbon';
                 $dates[] = $row->Field;
 
                 if ($row->Field == 'created_at') {
@@ -265,7 +274,9 @@ class CodeModelCommand extends CodeCommand
         $maker = $this->maker;
 
         // Constrainte
-        $constraints = \DB::select("SELECT
+
+        $constraints = $this->connection
+                            ->select("SELECT
                                    table_name,
                                    column_name,
                                    referenced_table_name,
@@ -275,13 +286,8 @@ class CodeModelCommand extends CodeCommand
                                  WHERE
                                    table_schema = ? AND
                                    (table_name = ? OR referenced_table_name = ?)
-                                   AND referenced_table_name IS NOT NULL", [\DB::getConfig('database'), $table, $table]);
+                                   AND referenced_table_name IS NOT NULL", [$this->connection->getConfig('database'), $table, $table]);
 
-        // on ajoute les alias généraux
-        $maker->addAlias('Collection', Collection::class);
-        $maker->addAlias('HasMany', HasMany::class);
-        $maker->addAlias('HasOne', HasOne::class);
-        $maker->addAlias('BelongsTo', BelongsTo::class);
 
 
         $configuration = collect([]);
@@ -305,7 +311,6 @@ class CodeModelCommand extends CodeCommand
                     continue;
                 }
 
-
                 $config['type'] = 'BelongsTo';
 
                 $name = $constraint->column_name;
@@ -321,7 +326,6 @@ class CodeModelCommand extends CodeCommand
                 $config['exists'] = $maker->hasMethod($config['name']) ? '*' : '';
 
             } else {
-
 
                 $config['id'] = str_random(3);
 
@@ -396,7 +400,7 @@ class CodeModelCommand extends CodeCommand
                     // Création
                     $maker->addTagPropertyRead($config['name'],$class);
                     $maker->addMethod($config['name'])
-                        ->addTag('return', $maker->findAliasName(BelongsTo::class))
+                        ->addTag('return', BelongsTo::class)
                         ->setBody('return $this->belongsTo(' . $class . '::class, "' . $config ['from'] . '", "' . $config['to'] . '");');
                     break;
                 case 'HasMany' :
@@ -407,9 +411,9 @@ class CodeModelCommand extends CodeCommand
 
                     // Nom de la liaision
                     $name = Pluralizer::plural($config['name']);
-                    $maker->addTagPropertyRead($name, 'Collection|' . $class . '[]');
+                    $maker->addTagPropertyRead($name, Collection::class . '|' . $class . '[]');
                     $maker->addMethod($name)
-                        ->addTag('return', 'HasMany')
+                        ->addTag('return', HasMany::class)
                         ->setBody('return $this->hasMany(' . $class . '::class, "' . $config['from'] . '", "' . $config['to']  . '");');
                     break;
 
