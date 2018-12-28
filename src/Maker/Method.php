@@ -142,6 +142,9 @@ class Method
                         case 'phpDocumentor\Reflection\Types\Mixed_':
                             $type = 'mixed';
                             break;
+                        case 'phpDocumentor\Reflection\Types\Null_':
+                            $type = '';
+                            break;
                         default :
                             throw new \Exception('Type pas encore pris en compte : ' . get_class($type));
                     }

@@ -37,7 +37,7 @@
     "oyejorge/less.php": "^1.7",
     "league/csv": "^8.0",
     "almasaeed2010/adminlte": "^2.4.2",
-    "roave/better-reflection": "2.*",
+    "roave/better-reflection": "3.*",
     "jdorn/sql-formatter": "^1.2",
     "webpatser/laravel-uuid": "^3.0"
   },
