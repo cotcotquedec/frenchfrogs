@@ -34,7 +34,7 @@ class Javascript extends Container
     }
 
     /**
-     * Ecnode un paramÃ¨tre js
+     * Ecnode un paramètre js
      *
      * @param $var
      * @return mixed
@@ -44,7 +44,7 @@ class Javascript extends Container
 
         $functions = [];
 
-        // on force un niveau supÃ©rieur
+        // on force un niveau supérieur
         $var = [$var];
 
         // bind toutes les functions
@@ -186,6 +186,19 @@ class Javascript extends Container
     {
         $body = empty($body) ?  ff()->get('toastr.error') : $body;
         $this->append(sprintf('toastr.error("%s", "%s");', addslashes($body), $title));
+        return $this;
+    }
+    
+    /**
+     * Add toastr success message
+     *
+     * @param $body
+     * @param string $title
+     * @return Javascript
+     */
+    public function info($body, $title = '')
+    {
+        $this->append(sprintf('toastr.info("%s", "%s");', addslashes($body), $title));
         return $this;
     }
 
