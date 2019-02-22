@@ -28,6 +28,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
 {
 
     const BINARY16_UUID = 'binuuid';
+    const HEX_UUID = 'hexuuid';
     const NENUPHAR = 'nenuphar';
 
 
@@ -68,7 +69,7 @@ class Model extends \Illuminate\Database\Eloquent\Model
 
                     $v = PCRE::fromPattern('#^(?<rule>[^`]+)(`(?<message>.+)`)?$#')->match($validator);
 
-                    // Inscription des regles pour la propriÃ©tÃ©
+                    // Inscription des regles pour la propriété
                     empty($rules[$property]) && $rules[$property] = [];
                     $rules[$property][] = $v->get('rule');
 
@@ -133,6 +134,8 @@ class Model extends \Illuminate\Database\Eloquent\Model
                 return $this->asTimestamp($value);
             case static::BINARY16_UUID:
                 return \Webpatser\Uuid\Uuid::import($value)->bytes;
+            case static::HEX_UUID:
+                return \Webpatser\Uuid\Uuid::import($value)->hex;
             case static::NENUPHAR :
                 return '';
             default:
