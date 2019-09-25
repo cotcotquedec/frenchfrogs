@@ -46,7 +46,7 @@ class CreateUserCommand extends CodeCommand
 
 
         // génération automatique de l'email
-        $password = $this->option('pass') ?: str_random(12);
+        $password = $this->option('pass') ?: \Str::random(12);
         $password = $this->askUntilValid('Mot de passe?', null, 'required|min:6', $password);
 
         // nom complet

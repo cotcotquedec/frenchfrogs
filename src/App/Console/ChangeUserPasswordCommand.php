@@ -47,7 +47,7 @@ class ChangeUserPasswordCommand extends Command
         $email = $this->argument('email');
 
         // génération automatique de l'email
-        $password = str_random(8);
+        $password = \Str::random(8);
 
         // interface
         $interface = $this->hasArgument('interface') ? $this->argument('interface') : 'default';

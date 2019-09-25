@@ -297,7 +297,7 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
                 'data-toggle' => 'tooltip'
             ];
 
-            $html = html('div', $attributes, str_limit($column->getValue($row), 70));
+            $html = html('div', $attributes, \Str::limit($column->getValue($row), 70));
         } else {
             $html = html('span', $attributes, $column->getValue($row));
         }

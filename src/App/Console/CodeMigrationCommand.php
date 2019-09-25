@@ -42,7 +42,7 @@ class CodeMigrationCommand extends CodeCommand
         // name
         $name = $this->argument('name') ?: static::CHOISE_NULL;
         $name = $this->askUntilValid('Quel est le nom de la migration?', 'migration_anonymous', 'required|min:6', $name);
-        $name .= '_' . str_random(6);
+        $name .= '_' . \Str::random(6);
 
 
         // Creation de la migration

@@ -148,7 +148,7 @@ class Route
                 //recuperation des informations
                 $action = $match['action'];
 
-                $title = str_slug($match['title']);
+                $title = \Str::slug($match['title']);
 
                 // construction de l'url
                 $uri = '/' . $prefix . ($title == 'index' ? '' : '/' . $title);

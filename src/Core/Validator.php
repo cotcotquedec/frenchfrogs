@@ -51,7 +51,7 @@ class Validator
         $response = (new ValidationRuleParser([]))
             ->explode([$rules]);
 
-        $this->rules[$index] = array_get($response->rules, 0, []);
+        $this->rules[$index] = \Arr::get($response->rules, 0, []);
         return $this;
     }
 
@@ -63,7 +63,7 @@ class Validator
      */
     public function hasRule($index, $rule)
     {
-        return isset(array_get($this->rules, $index, [])[$rule]);
+        return isset(\Arr::get($this->rules, $index, [])[$rule]);
     }
 
     /**
@@ -83,7 +83,7 @@ class Validator
     {
         if ($this->validator) {
             $errors = $this->validator->errors()->toArray();
-            return is_null($index) ? $errors : array_get($errors, $index, []);
+            return is_null($index) ? $errors : \Arr::get($errors, $index, []);
         }
 
         return [];
