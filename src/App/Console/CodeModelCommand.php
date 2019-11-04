@@ -111,7 +111,7 @@ class CodeModelCommand extends CodeCommand
             }
 
             // choix par default
-            $class = str_replace('\\\\', '\\', Maker::getDbNamespace() . '\\' . ucfirst(camel_case($class)));
+            $class = str_replace('\\\\', '\\', Maker::getDbNamespace() . '\\' . ucfirst(\Str::camel($class)));
             $file = $this->determineFileFromClass($class);
         }
 
@@ -207,7 +207,7 @@ class CodeModelCommand extends CodeCommand
 
             // boolean
             if ($row->Type == 'tinyint(1)' && preg_match('#(is|can|has)_.+#', $row->Field)) {
-                $maker->addMethod(camel_case($row->Field))
+                $maker->addMethod(\Str::camel($row->Field))
                     ->setBody('return (bool) $this->' . $row->Field . ';')
                     ->addTag('return', 'bool')
                     ->addAnnotation('Getter for ' . $row->Field);
