@@ -1085,7 +1085,7 @@ class Maker
     static public function formatClassName($shortname)
     {
         $shortname = str_replace('.', '\\_', $shortname);
-        $class = ucfirst(camel_case($shortname));
+        $class = ucfirst(\Str::camel($shortname));
         return '\\' . $class;
     }
 }

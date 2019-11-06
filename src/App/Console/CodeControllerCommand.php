@@ -33,7 +33,7 @@ class CodeControllerCommand extends CodeCommand
         $name = str_replace('.', '\\_', $name);
 
         // creation du controller
-        $class = ucfirst(camel_case($name . '_controller'));
+        $class = ucfirst(\Str::camel($name . '_controller'));
         $this->call('make:controller', ['name' => $class]);
     }
 }

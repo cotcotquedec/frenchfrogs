@@ -146,7 +146,7 @@ class Nenuphar
      */
     public function execute(...$params)
     {
-        $interpreter = camel_case('build_' . $this->interpreter);
+        $interpreter = \Str::camel('build_' . $this->interpreter);
 
         if (!method_exists($this, $interpreter)) {
             throw new \Exception('L\'interpreteur n\'existe pas : ' . $interpreter);
