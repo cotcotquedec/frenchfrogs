@@ -1,6 +1,12 @@
 <?php
 
-use FrenchFrogs\Core\Configurator;
+use FrenchFrogs\App\Models\Reference;
+use FrenchFrogs\Container\Head;
+use FrenchFrogs\Container\Javascript;
+use FrenchFrogs\Core\Nenuphar;
+use Illuminate\Database\Query\Expression;
+use Illuminate\Support\Collection;
+use Webpatser\Uuid\Uuid;
 
 
 if (!function_exists('html')) {
@@ -51,39 +57,6 @@ if (!function_exists('html')) {
 }
 
 /**
- * Function de debug qui sor une quote au hazard
- */
-function dq()
-{
-
-    // citatyion par default
-    $quote = 'I don\'t give a shit - cotcotquedec';
-
-    try {
-        // Tentative de recuperation d'un quote
-        $client = new \GuzzleHttp\Client();
-        $response = $client->get('http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json');
-
-        if ($response->getStatusCode() == 200) {
-            $content = $response->getBody()->getContents();
-            $content = \json_decode($content);
-
-            if (!empty($content->quoteText)) {
-                $quote = sprintf('%s - %s', $content->quoteText, $content->quoteAuthor);
-            }
-        }
-
-        throw new \Exception('dq is coming');
-
-    } catch (\Exception $e) {
-        // recuperation de la trace
-        $trace = collect($e->getTrace());
-        $line = $trace->first();
-        dd($quote, sprintf('%s [%d]', $line['file'], $line['line']));
-    }
-}
-
-/**
  * Return human format octet size (mo, go etc...)
  *
  * @param unknown_type $size
@@ -113,7 +86,7 @@ function human_size($size, $round = 1)
  * Return the namespace configurator
  *
  * @param null $namespace
- * @return \FrenchFrogs\Core\Configurator
+ * @return Configurator
  */
 function ff($index = null, $default = null)
 {
@@ -198,7 +171,7 @@ function modal(...$args)
  * @param null $selector
  * @param null $function
  * @param ...$params
- * @return \FrenchFrogs\Container\Javascript
+ * @return Javascript
  */
 function js($namespace = null, $selector = null, $function = null, ...$params)
 {
@@ -215,26 +188,13 @@ function js($namespace = null, $selector = null, $function = null, ...$params)
     return $container;
 }
 
-
-/**
- * Return css cointainer
- *
- * @param null $href
- * @return \FrenchFrogs\Container\Css
- */
-function css($namespace = null)
-{
-    return FrenchFrogs\Container\Css::getInstance($namespace);
-}
-
-
 /**
  * Return a head container
  *
  * @param $name
  * @param $value
  * @param null $conditional
- * @return \FrenchFrogs\Container\Head
+ * @return Head
  */
 function h($name = null, $value = null, $conditional = null)
 {
@@ -269,7 +229,7 @@ function action_url($controller, $action = 'getIndex', $params = [], $query = []
  *
  *
  * @param array ...$params
- * @return \Illuminate\Database\Query\Expression
+ * @return Expression
  */
 function raw(...$params)
 {
@@ -283,8 +243,8 @@ function raw(...$params)
  * @param $callable
  * @param null $connection
  * @return mixed
- * @throws \Exception
- * @throws \Throwable
+ * @throws Exception
+ * @throws Throwable
  */
 function transaction($callable, $connection = null)
 {
@@ -319,15 +279,15 @@ function query($table, $columns = null, $connection = null)
  *
  * @param string $format
  * @param null $uuid
- * @return \Webpatser\Uuid\Uuid
- * @throws \Exception
+ * @return Uuid
+ * @throws Exception
  */
 function uuid($uuid = null)
 {
     if (is_null($uuid)) {
-        $uuid = \Webpatser\Uuid\Uuid::generate(4);
+        $uuid = Uuid::generate(4);
     } else {
-        $uuid = \Webpatser\Uuid\Uuid::import($uuid);
+        $uuid = Uuid::import($uuid);
     }
 
     return $uuid;
@@ -342,91 +302,6 @@ function is_debug()
 {
     return config('app.debug');
 }
-
-/**
- * return true if application is in production mode
- *
- * @return bool
- */
-function production()
-{
-    return app()->environment() == 'production';
-}
-
-
-/**
- * Log une erreur
- *
- * @param $message
- * @param array $context
- */
-function le($message, $context = [])
-{
-    return Log::error($message, $context);
-}
-
-
-/**
- * Log un warning
- *
- * @param $message
- * @param array $context
- */
-function lw($message, $context = [])
-{
-    return Log::warning($message, $context);
-}
-
-
-/**
- * Log une alerte
- *
- * @param $message
- * @param array $context
- * @return bool
- */
-function la($message, $context = [])
-{
-    return Log::alert($message, $context);
-}
-
-/**
- * Log une critique
- *
- * @param $message
- * @param array $context
- * @return bool
- */
-function lc($message, $context = [])
-{
-    return Log::critical($message, $context);
-}
-
-
-/**
- * Log une info
- *
- * @param $message
- * @param array $context
- * @return bool
- */
-function li($message, $context = [])
-{
-    return Log::info($message, $context);
-}
-
-/**
- * Log un debug
- *
- * @param $message
- * @param array $context
- * @return bool
- */
-function ld($message, $context = [])
-{
-    return Log::debug($message, $context);
-}
-
 
 /**
  * Format a number in french format
@@ -465,7 +340,7 @@ if (!function_exists('extract_meta_url')) {
 
         $data = [];
         try {
-            $client = new \GuzzleHttp\Client();
+            $client = new Client();
             $res = $client->get($url);
 
             if ($res->getStatusCode() == 200) {
@@ -527,7 +402,7 @@ if (!function_exists('extract_meta_url')) {
                     }
                 }
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         return $data;
@@ -538,8 +413,8 @@ if (!function_exists('extract_meta_url')) {
  * Return Reference for the collection
  *
  * @param string $collection
+ * @return Reference
  * @package Reference
- * @return \FrenchFrogs\App\Models\Reference
  */
 
 if (!function_exists('ref')) {
@@ -547,7 +422,7 @@ if (!function_exists('ref')) {
     {
 
         // recuperation de la collection
-        $reference = \FrenchFrogs\App\Models\Reference::getInstance($collection);
+        $reference = Reference::getInstance($collection);
 
         // on rafraichie le cache si demandé
         if ($force_refresh) {
@@ -559,24 +434,6 @@ if (!function_exists('ref')) {
 }
 
 /**
- * Les liste les fichier qui match recursivement le pattern
- *
- * @param $pattern
- * @param int $flags
- * @return array
- */
-function glob_recursive($pattern, $flags = 0)
-{
-    $files = glob($pattern, $flags);
-
-    foreach (glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT) as $dir) {
-        $files = array_merge($files, glob_recursive($dir . '/' . basename($pattern), $flags));
-    }
-
-    return $files;
-}
-
-/**
  * Force la cast d'une variable en array
  *
  * @param $object
@@ -585,7 +442,7 @@ function a(&$object)
 {
 
     // Cast
-    if ($object instanceof \Illuminate\Support\Collection) {
+    if ($object instanceof Collection) {
         $object = $object->toArray();
     } elseif ($object instanceof StdClass) {
         $object = (array)$object;
@@ -607,27 +464,6 @@ function a(&$object)
 
 
 /**
- * Raccourcie vers l'trulistauer authentidfié
- *
- * @param null $name
- * @return \Illuminate\Contracts\Auth\Authenticatable|\Illuminate\Database\Eloquent\Model|null
- */
-function user($name = null)
-{
-
-    // recuperation de l'objet qui gere les user
-    $user = \auth()->user();
-
-    // gestion de la recherche de propriete
-    if (!is_null($user) && !is_null($name)) {
-        $user = $user->$name;
-    }
-
-    // gestion de la propriété demandé
-    return $user;
-}
-
-/**
  * @return string
  */
 function frenchfrogs_path($path = '')
@@ -645,9 +481,9 @@ function frenchfrogs_path($path = '')
  * @param array $params
  * @param string $interpreter
  * @param array $extras
- * @return \FrenchFrogs\Core\Nenuphar
+ * @return Nenuphar
  */
 function n(string $class, string $method = null, array $params = [], string $interpreter = 'default', $extras = [])
 {
-    return new \FrenchFrogs\Core\Nenuphar($class, $method, $params, $interpreter, $extras);
+    return new Nenuphar($class, $method, $params, $interpreter, $extras);
 }

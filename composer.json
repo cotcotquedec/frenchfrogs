@@ -2,11 +2,6 @@
   "name": "cotcotquedec/frenchfrogs",
   "description": "Framework construit sur laravel",
   "type": "library",
-  "source": {
-    "url": "https://github.com/cotcotquedec/frenchfrogs.git",
-    "type": "git",
-    "reference": "origin/master"
-  },
   "keywords": [
     "laravel",
     "french",
@@ -20,7 +15,6 @@
     "plugins"
   ],
   "homepage": "https://github.com/cotcotquedec/frenchfrogs.git",
-  "licence": "GPL-3.0+",
   "authors": [
     {
       "name": "Julien Houvion",
@@ -31,15 +25,11 @@
   ],
   "require": {
     "php": ">=7.3",
-    "illuminate/database": "^6.0",
-    "illuminate/validation": "^6.0",
-    "matthiasmullie/minify": "^1.3",
-    "oyejorge/less.php": "^1.7",
-    "league/csv": "^8.0",
-    "almasaeed2010/adminlte": "^2.4.2",
-    "roave/better-reflection": "3.*",
-    "jdorn/sql-formatter": "^1.2",
-    "webpatser/laravel-uuid": "^3.0"
+    "illuminate/database": "^6.6.2",
+    "illuminate/validation": "^6.5.2",
+    "league/csv": "^9.4.1",
+    "almasaeed2010/adminlte": "^3.0.1",
+    "webpatser/laravel-uuid": "^3.0.2"
   },
   "autoload": {
     "files": [
