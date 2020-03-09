@@ -6,6 +6,10 @@ use FrenchFrogs\Form\Form\Form;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 
+/**
+ * Class FormMiddleware
+ * @package FrenchFrogs\App\Http\Middleware
+ */
 class FormMiddleware
 {
     /**

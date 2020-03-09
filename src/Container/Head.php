@@ -11,7 +11,6 @@ class Head extends Container
 
     const NAMESPACE_DEFAULT = 'meta';
 
-
     /**
      * Meta
      *

@@ -37,15 +37,4 @@ trait FrenchFrogsController
 
         return $this->request;
     }
-
-
-    /**
-     * getter for l'utilisateur courant
-     *
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
-     */
-    public function user()
-    {
-        return \auth()->user();
-    }
 }
