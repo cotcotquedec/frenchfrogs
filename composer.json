@@ -25,10 +25,9 @@
   ],
   "require": {
     "php": ">=7.3",
-    "illuminate/database": "^6.6.2",
-    "illuminate/validation": "^6.5.2",
-    "league/csv": "^9.4.1",
-    "almasaeed2010/adminlte": "^3.0.1",
+    "illuminate/database": ">=7",
+    "illuminate/validation": ">=7",
+    "almasaeed2010/adminlte": "^3.0.2",
     "webpatser/laravel-uuid": "^3.0.2"
   },
   "autoload": {

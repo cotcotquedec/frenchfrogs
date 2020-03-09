@@ -14,8 +14,6 @@ class Javascript extends Container
 
     const NAMESPACE_DEFAULT = 'onload';
 
-    use Minify;
-
     protected $files = [];
 
 
@@ -34,7 +32,7 @@ class Javascript extends Container
     }
 
     /**
-     * Ecnode un paramètre js
+     * Ecnode un paramï¿½tre js
      *
      * @param $var
      * @return mixed
@@ -44,7 +42,7 @@ class Javascript extends Container
 
         $functions = [];
 
-        // on force un niveau supérieur
+        // on force un niveau supï¿½rieur
         $var = [$var];
 
         // bind toutes les functions
@@ -188,7 +186,7 @@ class Javascript extends Container
         $this->append(sprintf('toastr.error("%s", "%s");', addslashes($body), $title));
         return $this;
     }
-    
+
     /**
      * Add toastr success message
      *
@@ -269,93 +267,17 @@ class Javascript extends Container
     {
         $result = '';
         try {
-
-            // If we want to minify
-            if ($this->isMinify()) {
-
-                $hash = '';
-                $contents = [];
-
-                // TRaitement des fichiers
-                foreach ($this->files as $c) {
-                    // scheme case
-                    if (preg_match('#^//.+$#', $c)) {
-                        $c = 'http:' . $c;
-                        $contents[] = ['remote', $c];
-                        $hash .= md5($c);
-
-                        // url case
-                    } elseif (preg_match('#^https?://.+$#', $c)) {
-                        $contents[] = ['remote', $c];
-                        $hash .= md5($c);
-
-                        // local file
-                    } else {
-                        $c = public_path($c);
-                        $hash .= md5_file($c);
-                        $contents[] = ['local', $c];
-                    }
-                }
-
-                // manage remote or local file
-                foreach ($this->container as $content) {
-                    $hash .= md5($c);
-                    $contents[] = ['inline', $c];
-                }
-
-                // destination file
-                $target = public_path($this->getTargetPath());
-                if (substr($target, -1) != '/') {
-                    $target .= '/';
-                }
-                $target .= md5($hash) . '.js';
-
-                // add css to minifier
-                if (!file_exists($target)) {
-
-                    $minifier = new MiniJs();
-
-                    // Remote file management
-                    foreach($contents as $content) {
-
-                        list($t, $c) = $content;
-
-                        // we get remote file content
-                        if ($t == 'remote') {
-                            $c = file_get_contents($c);
-                        }
-
-                        $minifier->add($c);
-                    }
-
-                    // minify
-                    $minifier->minify($target);
-                }
-
-                // set $file
+            foreach ($this->files as $c) {
                 $result .= html('script',
                         [
-                            'src' => str_replace(public_path(), '', $target),
+                            'src' => $c,
                             'type' => 'text/javascript',
                         ]
                     ) . PHP_EOL;
+            }
 
-            } else {
-
-
-                foreach ($this->files as $c) {
-                    $result .= html('script',
-                            [
-                                'src' => $c,
-                                'type' => 'text/javascript',
-                            ]
-                        ) . PHP_EOL;
-                }
-
-
-                foreach ($this->container as $content) {
-                    $result .= $content . $this->getGlue();
-                }
+            foreach ($this->container as $content) {
+                $result .= $content . $this->getGlue();
             }
 
         } catch(\Exception $e) {
