@@ -108,9 +108,6 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
                     if (!isset($row[$table->getIdField()])) {
                         throw new \LogicException($table->getIdField() . ' column is not found');
                     }
-
-                    //too soon for you
-//                  $attributes['data-id'] = sprintf('%s#%s', $row[$table->getIdField()], $name);
                 }
 
                 // remove class in colum because it set in column for datatable

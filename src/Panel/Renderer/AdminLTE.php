@@ -29,16 +29,14 @@ class AdminLTE extends Bootstrap
             $actions .= $action->render() . PHP_EOL;
         }
 
-
-        $html .= html('div', ['class' => Style::PANEL_HEAD_CLASS_TITLE], $panel->getTitle());
-        $html .= html('div', ['class' => Style::PANEL_HEAD_CLASS_ACTIONS], $actions);
-        $html = html('div', ['class' => Style::PANEL_HEAD_CLASS], $html);
-
+        $html .= html('div', ['class' => 'card-title'], $panel->getTitle());
+        $html .= html('div', ['class' => 'card-tools'], $actions);
+        $html = html('div', ['class' => 'card-header'], $html);
 
         //@todo footer render
-        $html .= html('div', ['class' => Style::PANEL_BODY_CLASS], $panel->getBody());
+        $html .= html('div', ['class' => 'card-body'], $panel->getBody());
 
-        $panel->addClass(Style::PANEL_CLASS);
+        $panel->addClass('card');
 
         if ($panel->hasContext()) {
             $panel->addClass(constant( Style::class . '::' . $panel->getContext()));
