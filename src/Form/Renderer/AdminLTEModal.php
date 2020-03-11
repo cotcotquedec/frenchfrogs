@@ -11,7 +11,6 @@ class AdminLTEModal extends AdminLTE
 
     function form(Form\Form\Form $form)
     {
-
         $html = '';
         $form->addAttribute('role', 'form');
         $form->addClass('form-horizontal');
@@ -21,13 +20,14 @@ class AdminLTEModal extends AdminLTE
             $html .= csrf_field();
         }
 
-        $html .= html('button', ['type' => 'button', 'class' => 'close', 'data-dismiss' => 'modal'], '<span aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i></span>');
-
         if ($form->hasLegend()) {
-            $html .= html('h4', ['class' => Style::MODAL_HEADER_TITLE_CLASS], $form->getLegend());
+            $html .= html('h4', ['class' => 'modal-title'], $form->getLegend());
         }
 
-        $html = html('div', ['class' => Style::MODAL_HEADER_CLASS], $html);
+        $html .= html('button', ['type' => 'button', 'class' => 'close', 'data-dismiss' => 'modal'], '<span aria-hidden="true">&times;</span>');
+
+
+        $html = html('div', ['class' => 'modal-header'], $html);
 
         $body = '';
         foreach ($form->getElements() as $e) {
@@ -36,7 +36,7 @@ class AdminLTEModal extends AdminLTE
         }
 
         // body
-        $html .= html('div', ['class' => Style::MODAL_BODY_CLASS . ' form-body'], $body);
+        $html .= html('div', ['class' => 'modal-body' . ' form-body'], $body);
 
         // Actions
         if ($form->hasActions()) {
@@ -44,7 +44,7 @@ class AdminLTEModal extends AdminLTE
             foreach ($form->getActions() as $e) {
                 $actions .= $e->render();
             }
-            $html .= html('div', ['class' => Style::MODAL_FOOTER_CLASS], $actions);
+            $html .= html('div', ['class' => 'modal-footer'], $actions);
         }
 
         if ($form->isRemote()) {
