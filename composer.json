@@ -27,8 +27,10 @@
     "php": ">=7.3",
     "illuminate/database": ">=7",
     "illuminate/validation": ">=7",
-    "almasaeed2010/adminlte": "^3.0.2",
     "webpatser/laravel-uuid": "^3.0.2"
+  },
+  "require-dev": {
+      "almasaeed2010/adminlte": "^3.0.2"
   },
   "autoload": {
     "files": [
