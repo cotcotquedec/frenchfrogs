@@ -547,7 +547,7 @@ class Inline extends Renderer\Renderer {
     public function select(Form\Element\Select $element)
     {
         // CLASS
-        $class =  Style::FORM_GROUP_CLASS;
+        $class =  Style::FORM_GROUP_CLASS . " row";
 
         // ERROR
         if($element->fails()){
@@ -668,7 +668,7 @@ class Inline extends Renderer\Renderer {
     {
 
         // CLASS
-        $class =  Style::FORM_GROUP_CLASS;
+        $class =  Style::FORM_GROUP_CLASS . ' row';
 
         // ERROR
         if($element->fails()){
