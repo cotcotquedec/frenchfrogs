@@ -808,7 +808,7 @@ class Inline extends Renderer\Renderer {
     public function select2(Form\Element\SelectRemote $element)
     {
         // CLASS
-        $class =  Style::FORM_GROUP_CLASS;
+        $class =  Style::FORM_GROUP_CLASS . ' row';
 
         // ERROR
         if($element->fails()){
@@ -830,7 +830,7 @@ class Inline extends Renderer\Renderer {
         }
 
         // INPUT
-        $element->addClass('select2-remote');
+        $element->addClass('form-control select2 select2-hidden-accessible select2-remote');
         $element->addAttribute('data-css', 'form-control input-large input-sm');
         $element->addAttribute('data-remote', $element->getUrl());
         $element->addAttribute('data-length', $element->getLength());
