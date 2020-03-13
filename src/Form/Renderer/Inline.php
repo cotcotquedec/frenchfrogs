@@ -621,7 +621,7 @@ class Inline extends Renderer\Renderer {
     public function file(Form\Element\File $element)
     {
         // CLASS
-        $class =  Style::FORM_GROUP_CLASS;
+        $class =  Style::FORM_GROUP_CLASS . " row";
 
         // ERROR
         if($element->fails()){
@@ -639,20 +639,27 @@ class Inline extends Renderer\Renderer {
         // LABEL
         $label = '';
         if ($element->getForm()->hasLabel()) {
-            $label = '<label for="' . $element->getName() . '" class="col-md-3 control-label">' . $element->getLabel() . ($element->hasRule('required') ? ' *' : '') . '</label>';
+            $label = '<label for="' . $element->getName() . '" class="col-md-3 form-label">' . $element->getLabel() . ($element->hasRule('required') ? ' *' : '') . '</label>';
         }
 
         // INPUT
         $element->addClass(Style::FORM_ELEMENT_CONTROL);
         $element->addAttribute('type', 'file');
+        $element->addAttribute('class', 'form-control custom-file-input');
         $html = html('input', $element->getAttributes());
+
+        $html .= html('label', ['class' => 'custom-file-label'],'Choose file');
+
 
         // DESCRIPTION
         if ($element->hasDescription()) {
             $html .= html('span', ['class' => 'help-block'], $element->getDescription());
         }
 
+
         // FINAL CONTAINER
+        $html = html('div', ['class' => 'input-group'], $html);
+        $html = html('div', ['class' => 'custom-file'], $html);
         $html = html('div', ['class' => 'col-md-9'], $html);
         return html('div', compact('class'), $label . $html);
     }
