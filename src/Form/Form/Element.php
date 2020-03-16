@@ -35,7 +35,6 @@ trait Element
         $element->setForm($this);
 
         $this->elements[$element->getName()] = $element;
-
         return $this;
     }
 
@@ -664,6 +663,21 @@ trait Element
     public function addFile($name, $label = '')
     {
         $e = new \FrenchFrogs\Form\Element\File($name, $label);
+        $this->addElement($e);
+        return $e;
+    }
+
+    /**
+     * Add addColorpicker
+     *
+     * @param $name
+     * @param string $label
+     * @param array $attr
+     * @return \FrenchFrogs\Form\Element\Colorpicker
+     */
+    public function addColorpicker($name, $label = '')
+    {
+        $e = new \FrenchFrogs\Form\Element\Colorpicker($name, $label);
         $this->addElement($e);
         return $e;
     }

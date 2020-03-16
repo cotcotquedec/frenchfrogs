@@ -43,7 +43,8 @@ class Inline extends Renderer\Renderer {
         'date',
         'select2',
         'time',
-        'pre'
+        'pre',
+        'colorpicker'
     ];
 
     function form(Form\Form\Form $form)
@@ -658,7 +659,9 @@ class Inline extends Renderer\Renderer {
 
 
         // FINAL CONTAINER
-        $html = html('div', ['class' => 'col-md-9 custom-file input-group'], $html);
+        $html = html('div', ['class' => 'input-group'], $html);
+        $html = html('div', ['class' => 'custom-file'], $html);
+        $html = html('div', ['class' => 'col-md-9'], $html);
         return html('div', compact('class'), $label . $html);
     }
 
@@ -848,6 +851,49 @@ class Inline extends Renderer\Renderer {
 
         // FINAL CONTAINER
         $html = html('div', ['class' => 'col-md-9'], $html);
+        return html('div', compact('class'), $label . $html);
+    }
+
+    public function colorpicker(Form\Element\Colorpicker $element)
+    {
+        // CLASS
+        $class =  Style::FORM_GROUP_CLASS . ' row';
+
+        // ERROR
+        if($element->fails()){
+
+            if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
+            $message = '';
+            foreach($element->errors() as $error){
+                $message .= $error . ' ';
+            }
+            $element->addAttribute('data-original-title',$message);
+            $element->addAttribute('data-toggle', 'tooltip');
+            $class .= ' ' .Style::FORM_GROUP_ERROR;
+        }
+
+        // LABEL
+        $label = '';
+        if ($element->getForm()->hasLabel()) {
+            $label = '<label for="' . $element->getName() . '" class="col-md-3 control-label">' . $element->getLabel() . ($element->hasRule('required') ? ' *' : '') . '</label>';
+        }
+
+        // INPUT
+        $element->addClass(Style::FORM_ELEMENT_CONTROL);
+        $element->addAttribute('type', 'text');
+        $element->addAttribute('class', 'form-control');
+        $element->addAttribute('id', $element->getName());
+        $html = html('input', $element->getAttributes());
+
+        $html .= html('div', ['class' => 'input-group-append '], '<span class="input-group-text"><em class="fas fa-square" id="square_'.$element->getName().'"></em></span>');
+
+        // DESCRIPTION
+        if ($element->hasDescription()) {
+            $html .= html('span', ['class' => 'help-block'], $element->getDescription());
+        }
+
+        // FINAL CONTAINER
+        $html = html('div', ['class' => 'col-md-9 colorpicker-element input-group'], $html);
         return html('div', compact('class'), $label . $html);
     }
 }

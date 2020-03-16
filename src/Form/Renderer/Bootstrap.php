@@ -41,7 +41,8 @@ class Bootstrap extends Renderer\Renderer {
         'file',
         'date',
         'select2',
-        'datalist'
+        'datalist',
+        'colorpicker'
     ];
 
     function form(Form\Form\Form $form)
@@ -594,5 +595,11 @@ class Bootstrap extends Renderer\Renderer {
         $html = html('div', compact('class'), $html).html('datalist', ['id' => $element->getName()], $options);
 
         return $html;
+    }
+
+    public function colorpicker(Form\Element\SelectRemote $element)
+    {
+
+        dd("coucou");
     }
 }
