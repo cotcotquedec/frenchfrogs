@@ -882,10 +882,9 @@ class Inline extends Renderer\Renderer {
         $element->addClass(Style::FORM_ELEMENT_CONTROL);
         $element->addAttribute('type', 'text');
         $element->addAttribute('class', 'form-control');
-        $element->addAttribute('id', $element->getName());
         $html = html('input', $element->getAttributes());
 
-        $html .= html('div', ['class' => 'input-group-append '], '<span class="input-group-text"><em class="fas fa-square" id="square_'.$element->getName().'"></em></span>');
+        $html .= html('div', ['class' => 'input-group-append '], '<span class="input-group-text"><em class="fas fa-square"></em></span>');
 
         // DESCRIPTION
         if ($element->hasDescription()) {
