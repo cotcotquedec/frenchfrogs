@@ -596,10 +596,4 @@ class Bootstrap extends Renderer\Renderer {
 
         return $html;
     }
-
-    public function colorpicker(Form\Element\SelectRemote $element)
-    {
-
-        dd("coucou");
-    }
 }
