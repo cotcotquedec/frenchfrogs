@@ -15,6 +15,7 @@ class Colorpicker extends Text
         $this->setAttributes($attr);
         $this->setName($name);
         $this->setLabel($label);
+        $this->validator('regex:/^#(0-9a-f){6}$/');
     }
 
     /**
