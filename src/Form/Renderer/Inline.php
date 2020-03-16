@@ -658,9 +658,7 @@ class Inline extends Renderer\Renderer {
 
 
         // FINAL CONTAINER
-        $html = html('div', ['class' => 'input-group'], $html);
-        $html = html('div', ['class' => 'custom-file'], $html);
-        $html = html('div', ['class' => 'col-md-9'], $html);
+        $html = html('div', ['class' => 'col-md-9 custom-file input-group'], $html);
         return html('div', compact('class'), $label . $html);
     }
 
@@ -810,8 +808,6 @@ class Inline extends Renderer\Renderer {
 
     }
 
-
-
     public function select2(Form\Element\SelectRemote $element)
     {
         // CLASS
@@ -819,7 +815,6 @@ class Inline extends Renderer\Renderer {
 
         // ERROR
         if($element->fails()){
-
             if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
             $message = '';
             foreach($element->errors() as $error){
