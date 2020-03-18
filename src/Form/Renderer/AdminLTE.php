@@ -83,17 +83,16 @@ class AdminLTE extends Inline
             $opt = '';
 
             // INPUT
-            $attr = ['type' => 'checkbox', 'name' => $element->getName() . '[]', 'value' => $value];
+            $attr = ['class' => 'form-check-input', 'type' => 'checkbox', 'name' => $element->getName() . '[]', 'value' => $value];
 
             // VALUE
             $values = (array) $element->getValue();
             if (!is_null( $element->getValue()) && in_array($value, $values)) {
                 $attr['checked'] = 'checked';
             }
-
             $opt .= html('input', $attr);
-            $opt .= $label;
-            $options .=  html('div', ['class' => 'checkbox'], '<label>'.$opt.'</label>');
+            $options .= html('div', ['class' => 'form-check'], $opt . '<label class="form-check-label">' . $label . '</label>');
+            $options .=  html('div', ['class' => 'checkbox']);
         }
 
         // DESCRIPTION
@@ -102,10 +101,10 @@ class AdminLTE extends Inline
         }
 
         // INPUT
-        $html =  html('div', [], $options);
+        $html =  html('div', ['class' => 'form-group'], $options);
 
         // FINAL CONTAINER
-        $html = html('div', ['class' => 'col-md-9 checkbox'], $html);
+        $html = html('div', ['class' => 'col-md-9'], $html);
         return html('div', compact('class'), $elementLabel . $html);
     }
 
