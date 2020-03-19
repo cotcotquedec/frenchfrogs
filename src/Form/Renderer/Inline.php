@@ -882,6 +882,7 @@ class Inline extends Renderer\Renderer {
         $element->addClass(Style::FORM_ELEMENT_CONTROL);
         $element->addAttribute('type', 'text');
         $element->addAttribute('class', 'form-control');
+        $element->addAttribute('autocomplete', 'off');
         $html = html('input', $element->getAttributes());
 
         $html .= html('div', ['class' => 'input-group-append '], '<span class="input-group-text"><em class="fas fa-square"></em></span>');
