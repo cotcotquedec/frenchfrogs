@@ -24,7 +24,7 @@ class Colorpicker extends Text
     {
         $render = '';
         try {
-            $render = $this->validator('regex:/^#(0-9a-f){6}$/')->getRenderer()->render('colorpicker', $this);
+            $render = $this->validator('regex:/#([a-fA-F0-9]{3}){1,2}\b/')->getRenderer()->render('colorpicker', $this);
         } catch(\Exception $e){
             debugbar()->addThrowable($e);
         }
