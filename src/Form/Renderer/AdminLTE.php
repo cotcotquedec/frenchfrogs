@@ -141,12 +141,13 @@ class AdminLTE extends Inline
         // INPUT
         $element->addClass('make-switch');
         $element->addAttribute('type', 'checkbox');
+        $element->addAttribute('data-toggle', 'toggle');
+        $element->addAttribute('data-size', 'sm');
         $element->addAttribute('value', 1);
         $element->addAttribute('id', $element->getName());
         if ($element->getValue()) {
             $element->addAttribute('checked', 'checked');
         }
-
 
         $element->addClass(Style::FORM_ELEMENT_CONTROL);
         $html = html('input', $element->getAttributes());
