@@ -700,6 +700,8 @@ class Inline extends Renderer\Renderer {
         $element->addClass(Style::FORM_ELEMENT_CONTROL);
         $element->addClass('date-picker');
         $element->addAttribute('value', $element->getDisplayValue());
+        $element->addAttribute('autocomplete', 'off');
+
         $html = html('input', $element->getAttributes());
 
 
