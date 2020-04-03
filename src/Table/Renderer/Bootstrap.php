@@ -226,10 +226,11 @@ class Bootstrap extends \FrenchFrogs\Renderer\Renderer
 
         // Attributes
         $attributes = [
-            'class' => 'ff-remote-boolean make-switch',
+            'class' => 'make-switch ff-remote-boolean',
             'type' => 'checkbox',
-            'data-size' => 'small',
-            'value' => true,
+            'data-size' => 'sm',
+            'data-toggle' => 'toggle',
+            'value' => 1,
             'data-id' => $row[$column->getTable()->getIdField()],
             'data-column' => $column->getName(),
         ];
