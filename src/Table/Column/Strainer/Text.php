@@ -21,6 +21,9 @@ class Text extends Strainer
         $element->setPlaceholder('All');
         $this->setRenderer($column->getTable()->getRenderer());
         $this->setElement($element);
+        if (!is_null($callable)) {
+            $this->setCallable($callable);
+        }
     }
 
 
@@ -80,6 +83,8 @@ class Text extends Strainer
     public function call(\FrenchFrogs\Table\Table\Table $table, ...$params)
     {
         if ($this->hasCallable()) {
+            array_unshift($params, $this);
+            array_unshift($params, $table);
             call_user_func_array($this->callable, $params);
         } else {
 
