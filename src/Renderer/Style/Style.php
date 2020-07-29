@@ -30,6 +30,7 @@ class Style
     const BUTTON_SIZE_CLASS_LARGE = 'btn-lg';
     const BUTTON_SIZE_CLASS_SMALL = 'btn-sm';
     const BUTTON_SIZE_CLASS_EXTRA_SMALL = 'btn-xs';
+    const BUTTON_TOOL = 'btn-tool';
 
 
     /**

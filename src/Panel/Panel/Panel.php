@@ -294,6 +294,20 @@ class Panel
         return $e;
     }
 
+
+    /**
+     * Add Button minimize for panels
+     * 
+     * @return Action\ButtonMinimize
+     */
+    public function addButtonMinimize()
+    {
+        $e = new Action\ButtonMinimize();
+        $this->addAction($e);
+        return $e;
+    }
+
+
     /**
      * @param string $href
      * @param array $attr
