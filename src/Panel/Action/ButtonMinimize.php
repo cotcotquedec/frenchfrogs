@@ -5,23 +5,6 @@ use FrenchFrogs\Html\Element;
 
 class ButtonMinimize extends Action
 {
-    use Core\Remote;
-    use Element\Button;
-
-    /**
-     * Constructror
-     *
-     * @param $name
-     * @param string $label
-     * @param array $attr
-     */
-    public function __construct()
-    {
-        $this->setRemoteId(ff()->get('modal.remoteId', $this->remoteId));
-        $this->disableIconOnly();
-    }
-
-
     /**
      * @return string
      */

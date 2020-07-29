@@ -112,10 +112,9 @@ class Bootstrap extends Renderer
         // ADD CLASSES
         $action->addClass(Style::BUTTON_CLASS);
         $action->addClass(Style::BUTTON_TOOL);
+
         // ADD ATTRIBUTE
         $action->addAttribute("data-card-widget", 'collapse');
-        // ADD TOOLTIP
-        $action->addAttribute('title', 'Réduire');
 
         // GENERATE BUTTON WITH MINUS ICON
         $html = html('button',$action->getAttributes(), '<i class="fas fa-minus"></i>');
