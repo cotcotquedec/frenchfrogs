@@ -16,6 +16,7 @@ class Bootstrap extends Renderer
         'panel',
         'action',
         'button',
+        'buttonMinimize',
         'selectremote'
     ];
 
@@ -96,6 +97,27 @@ class Bootstrap extends Renderer
         $action->addAttribute('title', $name);
 
         $html = html('a',$action->getAttributes(), $label );
+
+        return $html;
+    }
+
+    /**
+     *
+     *
+     * @param \FrenchFrogs\Panel\Action\ButtonMinimize $action
+     * @return string
+     */
+    public function buttonMinimize(Panel\Action\ButtonMinimize $action)
+    {
+        // ADD CLASS
+        $action->addClass("btn btn-tool");
+        // ADD ATTRIBUTE
+        $action->addAttribute("data-card-widget", 'collapse');
+        // ADD TOOLTIP
+        $action->addAttribute('title', 'Réduire');
+
+        // GENERATE BUTTON WITH MINUS ICON
+        $html = html('button',$action->getAttributes(), '<i class="fas fa-minus"></i>');
 
         return $html;
     }

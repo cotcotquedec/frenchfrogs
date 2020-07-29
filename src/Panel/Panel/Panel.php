@@ -295,6 +295,24 @@ class Panel
     }
 
     /**
+     *
+     * Add Button minimize for panels
+     *
+     * @param $name
+     * @param $label
+     * @param string $href
+     * @param array $attr
+     * @return \FrenchFrogs\Panel\Action\ButtonMinimize
+     */
+    public function addButtonMinimize()
+    {
+        $e = new Action\ButtonMinimize();
+        $this->addAction($e);
+        return $e;
+    }
+
+
+    /**
      * @param string $href
      * @param array $attr
      * @return Action\Button
