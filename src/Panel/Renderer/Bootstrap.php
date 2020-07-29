@@ -109,8 +109,9 @@ class Bootstrap extends Renderer
      */
     public function buttonMinimize(Panel\Action\ButtonMinimize $action)
     {
-        // ADD CLASS
-        $action->addClass("btn btn-tool");
+        // ADD CLASSES
+        $action->addClass(Style::BUTTON_CLASS);
+        $action->addClass(Style::BUTTON_TOOL);
         // ADD ATTRIBUTE
         $action->addAttribute("data-card-widget", 'collapse');
         // ADD TOOLTIP
