@@ -8,7 +8,7 @@ class Boolean extends Select
 
     public function __construct(Column $column, $callable = null, $attr = [])
     {
-        parent::__construct($column, ["no" => "No", "yes" =>  "Yes"]);
+        parent::__construct($column, ["no" => "No", "yes" =>  "Yes"], $callable, $attr);
     }
 
     /**
