@@ -354,7 +354,7 @@ abstract class Column
         // if a direction is set
         if (!empty($direction)) {
             if (!is_string($this->order) && is_callable($this->order)) {
-                call_user_func_array($this->order, $this);
+                call_user_func_array($this->order, (array) $this);
             } else {
 
                 $table = $this->getTable();
