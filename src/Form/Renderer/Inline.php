@@ -44,7 +44,8 @@ class Inline extends Renderer\Renderer {
         'select2',
         'time',
         'pre',
-        'colorpicker'
+        'colorpicker',
+        'selectcustom'
     ];
 
     function form(Form\Form\Form $form)
@@ -897,4 +898,71 @@ class Inline extends Renderer\Renderer {
         $html = html('div', ['class' => 'col-md-9 colorpicker-element input-group'], $html);
         return html('div', compact('class'), $label . $html);
     }
+
+    /**
+     * Render select custom
+     *
+     * @param \FrenchFrogs\Form\Element\SelectCustom $element
+     * @return string
+     */
+    public function selectcustom(Form\Element\SelectCustom $element)
+    {
+        // CLASS
+        $class =  Style::FORM_GROUP_CLASS . " row";
+
+        // ERROR
+        if($element->fails()){
+            $element->addClass('form-error');
+            if(empty($element->getAttribute('data-placement'))){$element->addAttribute('data-placement','bottom');}
+            $message = '';
+            foreach($element->errors() as $error){
+                $message .= $error . ' ';
+            }
+            $element->addAttribute('data-original-title',$message);
+            $class .= ' ' .Style::FORM_GROUP_ERROR;
+        }
+
+        // LABEL
+        $label = '';
+        if ($element->getForm()->hasLabel()) {
+            $label = '<label for="' . $element->getName() . '" class="col-md-'. $element->getColMdLabel() .' control-label">' . $element->getLabel() . ($element->hasRule('required') ? ' *' : '') . '</label>';
+        }
+
+
+        // OPTIONS
+        $options = '';
+        if ($element->hasPlaceholder()){
+            $options .= html('option', ['value' => null], $element->getPlaceholder());
+        }
+
+        $elementValue = (array) $element->getValue();
+        foreach($element->getOptions() as $value => $key){
+            $attr = ['value' => $value];
+            if ($element->hasValue() && in_array($value, $elementValue)){
+                $attr['selected'] = 'selected';
+            }
+            $options .= html('option', $attr, $key);
+        }
+
+
+        // INPUT
+        $element->addClass(Style::FORM_ELEMENT_CONTROL);
+        $element->addAttribute('id', $element->getName());
+        $element->addStyle('width', '100%');
+        if ($element->isMultiple()) {
+            $element->setName($element->getName() .  '[]');
+        }
+        $html = html('select', $element->getAttributes(), $options);
+
+        // DESCRIPTION
+        if ($element->hasDescription()) {
+            $html .= html('span', ['class' => 'help-block'], $element->getDescription());
+        }
+
+        $html = html('div', ['class' => 'col-md-'. $element->getColMdSelect() .''], $html);
+
+        // FINAL CONTAINER
+        return html('div', compact('class'), $label . $html ) . PHP_EOL;
+    }
+
 }
