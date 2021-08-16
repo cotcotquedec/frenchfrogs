@@ -949,9 +949,6 @@ class Inline extends Renderer\Renderer {
         $element->addClass(Style::FORM_ELEMENT_CONTROL);
         $element->addAttribute('id', $element->getName());
         $element->addStyle('width', '100%');
-        if ($element->isMultiple()) {
-            $element->setName($element->getName() .  '[]');
-        }
         $html = html('select', $element->getAttributes(), $options);
 
         // DESCRIPTION
