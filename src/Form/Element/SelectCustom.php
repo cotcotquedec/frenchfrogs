@@ -15,11 +15,11 @@ class SelectCustom extends Element
     /**
      * @var int
      */
-    protected int $col_md_label;
+    protected $col_md_label;
     /**
      * @var int
      */
-    protected int $col_md_select;
+    protected $col_md_select;
 
     /**
      *
