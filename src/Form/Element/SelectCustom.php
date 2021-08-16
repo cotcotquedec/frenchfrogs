@@ -104,11 +104,6 @@ class SelectCustom extends Element
      */
     public function setValue($value)
     {
-
-        if ($this->isMultiple()) {
-            $value = (array) $value;
-        }
-
         $this->value = $value;
     }
 
