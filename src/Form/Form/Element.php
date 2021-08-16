@@ -687,16 +687,17 @@ trait Element
      * @param $name
      * @param $label
      * @param array $options
-     * @param $col_md_label
-     * @param $col_md_select
+     * @param int $col_md_label
+     * @param int $col_md_select
      * @return \FrenchFrogs\Form\Element\SelectCustom
      */
-    public function addSelectCustom($name, $label, array $options, $col_md_label, $col_md_select)
+    public function addSelectCustom($name, $label, array $options, int $col_md_label, int $col_md_select)
     {
         throw_if(
             $col_md_select + $col_md_label > 12,
             new \Exception('Please do not exceed 12 col-md-label + col-md-select')
         );
+        
         $e = new \FrenchFrogs\Form\Element\SelectCustom($name, $label, $options, $col_md_label, $col_md_select);
         $this->addElement($e);
 

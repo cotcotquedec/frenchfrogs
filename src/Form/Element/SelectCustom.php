@@ -10,16 +10,16 @@ class SelectCustom extends Element
      *
      * @var array
      */
-    protected $options = [];
+    protected $options;
 
     /**
      * @var int
      */
-    protected $col_md_label;
+    protected int $col_md_label;
     /**
      * @var int
      */
-    protected $col_md_select;
+    protected int $col_md_select;
 
     /**
      *
@@ -27,9 +27,10 @@ class SelectCustom extends Element
      * @param $name
      * @param string $label
      * @param array $options
-     * @param array $attr
+     * @param int $col_md_label
+     * @param int $col_md_select
      */
-    public function __construct($name, $label = '', $options = [], $col_md_label, $col_md_select)
+    public function __construct($name, $label = '', $options, int $col_md_label, int $col_md_select)
     {
         $this->setName($name);
         $this->setLabel($label);
