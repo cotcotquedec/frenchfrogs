@@ -43,7 +43,8 @@ class AdminLTE extends Inline
         'select2',
         'time',
         'pre',
-        'colorpicker'
+        'colorpicker',
+        'selectcustom'
     ];
 
 

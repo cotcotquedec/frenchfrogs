@@ -1,4 +1,5 @@
-<?php namespace FrenchFrogs\Form\Form;
+<?php
+namespace FrenchFrogs\Form\Form;
 
 use FrenchFrogs;
 use InvalidArgumentException;
@@ -29,8 +30,10 @@ trait Element
      * @param \FrenchFrogs\Form\Element\Element $element
      * @return $this
      */
-    public function addElement(\FrenchFrogs\Form\Element\Element $element, FrenchFrogs\Renderer\Renderer $renderer = null)
-    {
+    public function addElement(
+        \FrenchFrogs\Form\Element\Element $element,
+        FrenchFrogs\Renderer\Renderer $renderer = null
+    ) {
         // Join element to the form
         $element->setForm($this);
 
@@ -46,7 +49,6 @@ trait Element
      */
     public function removeElement($name)
     {
-
         if (isset($this->elements[$name])) {
             unset($this->elements[$name]);
         }
@@ -61,7 +63,6 @@ trait Element
      */
     public function clearElements()
     {
-
         $this->elements = [];
 
         return $this;
@@ -71,12 +72,11 @@ trait Element
      * Return the element $name from the elements container
      *
      * @param $name
-     * @throws InvalidArgumentException
      * @return \FrenchFrogs\Form\Element\Element
+     * @throws InvalidArgumentException
      */
     public function getElement($name)
     {
-
         if (!isset($this->elements[$name])) {
             throw new InvalidArgumentException(" Element not found : {$name}");
         }
@@ -148,7 +148,6 @@ trait Element
      */
     public function removeAction($name)
     {
-
         if (isset($this->actions[$name])) {
             unset($this->actions[$name]);
         }
@@ -192,12 +191,11 @@ trait Element
      * Return the $name element from the actions container
      *
      * @param $name
-     * @throws InvalidArgumentException
      * @return \FrenchFrogs\Form\Element\Element
+     * @throws InvalidArgumentException
      */
     public function getAction($name)
     {
-
         if (!isset($this->actions[$name])) {
             throw new InvalidArgumentException("Action not found : {$name}");
         }
@@ -679,6 +677,30 @@ trait Element
     {
         $e = new \FrenchFrogs\Form\Element\Colorpicker($name, $label);
         $this->addElement($e);
+        return $e;
+    }
+
+    /**
+     * Add select custom element (customizable label md & select md)
+     *
+     *
+     * @param $name
+     * @param $label
+     * @param array $options
+     * @param int $col_md_label
+     * @param int $col_md_select
+     * @return \FrenchFrogs\Form\Element\SelectCustom
+     */
+    public function addSelectCustom($name, $label, array $options, int $col_md_label, int $col_md_select)
+    {
+        throw_if(
+            $col_md_select + $col_md_label > 12,
+            new \Exception('Please do not exceed 12 col-md-label + col-md-select')
+        );
+        
+        $e = new \FrenchFrogs\Form\Element\SelectCustom($name, $label, $options, $col_md_label, $col_md_select);
+        $this->addElement($e);
+
         return $e;
     }
 }
