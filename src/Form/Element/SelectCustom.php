@@ -12,7 +12,13 @@ class SelectCustom extends Element
      */
     protected $options = [];
 
+    /**
+     * @var int
+     */
     protected $col_md_label;
+    /**
+     * @var int
+     */
     protected $col_md_select;
 
     /**
@@ -44,23 +50,37 @@ class SelectCustom extends Element
         return $this;
     }
 
+    /**
+     * @param $col_md_label
+     * @return $this
+     */
     public function setColMdLabel($col_md_label)
     {
         $this->col_md_label = $col_md_label;
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getColMdLabel()
     {
         return $this->col_md_label;
     }
 
+    /**
+     * @param $col_md_select
+     * @return $this
+     */
     public function setColMdSelect($col_md_select)
     {
         $this->col_md_select = $col_md_select;
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getColMdSelect()
     {
         return $this->col_md_select;
@@ -101,39 +121,7 @@ class SelectCustom extends Element
     {
         return '-- ' . $this->getAttribute('placeholder') . ' --';
     }
-
-    /**
-     * Enabler pour le multiple
-     *
-     * @return $this
-     */
-    public function enableMultiple()
-    {
-        $this->addAttribute('multiple', 'multiple');
-        return $this;
-    }
-
-    /**
-     * Disabler pour le multiple
-     *
-     * @return $this
-     */
-    public function disableMultiple()
-    {
-        $this->removeAttribute('multiple');
-        return $this;
-    }
-
-    /**
-     * Renvoie si le select est multiple
-     *
-     * @return bool
-     */
-    public function isMultiple()
-    {
-        return $this->getAttribute('multiple') == 'multiple';
-    }
-
+    
     /**
      * @return string
      */
